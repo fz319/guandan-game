@@ -2,23 +2,46 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="掼蛋理牌">
 <title>掼蛋理牌模拟器</title>
 <style>
+  :root {
+    --card-w: 68px;
+    --card-h: 106px;
+    --card-overlap: -32px;
+    --card-font-val: 17px;
+    --card-font-suit: 15px;
+  }
+
+  @media (max-width: 640px) {
+    :root {
+      --card-w: 52px;
+      --card-h: 84px;
+      --card-overlap: -25px;
+      --card-font-val: 14px;
+      --card-font-suit: 12px;
+    }
+  }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: #1b382b;
     color: #f3f3f3;
     margin: 0;
-    padding: 14px 20px;
+    padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
     align-items: center;
     user-select: none;
     -webkit-user-select: none;
+    -webkit-touch-callout: none;
     min-height: 100vh;
     box-sizing: border-box;
     overflow-x: auto;
+    touch-action: pan-y pinch-zoom;
   }
 
   .controls-bar {
@@ -51,8 +74,8 @@
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.15);
   }
-  .level-info { font-size: 16px; font-weight: bold; color: #ffd700; }
-  .count-info { font-size: 14px; font-weight: bold; color: #63b3ed; }
+  .level-info { font-size: 16px; font-weight: bold; color: #ffd700; white-space: nowrap; }
+  .count-info { font-size: 14px; font-weight: bold; color: #63b3ed; white-space: nowrap; }
 
   button {
     background-color: #4a5568;
@@ -68,6 +91,8 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
+    white-space: nowrap;
+    touch-action: manipulation;
   }
   button:hover:not(:disabled) { transform: translateY(-1px); background-color: #5a677d; }
   button:active:not(:disabled) { transform: translateY(1px); }
@@ -85,6 +110,12 @@
   button.compare-btn { background: linear-gradient(135deg, #805ad5, #6b46c1); }
   button.compare-btn:hover:not(:disabled) { background: linear-gradient(135deg, #9f7aea, #805ad5); }
 
+  button.toggle-active {
+    background-color: #d69e2e !important;
+    color: #fff !important;
+    box-shadow: 0 0 8px #ecc94b;
+  }
+
   .schemes-nav {
     display: flex;
     align-items: center;
@@ -94,6 +125,7 @@
     margin-bottom: 12px;
     padding: 0 4px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .scheme-tab {
     padding: 6px 14px;
@@ -123,7 +155,6 @@
     border-radius: 50%;
     padding: 0 4px;
   }
-  .scheme-tab .tab-del:hover { background: rgba(0,0,0,0.3); color: #fc8181; }
 
   #board {
     display: flex;
@@ -133,13 +164,15 @@
     max-width: 1360px;
     padding-bottom: 80px;
     position: relative;
+    touch-action: pan-x pan-y;
   }
 
+  /* 彻底开放裁剪限制，保证立起牌绝对不削顶 */
   .card-row {
     background: rgba(255, 255, 255, 0.04);
     border: 1px dashed rgba(255, 255, 255, 0.2);
     border-radius: 10px;
-    min-height: 185px;
+    min-height: calc(var(--card-h) + 75px);
     display: flex;
     align-items: center;
     padding: 56px 20px 14px 12px;
@@ -148,6 +181,12 @@
     overflow: visible !important;
     transition: background-color 0.2s, border-color 0.2s;
   }
+  @media (max-width: 640px) {
+    .card-row {
+      padding: 48px 14px 12px 8px;
+    }
+  }
+
   .card-row.empty-row {
     border-color: rgba(255, 255, 255, 0.35);
     background: rgba(255, 255, 255, 0.06);
@@ -162,6 +201,7 @@
     font-size: 14px;
     color: rgba(255, 255, 255, 0.45);
     pointer-events: none;
+    white-space: nowrap;
   }
   .card-row.drop-highlight {
     background: rgba(255, 255, 255, 0.12);
@@ -176,7 +216,7 @@
     align-items: center;
     justify-content: center;
     width: 48px;
-    height: 106px;
+    height: var(--card-h);
     background: rgba(0, 0, 0, 0.25);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 6px;
@@ -186,6 +226,7 @@
     transition: background-color 0.15s, border-color 0.15s;
     user-select: none;
     text-align: center;
+    touch-action: none;
   }
   .row-handle:hover { background: rgba(255, 255, 255, 0.15); border-color: #ecc94b; }
   .row-handle:active { cursor: grabbing; }
@@ -193,30 +234,34 @@
   .row-handle .handle-label { font-size: 11px; color: #ffd700; font-weight: bold; margin-top: 4px; }
   .row-handle .handle-count { font-size: 11px; color: #63b3ed; font-weight: bold; margin-top: 2px; }
 
+  /* 核心修复：确保卡牌包装盒无论如何都不裁剪超出边界的卡牌 */
   .cards-wrapper {
     display: flex;
     align-items: center;
     flex-grow: 1;
-    overflow: visible !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
     padding: 8px 0;
     position: relative;
   }
 
   .card {
-    width: 68px;
-    height: 106px;
+    width: var(--card-w);
+    height: var(--card-h);
     background-color: #ffffff;
     border-radius: 6px;
     box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
+    /* 保留充足顶部间距，文字不贴边 */
     padding: 10px 8px 6px;
     box-sizing: border-box;
     cursor: pointer;
-    margin-left: -32px;
+    margin-left: var(--card-overlap);
     transition: transform 0.15s ease-out, margin 0.15s ease-out, box-shadow 0.15s ease-out;
     position: relative;
     flex-shrink: 0;
+    touch-action: none;
   }
   .card:first-child { margin-left: 0 !important; }
 
@@ -225,7 +270,7 @@
     box-shadow: 0 10px 18px rgba(246, 224, 94, 0.5), -2px 4px 8px rgba(0,0,0,0.4);
     border: 2px solid #ecc94b;
   }
-  .card.selected + .card:not(.selected) { margin-left: -24px; }
+  .card.selected + .card:not(.selected) { margin-left: calc(var(--card-overlap) + 8px); }
 
   body:not(.is-dragging) .card:hover:not(.selected) { transform: translateY(-8px); }
   .card.ghost { opacity: 0.18; }
@@ -237,8 +282,8 @@
     line-height: 1;
     pointer-events: none;
   }
-  .card-val { font-size: 17px; font-weight: 800; line-height: 1; }
-  .card-suit { font-size: 15px; line-height: 1; margin-top: 3px; }
+  .card-val { font-size: var(--card-font-val); font-weight: 800; line-height: 1; }
+  .card-suit { font-size: var(--card-font-suit); line-height: 1; margin-top: 3px; }
   .wild-badge {
     position: absolute;
     bottom: 6px;
@@ -259,7 +304,7 @@
   #dropCaret {
     position: absolute;
     width: 4px;
-    height: 110px;
+    height: var(--card-h);
     background: #ecc94b;
     border-radius: 3px;
     box-shadow: 0 0 10px #ecc94b, 0 0 16px #ecc94b;
@@ -288,7 +333,7 @@
     filter: drop-shadow(0 12px 24px rgba(0,0,0,0.6));
     display: none;
   }
-  #dragProxy .card { margin-left: -32px; transform: none !important; }
+  #dragProxy .card { margin-left: var(--card-overlap); transform: none !important; }
   #dragProxy .card:first-child { margin-left: 0; }
 
   #rowDragBadge {
@@ -347,6 +392,7 @@
     display: flex;
     gap: 20px;
     padding: 12px 4px;
+    -webkit-overflow-scrolling: touch;
   }
   .scheme-column {
     min-width: 440px;
@@ -358,6 +404,9 @@
     flex-direction: column;
     gap: 12px;
     flex-shrink: 0;
+  }
+  @media (max-width: 640px) {
+    .scheme-column { min-width: 320px; }
   }
   .scheme-col-header {
     display: flex;
@@ -388,7 +437,6 @@
   .scheme-mini-row .card .card-suit { font-size: 11px; margin-top: 1px; }
   .scheme-mini-row .wild-badge { font-size: 8px; padding: 1px 2px; bottom: 3px; }
 
-  /* 存档弹窗 */
   .saves-list {
     display: flex;
     flex-direction: column;
@@ -396,6 +444,7 @@
     max-height: 60vh;
     overflow-y: auto;
     padding-right: 4px;
+    -webkit-overflow-scrolling: touch;
   }
   .save-card-item {
     background: rgba(255, 255, 255, 0.05);
@@ -406,21 +455,10 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    transition: background 0.15s;
+    flex-wrap: wrap;
   }
-  .save-card-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-  }
-  .save-info-title {
-    font-size: 15px;
-    font-weight: bold;
-    color: #ffd700;
-    margin-bottom: 4px;
-  }
-  .save-info-meta {
-    font-size: 12px;
-    color: #94a3b8;
-  }
+  .save-info-title { font-size: 15px; font-weight: bold; color: #ffd700; margin-bottom: 4px; }
+  .save-info-meta { font-size: 12px; color: #94a3b8; }
 
   .modal-backdrop {
     position: fixed;
@@ -461,6 +499,7 @@
     flex-direction: column;
     gap: 16px;
     padding-right: 6px;
+    -webkit-overflow-scrolling: touch;
   }
   .picker-row {
     display: flex;
@@ -488,7 +527,7 @@
     transition: transform 0.1s, border-color 0.1s;
     user-select: none;
   }
-  .picker-card-btn:hover { transform: scale(1.05); }
+  .picker-card-btn:active { transform: scale(0.96); }
   .picker-card-btn.has-selected {
     border-color: #ecc94b;
     box-shadow: 0 0 8px rgba(236, 201, 75, 0.6);
@@ -554,6 +593,7 @@
     <button class="danger" id="deleteBtn" disabled>删除选中 (0)</button>
   </div>
   <div class="controls-right">
+    <button id="multiSelectToggleBtn" title="触屏端连选模式">⚡ 批量连选</button>
     <button id="undoBtn" disabled>上一步 (撤销)</button>
     <button id="redoBtn" disabled>下一步 (重做)</button>
     <button class="warn" id="resetBtn">重置初始排序</button>
@@ -565,11 +605,11 @@
   <div class="help-grid">
     <div class="help-item">
       <h4>🃏 1. 选牌与放回</h4>
-      <p>• 单击牌立即立起；再次单击该牌自身可放平。<br>• <strong>一键全部放回</strong>：按住 <strong>Shift</strong> 或 <strong>Command / Ctrl</strong> 点击任意已立起的牌，所有立起的牌<strong>全员归位</strong>。<br>• <strong>Shift 快速连选</strong>：点选第一张后按住 Shift 点另一张未选牌，区间内所有牌连选立起。<br>• 点击空白处亦可一键收回所有牌。</p>
+      <p>• 单击牌立即立起；再次单击该牌自身可放平。<br>• <strong>一键全部放回</strong>：按住 <strong>Shift</strong> 或 <strong>Command / Ctrl</strong>（触屏开启右上方<strong>【⚡ 批量连选】</strong>）点击任意已立起的牌，所有立起的牌<strong>全员归位</strong>。<br>• <strong>Shift 快速连选</strong>：点选第一张后按住 Shift（或开启【⚡ 批量连选】）点另一张未选牌，区间内所有牌连选立起。<br>• 点击空白处一键收回所有牌。</p>
     </div>
     <div class="help-item">
       <h4>🎯 2. 丝滑拖拽与穿插</h4>
-      <p>• 拖拽已立起的<strong>任意一张牌</strong>，整组牌打包随鼠标移动。<br>• 黄色发光光标指示落点，松手精准插入缝隙。<br>• 拖到底部虚线槽自动开辟新的一层。</p>
+      <p>• 手指/鼠标拖拽已立起的<strong>任意一张牌</strong>，整组牌打包移动。<br>• 黄色发光光标指示落点，松手精准插入缝隙。<br>• 拖到底部虚线槽自动开辟新的一层。</p>
     </div>
     <div class="help-item">
       <h4>📑 3. 多方案对比与存档</h4>
@@ -577,7 +617,7 @@
     </div>
     <div class="help-item">
       <h4>⚙️ 4. 整层调序与残局调牌</h4>
-      <p>• 按住每层左侧的 <strong>“≡ 手柄”</strong> 可上下调换整层顺序。<br>• “自定义选牌/调牌”可在 108 张全牌库中自定手牌或残局。<br>• 键盘 <strong>Delete / Backspace</strong> 快速删除立起牌。</p>
+      <p>• 按住每层左侧的 <strong>“≡ 手柄”</strong> 可上下调换整层顺序。<br>• “自定义选牌/调牌”可在 108 张全牌库中自定手牌或残局。<br>• 电脑键盘按 <strong>Delete / Backspace</strong> 亦可快速删除立起牌。</p>
     </div>
   </div>
 </div>
@@ -662,6 +702,7 @@
   let clickedCardInitialSelected = false;
   let hasMovedEnough = false;
   let mousePressedWithShiftOrCmd = false;
+  let touchMultiSelectActive = false;
 
   let dropTarget = null;
   let draggedRowIndex = null;
@@ -866,22 +907,23 @@
     return list;
   }
 
-  // ---------------- 全局鼠标交互与手势识别 ----------------
+  // ---------------- 全平台指针交互引擎 ----------------
 
-  document.addEventListener('mousedown', (e) => {
-    if (e.button !== 0) return;
+  document.addEventListener('pointerdown', (e) => {
+    if (e.button && e.button !== 0) return;
     startX = e.clientX;
     startY = e.clientY;
     hasMovedEnough = false;
 
-    const isShift = e.shiftKey;
-    const isCmdOrCtrl = e.metaKey || e.ctrlKey;
+    const isShift = e.shiftKey || touchMultiSelectActive;
+    const isCmdOrCtrl = e.metaKey || e.ctrlKey || touchMultiSelectActive;
     mousePressedWithShiftOrCmd = (isShift || isCmdOrCtrl);
 
     const handleEl = e.target.closest('.row-handle');
     if (handleEl) {
       draggedRowIndex = parseInt(handleEl.dataset.rowIndex);
       interactionMode = 'row-reorder';
+      try { e.target.setPointerCapture(e.pointerId); } catch(err) {}
       return;
     }
 
@@ -924,6 +966,7 @@
 
     if (clickedCardInitialSelected) {
       interactionMode = 'dragging';
+      try { cardEl.setPointerCapture(e.pointerId); } catch(err) {}
     } else {
       selectedIds.add(cardId);
       lastAnchorCardId = cardId;
@@ -933,7 +976,7 @@
     }
   });
 
-  document.addEventListener('mousemove', (e) => {
+  document.addEventListener('pointermove', (e) => {
     if (!interactionMode) return;
     const cur = getCurrentScheme();
     if (!cur) return;
@@ -1002,7 +1045,7 @@
     }
   });
 
-  document.addEventListener('mouseup', (e) => {
+  document.addEventListener('pointerup', (e) => {
     if (!interactionMode) return;
 
     if (interactionMode === 'row-reorder') {
@@ -1234,6 +1277,12 @@
     }
   });
 
+  const multiToggleBtn = document.getElementById('multiSelectToggleBtn');
+  multiToggleBtn.addEventListener('click', () => {
+    touchMultiSelectActive = !touchMultiSelectActive;
+    multiToggleBtn.classList.toggle('toggle-active', touchMultiSelectActive);
+  });
+
   // ---------------- 方案横向对比 ----------------
 
   const compareModal = document.getElementById('compareModal');
@@ -1298,7 +1347,7 @@
     compareModal.style.display = 'none';
   });
 
-  // ---------------- 存档管理（永久本地存储 LocalStorage） ----------------
+  // ---------------- 存档管理 ----------------
 
   const STORAGE_KEY = 'GUANDAN_SAVED_ARCHIVES';
   const archiveModal = document.getElementById('archiveModal');
@@ -1317,7 +1366,6 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
   }
 
-  // 保存当前手牌与所有方案
   document.getElementById('saveArchiveBtn').addEventListener('click', () => {
     const defaultName = `牌局存档 - 打${currentLevel} (${new Date().toLocaleDateString()})`;
     const customName = prompt('请为当前手牌存档命名：', defaultName);
@@ -1334,12 +1382,11 @@
       currentSchemeIndex: currentSchemeIndex
     };
 
-    archives.unshift(newRecord); // 最新保存排在前面
+    archives.unshift(newRecord);
     setSavedArchives(archives);
     alert('保存成功！随时可在“打开存档箱”中调取继续理牌。');
   });
 
-  // 打开存档箱
   document.getElementById('openArchiveBtn').addEventListener('click', () => {
     renderArchiveList();
     archiveModal.style.display = 'flex';
@@ -1354,11 +1401,11 @@
     const archives = getSavedArchives();
 
     if (archives.length === 0) {
-      archiveListContainer.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 24px 0;">暂无保存的牌局存档，点击上方“保存当前存档”即可创建。</div>`;
+      archiveListContainer.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 24px 0;">暂无保存的手牌存档。</div>`;
       return;
     }
 
-    archives.forEach((item, idx) => {
+    archives.forEach((item) => {
       const cardEl = document.createElement('div');
       cardEl.className = 'save-card-item';
 
@@ -1368,11 +1415,11 @@
         <div style="flex-grow: 1;">
           <div class="save-info-title">${item.name}</div>
           <div class="save-info-meta">
-            打【${item.currentLevel}】 · ${totalCards} 张牌 · 共 ${item.schemes.length} 个方案 · 保存于 ${item.date}
+            打【${item.currentLevel}】 · ${totalCards} 张牌 · ${item.schemes.length} 个方案 · ${item.date}
           </div>
         </div>
         <div style="display: flex; gap: 8px;">
-          <button class="primary" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">载入编辑</button>
+          <button class="primary" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">载入</button>
           <button class="danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">删除</button>
         </div>
       `;
@@ -1380,7 +1427,6 @@
     });
   }
 
-  // 载入存档
   window.loadArchive = function(id) {
     const archives = getSavedArchives();
     const target = archives.find(a => a.id === id);
@@ -1401,9 +1447,8 @@
     renderBoard();
   };
 
-  // 删除存档
   window.deleteArchive = function(id) {
-    if (!confirm('确定要删除这条存档吗？此操作无法撤销。')) return;
+    if (!confirm('确定要删除这条存档吗？此操作不可逆。')) return;
     let archives = getSavedArchives();
     archives = archives.filter(a => a.id !== id);
     setSavedArchives(archives);
