@@ -31,7 +31,7 @@
     background-color: #1b382b;
     color: #f3f3f3;
     margin: 0;
-    padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+    padding: 14px 20px calc(24px + env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -162,12 +162,11 @@
     gap: 16px;
     width: 100%;
     max-width: 1360px;
-    padding-bottom: 80px;
+    padding-bottom: 160px; /* 增加底部留白，确保第4层及后续层能完全滚入舒适可视区 */
     position: relative;
     touch-action: pan-x pan-y;
   }
 
-  /* 彻底开放裁剪限制，保证立起牌绝对不削顶 */
   .card-row {
     background: rgba(255, 255, 255, 0.04);
     border: 1px dashed rgba(255, 255, 255, 0.2);
@@ -182,9 +181,7 @@
     transition: background-color 0.2s, border-color 0.2s;
   }
   @media (max-width: 640px) {
-    .card-row {
-      padding: 48px 14px 12px 8px;
-    }
+    .card-row { padding: 48px 14px 12px 8px; }
   }
 
   .card-row.empty-row {
@@ -234,7 +231,6 @@
   .row-handle .handle-label { font-size: 11px; color: #ffd700; font-weight: bold; margin-top: 4px; }
   .row-handle .handle-count { font-size: 11px; color: #63b3ed; font-weight: bold; margin-top: 2px; }
 
-  /* 核心修复：确保卡牌包装盒无论如何都不裁剪超出边界的卡牌 */
   .cards-wrapper {
     display: flex;
     align-items: center;
@@ -253,7 +249,6 @@
     box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
-    /* 保留充足顶部间距，文字不贴边 */
     padding: 10px 8px 6px;
     box-sizing: border-box;
     cursor: pointer;
@@ -608,8 +603,8 @@
       <p>• 单击牌立即立起；再次单击该牌自身可放平。<br>• <strong>一键全部放回</strong>：按住 <strong>Shift</strong> 或 <strong>Command / Ctrl</strong>（触屏开启右上方<strong>【⚡ 批量连选】</strong>）点击任意已立起的牌，所有立起的牌<strong>全员归位</strong>。<br>• <strong>Shift 快速连选</strong>：点选第一张后按住 Shift（或开启【⚡ 批量连选】）点另一张未选牌，区间内所有牌连选立起。<br>• 点击空白处一键收回所有牌。</p>
     </div>
     <div class="help-item">
-      <h4>🎯 2. 丝滑拖拽与穿插</h4>
-      <p>• 手指/鼠标拖拽已立起的<strong>任意一张牌</strong>，整组牌打包移动。<br>• 黄色发光光标指示落点，松手精准插入缝隙。<br>• 拖到底部虚线槽自动开辟新的一层。</p>
+      <h4>🎯 2. 丝滑拖拽与自动滚屏</h4>
+      <p>• 拖拽已立起的<strong>任意一张牌</strong>，整组牌打包随鼠标/手指移动。<br>• <strong>边缘自动滚屏</strong>：在平板或手机上拖拽靠近屏幕上下边缘时，页面会自动平滑滚动，直达第4层、第5层。<br>• 拖到底部虚线槽自动开辟新的一层。</p>
     </div>
     <div class="help-item">
       <h4>📑 3. 多方案对比与存档</h4>
@@ -628,7 +623,6 @@
 <div id="dragProxy"></div>
 <div id="rowDragBadge"></div>
 
-<!-- 方案多版本横向对比弹窗 -->
 <div class="modal-backdrop" id="compareModal">
   <div class="compare-modal-content">
     <div class="modal-header">
@@ -639,20 +633,18 @@
   </div>
 </div>
 
-<!-- 存档箱弹窗 -->
 <div class="modal-backdrop" id="archiveModal">
   <div class="modal-content" style="max-width: 680px;">
     <div class="modal-header">
       <div class="modal-title">📂 本地手牌存档箱</div>
       <button class="primary" id="closeArchiveBtn" style="padding: 4px 10px;">关闭</button>
     </div>
-    <div class="modal-body" style="padding: 6px 0;">
+    <div class="modal-body" style="padding: 4px 0;">
       <div class="saves-list" id="archiveListContainer"></div>
     </div>
   </div>
 </div>
 
-<!-- 自定义选牌弹窗 -->
 <div class="modal-backdrop" id="customModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -698,6 +690,7 @@
   let lastAnchorCardId = null;
   let interactionMode = null;
   let startX = 0, startY = 0;
+  let currentClientX = 0, currentClientY = 0;
   let clickedCardId = null;
   let clickedCardInitialSelected = false;
   let hasMovedEnough = false;
@@ -708,6 +701,10 @@
   let draggedRowIndex = null;
   let rowTargetDrop = null;
   let modalSelectionMap = {};
+
+  // 边缘自动滚动状态
+  let autoScrollAnimationId = null;
+  let autoScrollSpeed = 0;
 
   function pickRandomLevel() {
     return RANKS[Math.floor(Math.random() * RANKS.length)];
@@ -907,12 +904,65 @@
     return list;
   }
 
+  // ---------------- 物理边缘自动滚屏引擎 ----------------
+
+  function checkEdgeAutoScroll(clientY) {
+    const viewportHeight = window.innerHeight;
+    const edgeThreshold = 85; // 边缘触发感应区（像素）
+    const maxSpeed = 16;      // 最大每帧滚动速度
+
+    if (clientY > viewportHeight - edgeThreshold) {
+      // 触及底部感应区，向下滚动
+      const intensity = (clientY - (viewportHeight - edgeThreshold)) / edgeThreshold;
+      autoScrollSpeed = Math.min(maxSpeed, Math.max(3, intensity * maxSpeed));
+      startAutoScrollLoop();
+    } else if (clientY < edgeThreshold) {
+      // 触及顶部感应区，向上滚动
+      const intensity = (edgeThreshold - clientY) / edgeThreshold;
+      autoScrollSpeed = -Math.min(maxSpeed, Math.max(3, intensity * maxSpeed));
+      startAutoScrollLoop();
+    } else {
+      stopAutoScrollLoop();
+    }
+  }
+
+  function startAutoScrollLoop() {
+    if (autoScrollAnimationId) return;
+    function loop() {
+      if (autoScrollSpeed !== 0 && (interactionMode === 'dragging' || interactionMode === 'row-reorder')) {
+        window.scrollBy(0, autoScrollSpeed);
+
+        // 视口滚动时，实时同步落点指示光标
+        if (interactionMode === 'dragging') {
+          updateDropCaret(currentClientX, currentClientY);
+        } else if (interactionMode === 'row-reorder') {
+          updateRowReorderIndicator(currentClientX, currentClientY);
+        }
+
+        autoScrollAnimationId = requestAnimationFrame(loop);
+      } else {
+        stopAutoScrollLoop();
+      }
+    }
+    autoScrollAnimationId = requestAnimationFrame(loop);
+  }
+
+  function stopAutoScrollLoop() {
+    if (autoScrollAnimationId) {
+      cancelAnimationFrame(autoScrollAnimationId);
+      autoScrollAnimationId = null;
+    }
+    autoScrollSpeed = 0;
+  }
+
   // ---------------- 全平台指针交互引擎 ----------------
 
   document.addEventListener('pointerdown', (e) => {
     if (e.button && e.button !== 0) return;
     startX = e.clientX;
     startY = e.clientY;
+    currentClientX = e.clientX;
+    currentClientY = e.clientY;
     hasMovedEnough = false;
 
     const isShift = e.shiftKey || touchMultiSelectActive;
@@ -981,9 +1031,17 @@
     const cur = getCurrentScheme();
     if (!cur) return;
 
+    currentClientX = e.clientX;
+    currentClientY = e.clientY;
+
     const dx = Math.abs(e.clientX - startX);
     const dy = Math.abs(e.clientY - startY);
     if (dx > 6 || dy > 6) hasMovedEnough = true;
+
+    // 拖拽过程中检测边缘自动滚屏
+    if (interactionMode === 'dragging' || interactionMode === 'row-reorder') {
+      if (hasMovedEnough) checkEdgeAutoScroll(e.clientY);
+    }
 
     if (interactionMode === 'row-reorder') {
       if (!hasMovedEnough) return;
@@ -1046,6 +1104,7 @@
   });
 
   document.addEventListener('pointerup', (e) => {
+    stopAutoScrollLoop();
     if (!interactionMode) return;
 
     if (interactionMode === 'row-reorder') {
@@ -1089,6 +1148,15 @@
     const proxy = document.getElementById('dragProxy');
     proxy.style.display = 'none';
     proxy.innerHTML = '';
+    hideDropCaret();
+  });
+
+  document.addEventListener('pointercancel', () => {
+    stopAutoScrollLoop();
+    interactionMode = null;
+    document.body.classList.remove('is-dragging');
+    const proxy = document.getElementById('dragProxy');
+    if (proxy) proxy.style.display = 'none';
     hideDropCaret();
   });
 
