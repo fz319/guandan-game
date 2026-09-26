@@ -11,6 +11,7 @@
 <title>掼蛋理牌模拟器 / Guandan Cards Simulator</title>
 <style>
   :root {
+    /* 深林暗调天鹅绒配色体系 */
     --bg-base: #07120e;
     --bg-gradient: radial-gradient(circle at 50% 20%, #163628 0%, #0d1e17 55%, #050d0a 100%);
     --island-bg: rgba(18, 36, 28, 0.85);
@@ -23,6 +24,7 @@
     --btn-glass: rgba(255, 255, 255, 0.07);
     --btn-glass-hover: rgba(255, 255, 255, 0.16);
 
+    /* 全局基准尺寸体系 */
     --font-ui-btn: 13px;
     --font-ui-title-level: 16px;
     --font-ui-title-count: 15px;
@@ -39,6 +41,7 @@
     --card-font-val: 17px;
     --card-font-suit: 15px;
 
+    /* 弹窗及文本模块联动变量 */
     --font-modal-title: 17px;
     --font-modal-body: 14px;
     --font-modal-sec-title: 15px;
@@ -205,6 +208,7 @@
     }
   }
 
+  /* 彻底消除 iOS 顶部白色毛玻璃与横向变黑 */
   html {
     background-color: #07120e;
     width: 100%;
@@ -839,34 +843,8 @@
     align-items: center;
     gap: 6px;
   }
-  .rule-card-preview-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 8px 0;
-    flex-wrap: wrap;
-  }
-  .mini-chip {
-    padding: 3px 8px;
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    font-size: var(--font-modal-small);
-    font-weight: 600;
-  }
-  .mini-chip.red { color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
-  .mini-chip.gold { color: var(--gold); border-color: rgba(246, 197, 89, 0.4); }
 
-  .strategy-box {
-    background: rgba(56, 189, 248, 0.05);
-    border-left: 3px solid #38bdf8;
-    padding: 10px 14px;
-    margin-top: 8px;
-    border-radius: 0 6px 6px 0;
-  }
-  .strategy-box strong { color: #38bdf8; }
-
-  /* 思路比较弹窗样式 */
+  /* 思路比较弹窗样式与针对 iPhone 顶部毛玻璃遮挡的彻底防御 */
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
@@ -880,6 +858,15 @@
     flex-direction: column;
     box-shadow: 0 25px 50px rgba(0,0,0,0.6);
   }
+  @media (max-width: 640px) {
+    .compare-modal-content {
+      width: 98%;
+      height: 94vh;
+      /* 核心修复：iPhone 安全区深度内衬避让，标题按钮区域永远不被系统毛玻璃遮盖 */
+      padding: max(16px, calc(env(safe-area-inset-top) + 12px)) 10px 16px 10px;
+    }
+  }
+
   .compare-header-tools {
     display: flex;
     align-items: center;
@@ -935,11 +922,6 @@
     -webkit-overflow-scrolling: touch;
   }
   @media (max-width: 640px) {
-    .compare-modal-content {
-      width: 98%;
-      height: 94vh;
-      padding: 14px 10px;
-    }
     .scheme-column {
       min-width: 86vw;
       padding: 10px 8px;
@@ -973,7 +955,7 @@
     padding-bottom: 8px;
     position: sticky;
     top: 0;
-    background: #0f172a;
+    background: #0f172a; /* 实体不透明背景，阻断穿透 */
     z-index: 10;
   }
   .scheme-col-title { font-size: var(--font-modal-sec-title); font-weight: bold; color: var(--gold); }
@@ -1381,7 +1363,25 @@
       renamePrompt: '请输入此理牌思路的名称：',
       compareSummary: '共 {tiers} 层 · {cards} 张',
       viewFull: '标准',
-      viewCompact: '紧凑'
+      viewCompact: '紧凑',
+      help: [
+        {
+          title: '🃏 选牌与放平',
+          desc: '• <span class="help-pill">单击</span> 任何一张牌即可立起选中。<br>• 再次点击这张牌本身即可放平。<br>• <strong>一键收回</strong>：点桌面空白处，所有立起的牌全员归位。<br>• <strong>连选多张</strong>：点第一张后按住 <span class="help-pill">Shift</span> 点另一张，中间整段全选。'
+        },
+        {
+          title: '🎯 拖拽与智能分层',
+          desc: '• <strong>整组打包</strong>：立起几张牌后，拖动其中任意一张，整组牌一起移动。<br>• <strong>黄色光标指引</strong>：光标指示精确插牌空隙，松手即落位。<br>• <strong>无限分层</strong>：拖到底部虚线槽自动成立新一层；拖住层左侧 <span class="help-pill">≡</span> 手柄可上下调整整层顺序。'
+        },
+        {
+          title: '📱 手机与触屏手感',
+          desc: '• <strong>左右自由滑屏</strong>：竖屏查看第一层所有 27 张牌，直接用手指横向划屏查看。<br>• <strong>全向巡航滚屏</strong>：按住选中的牌往屏幕左侧或下边缘靠拢，页面会自动平滑回滚，轻松把最右侧的牌插进左边或第二层。<br>• 触屏可开启顶部 <span class="help-pill">⚡ 批量连选</span> 开关代替电脑 Shift 键。'
+        },
+        {
+          title: '⚖️ 对比复盘与差异高亮',
+          desc: '• 点击 <span class="help-pill">⚖️ 思路比较</span>，系统会自动与内置最佳算法比对。<br>• 若思路与推荐一致，直接点亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span> 勋章；若有拆法出入，自动高亮标注差异层，助你快速找差反思！'
+        }
+      ]
     },
     'zh-TW': {
       levelPrefix: '打：【 {level} 】',
@@ -1431,7 +1431,25 @@
       renamePrompt: '請輸入此理牌思路的名稱：',
       compareSummary: '共 {tiers} 層 · {cards} 張',
       viewFull: '標準',
-      viewCompact: '緊湊'
+      viewCompact: '緊湊',
+      help: [
+        {
+          title: '🃏 選牌與放平',
+          desc: '• <span class="help-pill">單擊</span> 任何一張牌即可立起選取。<br>• 再次點擊這張牌本身即可放平。<br>• <strong>一鍵收回</strong>：點桌面空白處，所有立起的牌全員歸位。<br>• <strong>連選多張</strong>：點第一張後按住 <span class="help-pill">Shift</span> 點另一張，中間整段全選。'
+        },
+        {
+          title: '🎯 拖曳與智慧分層',
+          desc: '• <strong>整組打包</strong>：立起幾張牌後，拖曳其中任意一張，整組牌一起移動。<br>• <strong>黃色游標指引</strong>：游標指示精確插牌空隙，鬆手即落位。<br>• <strong>無限分層</strong>：拖到底部虛線槽自動成立新一層；拖住層左側 <span class="help-pill">≡</span> 手柄可上下調整整層順序。'
+        },
+        {
+          title: '📱 手機與觸控螢幕手感',
+          desc: '• <strong>左右自由滑屏</strong>：直屏查看第一層所有 27 張牌，直接用手指橫向劃屏查看。<br>• <strong>全向巡航滾屏</strong>：按住選取的牌往螢幕左側或下邊緣靠攏，頁面會自動平滑回滾，輕鬆把最右側的牌插進左邊或第二層。<br>• 觸控螢幕可開啟頂部 <span class="help-pill">⚡ 批量連選</span> 開關代替電腦 Shift 鍵。'
+        },
+        {
+          title: '⚖️ 對比復盤與差異高亮',
+          desc: '• 點擊 <span class="help-pill">⚖️ 思路比較</span>，系統會自動與內置最佳算法比對。<br>• 若思路與推薦一致，直接點亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span> 勳章；若有拆法出入，自動高亮標註差異層！'
+        }
+      ]
     },
     'en': {
       levelPrefix: 'Rank: [ {level} ]',
@@ -1481,7 +1499,25 @@
       renamePrompt: 'Enter new name for this idea:',
       compareSummary: 'Total {tiers} Tiers · {cards} Cards',
       viewFull: 'Standard',
-      viewCompact: 'Compact'
+      viewCompact: 'Compact',
+      help: [
+        {
+          title: '🃏 Pick & Drop Cards',
+          desc: '• <span class="help-pill">Tap</span> any card to raise it up; tap again to drop it down.<br>• <strong>Instant Clear</strong>: Tap any empty table background to drop all raised cards.<br>• <strong>Interval Select</strong>: Tap the 1st card, hold <span class="help-pill">Shift</span> and tap another card to select the whole sequence.'
+        },
+        {
+          title: '🎯 Smooth Drag & Auto Tiering',
+          desc: '• <strong>Group Drag</strong>: Once multiple cards are raised, drag any one card to move the entire combo together.<br>• <strong>Caret Sensor</strong>: Follow the luminous yellow caret for accurate insertion.<br>• <strong>New Tiers</strong>: Drop cards onto the bottom dashed box to open a new tier instantly. Drag the left <span class="help-pill">≡</span> handle to reorder rows.'
+        },
+        {
+          title: '📱 Mobile Touch Navigation',
+          desc: '• <strong>Horizontal Pan</strong>: Swipe your finger horizontally anywhere to inspect all 27 cards in portrait mode.<br>• <strong>Edge Auto-Cruise</strong>: While dragging cards, move near screen edges to smoothly auto-scroll into previous tiers or rightward gaps.<br>• Toggle <span class="help-pill">⚡ Multi</span> on top to select intervals easily on touch screens.'
+        },
+        {
+          title: '⚖️ Comparison & Difference Highlighting',
+          desc: '• Click <span class="help-pill">⚖️ Compare Ideas</span> to audit your layout against the master algorithm.<br>• Differences are automatically highlighted for rapid reflection!'
+        }
+      ]
     },
     'es': {
       levelPrefix: 'Nivel: [ {level} ]',
@@ -1531,7 +1567,25 @@
       renamePrompt: 'Introduce el nuevo nombre para esta idea:',
       compareSummary: 'Total {tiers} Filas · {cards} Cartas',
       viewFull: 'Estándar',
-      viewCompact: 'Compacto'
+      viewCompact: 'Compacto',
+      help: [
+        {
+          title: '🃏 Levantar y Bajar Cartas',
+          desc: '• <span class="help-pill">Toca</span> una carta para levantarla; toca de nuevo para bajarla.<br>• <strong>Bajar Todo Rápido</strong>: Toca el fondo vacío de la mesa para bajar todas las cartas seleccionadas.<br>• <strong>Selección en Bloque</strong>: Elige una carta, mantén <span class="help-pill">Shift</span> y toca otra para seleccionar el rango.'
+        },
+        {
+          title: '🎯 Arrastre Suave y Filas Nuevas',
+          desc: '• <strong>Mover en Grupo</strong>: Con cartas levantadas, arrastra una cualquiera para mover el combo entero.<br>• <strong>Cursor Luminoso</strong>: Suelta donde indique la flecha amarilla para insertar con precisión.<br>• <strong>Nuevas Filas</strong>: Suelta en el cajón de puntos abajo para crear otra fila. Arrastra el icono <span class="help-pill">≡</span> para reordenar filas.'
+        },
+        {
+          title: '📱 Pantalla Táctil y Móvil',
+          desc: '• <strong>Deslizamiento Libre</strong>: En móvil desliza horizontalmente con el dedo para ver todas las 27 cartas.<br>• <strong>Crucero en Bordes</strong>: Arrastra cartas cerca de los bordes para que la pantalla se desplace sola hacia atrás o adelante suavemente.<br>• Activa <span class="help-pill">⚡ Multiselección</span> arriba para suplir la tecla Shift en pantallas táctiles.'
+        },
+        {
+          title: '⚖️ Comparar y Resaltar Diferencias',
+          desc: '• Pulsa <span class="help-pill">⚖️ Comparar Ideas</span> para auditar tu planteamiento con el algoritmo maestro.<br>• ¡Las diferencias se resaltan para que reflexiones en segundos!'
+        }
+      ]
     }
   };
 
@@ -1560,61 +1614,121 @@
       container.innerHTML = `
         <div class="rule-section">
           <h3>🏆 1. Overview & Objectives</h3>
-          <p><strong>Guandan (掼蛋)</strong> is a climbing card game played by 4 players using two standard 54-card decks (108 cards in total). Cooperate with your partner to empty your hands before opponents do.</p>
+          <p><strong>Guandan (掼蛋)</strong> is a climbing card game played by 4 players (teams of two seated opposite each other) using two standard 54-card decks (108 cards in total). The objective is to work together with your teammate to empty your hands before opponents do.</p>
         </div>
         <div class="rule-section">
           <h3>⭐ 2. Rank & Wild Cards ("Feng Ren Pei")</h3>
-          <p>• <strong>Current Rank</strong>: Plays through ranks 2 to Ace. Rank cards are promoted above Aces.<br>
-          • <strong>Heart Wild Card</strong>: The two Heart cards of current rank are universal Wild Cards.<br>
-          • <strong>Hierarchy</strong>: Red Joker > Black Joker > Heart Wild > Other Rank Cards > A > K > Q > J > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3 > 2.</p>
+          <p>• <strong>Current Rank (级牌)</strong>: The game plays through ranks 2 to Ace. If playing Rank 5, all 5s are promoted above Aces.<br>
+          • <strong>Heart Wild Card (红桃级牌·逢人配)</strong>: The two <strong>Heart cards of current rank</strong> are universal Wild Cards. They can substitute any card (except Jokers) to form straights, flushes, bombs, or full houses.<br>
+          • <strong>Card Hierarchy</strong>: Red Joker > Black Joker > Heart Rank Wild > Normal Rank Cards > A > K > Q > J > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3 > 2.</p>
         </div>
         <div class="rule-section">
-          <h3>💣 3. Bomb Rankings</h3>
-          <p>4-Bomb &lt; 5-Bomb &lt; Straight Flush (5 cards) &lt; 6-Bomb &lt; 7-Bomb &lt; 8-Bomb &lt; 👑 4-Joker Supreme Bomb.</p>
+          <h3>💣 3. Combinations & Bomb Rankings</h3>
+          <p><strong>Bomb Hierarchy (Bombs beat all non-bomb combinations):</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">4-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">5-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">Straight Flush (5 cards)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">6-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">7-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">8-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip gold">👑 4-Joker Supreme Bomb</span>
+          </div>
+          <p style="font-size:var(--font-modal-small); color:#94a3b8;">* Note: Straight Flush beats 4-Bomb and 5-Bomb, but loses to 6-Bomb and higher!</p>
         </div>
         <div class="rule-section">
-          <h3>💡 4. Master Tactics & Strategy</h3>
-          <div class="strategy-box"><p><strong>1. Wilds Make Bombs First</strong>: Always prioritize building Straight Flushes or 5/6-card Bombs with your Wild cards.</p></div>
-          <div class="strategy-box"><p><strong>2. Partner Synergy</strong>: Divide roles between aggressor and supporter.</p></div>
+          <h3>💡 4. Master Tactics & Philosophy for Beginners</h3>
+          <div class="strategy-box">
+            <p><strong>1. "Wilds make Bombs" Priority</strong>: Never waste your Heart Wild cards on basic pairs or full houses. Always look to build a <em>Straight Flush</em> or 5/6-card Bomb first. Turning a single into an explosive bomb is the single highest-value play in Guandan.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>2. Partner Synergy & Division of Roles</strong>: Pay close attention to what your partner leads. If your partner has an aggressive hand, your role is to suppress the opponent's strong plays and pass control back to your partner. Win together, not alone.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>3. Keep the Key Counters in Mind</strong>: You don't need to count every card, but track these 3 essentials: How many Jokers have been played? Are all current rank cards out? How many cards are left in opponents' hands (under 6 cards means beware of singles/bombs)?</p>
+          </div>
         </div>
       `;
     } else if (currentLang === 'es') {
       container.innerHTML = `
         <div class="rule-section">
           <h3>🏆 1. Descripción y Objetivo</h3>
-          <p><strong>Guandan (掼蛋)</strong> se juega entre 4 jugadores en parejas con 2 barajas (108 cartas en total).</p>
+          <p><strong>Guandan (掼蛋)</strong> se juega entre 4 jugadores en parejas con 2 barajas (108 cartas en total). El objetivo es vaciar la mano antes que los rivales colaborando con tu compañero.</p>
         </div>
         <div class="rule-section">
-          <h3>⭐ 2. Nivel Actual y Comodines</h3>
-          <p>• Los dos Corazones del nivel actual son comodines universales.</p>
+          <h3>⭐ 2. Nivel Actual y Comodín Universal</h3>
+          <p>• <strong>Carta de Nivel</strong>: Si se juega el 5, todos los 5s suben por encima del As.<br>
+          • <strong>Comodín de Corazones</strong>: Las dos cartas de Corazones del nivel actual son comodines universales.<br>
+          • <strong>Jerarquía</strong>: Joker Rojo > Joker Negro > Comodín de Nivel > Cartas de Nivel > A > K > Q > J > 10 > ... > 2.</p>
         </div>
         <div class="rule-section">
-          <h3>💣 3. Jerarquía de Bombas</h3>
-          <p>Bomba de 4 &lt; Bomba de 5 &lt; Escalera de Color (5) &lt; Bomba de 6+ &lt; 👑 Bomba Suprema (4 Jokers).</p>
+          <h3>💣 3. Combinaciones y Bombas</h3>
+          <p><strong>Jerarquía de Bombas:</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">Bomba de 4</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">Bomba de 5</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">Escalera de Color (5)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">Bomba de 6+</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip gold">👑 Bomba Suprema (4 Jokers)</span>
+          </div>
         </div>
         <div class="rule-section">
-          <h3>💡 4. Estrategia para Principiantes</h3>
-          <div class="strategy-box"><p><strong>1. Comodines para Bombas</strong>: Úsalos siempre para bombas o escaleras de color.</p></div>
+          <h3>💡 4. Estrategia y Consejos para Principiantes</h3>
+          <div class="strategy-box">
+            <p><strong>1. Usa los comodines para Bombas</strong>: Nunca gastes un comodín en parejas simples. Úsalos siempre para crear Escaleras de Color o bombas de 5-6 cartas.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>2. Trabajo en Pareja</strong>: Observa lo que juega tu compañero. Si tiene buena mano, tu deber es bloquear a los rivales y cederle el turno.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>3. Memoria Básica</strong>: No memorices todo, solo vigila los Jokers y las cartas de nivel que van saliendo.</p>
+          </div>
         </div>
       `;
     } else if (currentLang === 'zh-TW') {
       container.innerHTML = `
         <div class="rule-section">
           <h3>🏆 1. 遊戲綜述與勝負目標</h3>
-          <p><strong>掼蛋</strong>源自江蘇淮安，採用兩副牌（共 108 張），4人參與，對家兩人為一組配合。遊戲核心目標是在隊友戰術掩護下，儘早將手中 27 張牌全部出完。</p>
+          <p><strong>掼蛋</strong>源自江蘇淮安，採用<strong>兩副牌（共 108 張）</strong>，4人參與，對家兩人為一組配合。遊戲核心目標是在隊友的戰術掩護下，儘早將手中的 27 張牌全部出完（第一名出完者稱為「頭遊」）。</p>
         </div>
         <div class="rule-section">
           <h3>⭐ 2. 級牌體系與「逢人配」萬能牌</h3>
-          <p>• 兩張<strong>紅心級牌</strong>為萬能百搭牌，大小順序：大王 ＞ 小王 ＞ 紅心逢人配 ＞ 其他花色級牌 ＞ A ＞ K ＞ ... ＞ 2。</p>
+          <p>• <strong>級牌（本局打幾）</strong>：從打 2 開始升至打 A。若當前打 5，則所有的 5 點數權重被拔高，大於 A 且僅次於小王。<br>
+          • <strong>逢人配（紅心級牌）</strong>：兩張<strong>紅心級牌</strong>為萬能百搭牌（除大小王外），可替代任意點數和花色湊成同花順、順子、炸彈等。<br>
+          • <strong>大小順序</strong>：大王 ＞ 小王 ＞ 紅心逢人配 ＞ 其他花色級牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
         </div>
         <div class="rule-section">
           <h3>💣 3. 牌型圖譜與炸彈威力天梯</h3>
-          <p>四張炸彈 ＜ 五張炸彈 ＜ 同花順(5張) ＜ 六張炸彈 ＜ 七張炸彈 ＜ 八張炸彈 ＜ 👑 四大天王(天王炸)。</p>
+          <p><strong>【常規牌型】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">單張</span> <span class="mini-chip">對子</span> <span class="mini-chip">三張</span> <span class="mini-chip">三帶二</span>
+            <span class="mini-chip">單順 (5張連牌)</span> <span class="mini-chip">三連對 (木板)</span> <span class="mini-chip">雙飛 (鋼板)</span>
+          </div>
+          <p><strong>【炸彈威力比拼】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">四張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">五張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">同花順 (5張)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">六張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">七張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">八張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip gold">👑 四大天王 (四王天王炸)</span>
+          </div>
         </div>
         <div class="rule-section">
           <h3>💡 4. 實戰進階：掼蛋核心戰術思路與控局哲學</h3>
-          <div class="strategy-box"><p><strong>一、配火第一，絕不湊零</strong><br>逢人配的最優價值永遠是「配炸」或「配同花順」。</p></div>
-          <div class="strategy-box"><p><strong>二、隊友同心，角色分工</strong><br>牌好當主攻手，牌弱當掩護手。</p></div>
+          <div class="strategy-box">
+            <p><strong>一、配火第一，絕不湊零（逢人配的黃金法則）</strong><br>
+            逢人配萬萬不可隨便拿去湊三帶二或單順。它的<strong>最優價值永遠是「配炸」或「配同花順」</strong>。多一個炸彈，整手牌的防守與進攻能力將迎來質的飛躍。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>二、隊友同心，角色分工（一主一副打法）</strong><br>
+            掼蛋是雙人默契運動：摸完牌後要迅速評估自己的牌力。若牌力強、炸彈多，主動當<strong>「主攻手」</strong>衝刺頭遊；若手牌零散、小牌多，要甘願當<strong>「掩護手」</strong>，負責頂對手大牌、拆炸彈卡位，把出牌路數留給隊友。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>三、基礎算牌基線（知己知彼）</strong><br>
+            不需要背下全部 108 張牌，新手只要記住三條線：① 四張王牌出了幾張？② 當前級牌有沒有出完？③ 對手手牌小於 6 張時，隨時防範其一擊走脫！</p>
+          </div>
         </div>
       `;
     } else {
@@ -1631,6 +1745,12 @@
         </div>
         <div class="rule-section">
           <h3>💣 3. 牌型图谱与炸弹威力天梯</h3>
+          <p><strong>【常规牌型】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">单张</span> <span class="mini-chip">对子</span> <span class="mini-chip">三张</span> <span class="mini-chip">三带二</span>
+            <span class="mini-chip">单顺 (5张连牌)</span> <span class="mini-chip">三连对 (木板)</span> <span class="mini-chip">双飞 (钢板)</span>
+          </div>
+          <p><strong>【炸弹威力比拼】</strong></p>
           <div class="rule-card-preview-row">
             <span class="mini-chip">四张炸弹</span> <span style="color:var(--gold);">&lt;</span>
             <span class="mini-chip">五张炸弹</span> <span style="color:var(--gold);">&lt;</span>
@@ -1638,8 +1758,9 @@
             <span class="mini-chip">六张炸弹</span> <span style="color:var(--gold);">&lt;</span>
             <span class="mini-chip">七张炸弹</span> <span style="color:var(--gold);">&lt;</span>
             <span class="mini-chip">八张炸弹</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip gold">👑 四大天王 (天王炸)</span>
+            <span class="mini-chip gold">👑 四大天王 (四张大小王天王炸)</span>
           </div>
+          <p style="font-size:var(--font-modal-small); color:#94a3b8;">* 关键特权：同花顺威力大于五张炸弹，但小于六张炸弹！天王炸为全场最大神牌。</p>
         </div>
         <div class="rule-section">
           <h3>💡 4. 实战进阶：掼蛋核心战术思路与控局哲学</h3>
@@ -1771,7 +1892,7 @@
 
   let autoScrollAnimationId = null;
   let autoScrollSpeedY = 0;
-  let autoScrollSpeedX = 0;
+  autoScrollSpeedX = 0;
 
   let draggedSchemeIndex = null;
   let isTabDraggingPointer = false;
@@ -1877,7 +1998,7 @@
     return `思路 ${num}`;
   }
 
-  // ---------------- 智能启发式理牌算法引擎 ----------------
+  // 启发式理牌算法引擎
   function generateAIRecommendedRows(cardsPool, level) {
     let pool = sortCards([...cardsPool], level);
     const rows = [];
@@ -2038,7 +2159,7 @@
       rows.push(takeCardsByIds([...tGroup.map(c => c.id), ...pGroup.map(c => c.id)]));
     }
 
-    // 8. 剩余对子（标准视角下，每一对都是独立的一层）
+    // 8. 剩余对子（标准视角：每一对独立成层）
     const remainBuckets = {};
     pool.forEach(c => {
       remainBuckets[c.rank] = remainBuckets[c.rank] || [];
@@ -2160,7 +2281,7 @@
   function isTubesRow(cards, level) { return cards.length === 6; }
   function isPlatesRow(cards, level) { return cards.length === 6; }
 
-  // ---------------- 智能语义对齐与差异检测算法 ----------------
+  // 智能语义对齐与差异检测算法
   function analyzeSemanticMatch(userRows, standardRecRows, compactRecRows, level) {
     const cleanUser = userRows.filter(r => r && r.length > 0);
     const cleanStd = standardRecRows.filter(r => r && r.length > 0);
@@ -2169,19 +2290,14 @@
     function getSortedIds(row) {
       return row.map(c => c.id).sort((a,b)=>a-b).join(',');
     }
-    function getSortedRanks(row) {
-      return row.map(c => c.rank).sort().join(',');
-    }
 
     const userSignatures = cleanUser.map(getSortedIds);
     const stdSignatures = cleanStd.map(getSortedIds);
     const cptSignatures = cleanCpt.map(getSortedIds);
 
-    // 1. 完全一致判定：不管顺序，组合签名一致；或者用户将同类归并在了一起与紧凑一致
     const isStdMatch = (userSignatures.slice().sort().join('|') === stdSignatures.slice().sort().join('|'));
     const isCptMatch = (userSignatures.slice().sort().join('|') === cptSignatures.slice().sort().join('|'));
 
-    // 2. 语义同构判定（例如所有对子放在同一层）
     let isSemanticPureMatch = isStdMatch || isCptMatch;
     if (!isSemanticPureMatch) {
       const userCompact = buildCompactRows(cleanUser, level);
@@ -2192,17 +2308,14 @@
       }
     }
 
-    // 3. 逐层差异标记集合
     const validStdSet = new Set(stdSignatures);
     const validCptSet = new Set(cptSignatures);
 
     const diffRowIndices = new Set();
     cleanUser.forEach((row, idx) => {
       const sig = getSortedIds(row);
-      // 若标准或紧凑中都没有这一层整组牌，则检测是不是由纯对子合并而成
       let isRowLegit = validStdSet.has(sig) || validCptSet.has(sig);
       if (!isRowLegit) {
-        // 如果这层全部是由推荐思路里存在的对子合并而成的纯对子集合，宽容视为非差异
         if (row.length % 2 === 0 && row.every((_, i, arr) => i % 2 !== 0 || isPairRow([arr[i], arr[i+1]], level))) {
           const recPairs = cleanStd.filter(r => r.length === 2 && isPairRow(r, level)).map(getSortedIds);
           let allSubPairsInRec = true;
@@ -2224,7 +2337,7 @@
     };
   }
 
-  // 点击“💡 推荐思路”：无论当前处于何模式，均重新依规生成或重置
+  // 点击“💡 推荐思路”
   function handleGenerateAIRecommend() {
     const allCards = getFlattenedCards();
     if (!allCards || allCards.length === 0) return;
@@ -2438,7 +2551,7 @@
     if (!cur) return;
 
     cur.rows = (cur.rows || []).filter(r => r && r.length > 0);
-    cur.rows.push([]); // 末尾保留空槽以供开辟新层
+    cur.rows.push([]);
 
     cur.rows.forEach((rowCards, rIndex) => {
       const rowEl = document.createElement('div');
@@ -2451,7 +2564,7 @@
         const handle = document.createElement('div');
         handle.className = 'row-handle';
         handle.dataset.rowIndex = rIndex;
-        // 严格统一：无论紧凑还是标准均显示第几层
+        // 严格统一显示第几层
         handle.innerHTML = `
           <div class="handle-icon">≡</div>
           <div class="handle-label">${t('rowLayer', { idx: rIndex + 1 })}</div>
@@ -3006,7 +3119,7 @@
     multiToggleBtn.classList.toggle('toggle-active', touchMultiSelectActive);
   });
 
-  // ---------------- 规则与帮助弹窗（彻底保证点击响应） ----------------
+  // ---------------- 保证规则弹窗与使用指南百分之百可靠触发 ----------------
   const rulesModal = document.getElementById('rulesModal');
   const rulesBtn = document.getElementById('rulesBtn');
   const closeRulesBtn = document.getElementById('closeRulesBtn');
@@ -3020,6 +3133,21 @@
   if (closeRulesBtn) {
     closeRulesBtn.addEventListener('click', () => {
       if (rulesModal) rulesModal.style.display = 'none';
+    });
+  }
+
+  // 修复使用指南折叠展开
+  const toggleHelpBtn = document.getElementById('toggleHelpBtn');
+  const helpDrawer = document.getElementById('helpDrawer');
+  if (toggleHelpBtn && helpDrawer) {
+    toggleHelpBtn.addEventListener('click', () => {
+      const isVisible = (helpDrawer.style.display === 'block');
+      if (!isVisible) {
+        updateHelpDrawerContent();
+        helpDrawer.style.display = 'block';
+      } else {
+        helpDrawer.style.display = 'none';
+      }
     });
   }
 
@@ -3081,7 +3209,6 @@
         </div>
       `;
 
-      // 决定渲染的行集合
       let displayRows = validRows;
       if (compareViewMode === 'compact' && s.isRecommended) {
         displayRows = benchmarkCptRows;
@@ -3091,7 +3218,6 @@
         const miniRow = document.createElement('div');
         miniRow.className = 'scheme-mini-row';
 
-        // 仅在非推荐思路、且非完全一致时，提示真实的拆牌差异层
         const isDiffRow = !s.isRecommended && !analysis.isExactMatch && analysis.diffRowIndices.has(rIdx);
         if (isDiffRow) {
           miniRow.classList.add('is-diff-row');
@@ -3245,12 +3371,6 @@
     setSavedArchives(archives);
     renderArchiveList();
   };
-
-  document.getElementById('toggleHelpBtn').addEventListener('click', () => {
-    const drawer = document.getElementById('helpDrawer');
-    const isShown = drawer.style.display === 'block';
-    drawer.style.display = isShown ? 'none' : 'block';
-  });
 
   const modalBackdrop = document.getElementById('customModal');
   const modalCardsList = document.getElementById('modalCardsList');
