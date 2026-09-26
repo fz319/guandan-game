@@ -24,7 +24,7 @@
     --btn-glass: rgba(255, 255, 255, 0.07);
     --btn-glass-hover: rgba(255, 255, 255, 0.16);
 
-    /* 全局基准尺寸体系（小号为基准，中号与大号等比放大） */
+    /* 全局基准尺寸体系（小号为基准，中号、大号、特大号等比放大） */
     --font-ui-btn: 13px;
     --font-ui-title-level: 16px;
     --font-ui-title-count: 15px;
@@ -108,7 +108,7 @@
     }
   }
 
-  /* 尺寸大号 (长辈关爱大字版) */
+  /* 尺寸大号 */
   body.font-size-large {
     --font-ui-btn: 16px;
     --font-ui-title-level: 21px;
@@ -141,6 +141,39 @@
     }
   }
 
+  /* 尺寸特大 (关爱超大字号) */
+  body.font-size-xlarge {
+    --font-ui-btn: 18px;
+    --font-ui-title-level: 24px;
+    --font-ui-title-count: 22px;
+    --font-scheme: 18px;
+    --font-handle-icon: 20px;
+    --font-handle-label: 15.5px;
+    --font-handle-count: 15.5px;
+    --handle-w: 74px;
+    --font-placeholder: 25px;
+
+    --card-w: 102px;
+    --card-h: 156px;
+    --card-overlap: -46px;
+    --card-font-val: 27px;
+    --card-font-suit: 23px;
+  }
+  @media (max-width: 640px) {
+    body.font-size-xlarge {
+      --card-w: 74px;
+      --card-h: 116px;
+      --card-overlap: -34px;
+      --card-font-val: 20px;
+      --card-font-suit: 17px;
+      --font-placeholder: 19px;
+      --handle-w: 60px;
+      --font-handle-icon: 17px;
+      --font-handle-label: 13px;
+      --font-handle-count: 13px;
+    }
+  }
+
   html {
     background-color: var(--bg-base);
     overscroll-behavior: none;
@@ -166,7 +199,8 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
-    padding-top: max(26px, calc(env(safe-area-inset-top) + 16px));
+    /* 彻底下移避免 iPhone 遮挡顶层功能 */
+    padding-top: max(38px, calc(env(safe-area-inset-top) + 24px));
     padding-bottom: max(34px, calc(env(safe-area-inset-bottom) + 16px));
     padding-left: max(16px, env(safe-area-inset-left));
     padding-right: max(16px, env(safe-area-inset-right));
@@ -345,7 +379,7 @@
     color: #e2e8f0;
   }
 
-  /* 思路导航栏与可拖拽排序标签 */
+  /* 思路导航栏与全端可拖拽排序标签 */
   .schemes-nav {
     display: flex;
     align-items: center;
@@ -359,7 +393,7 @@
     -webkit-overflow-scrolling: touch;
   }
   .scheme-tab {
-    padding: 6px 12px;
+    padding: 6px 14px;
     background: rgba(18, 38, 29, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 7px;
@@ -370,9 +404,10 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    transition: all 0.12s;
+    transition: background-color 0.12s, border-color 0.12s, transform 0.12s;
     white-space: nowrap;
     user-select: none;
+    touch-action: none;
   }
   .scheme-tab:active { cursor: grabbing; }
   .scheme-tab:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
@@ -384,8 +419,11 @@
   }
   .scheme-tab.drag-over {
     border-color: var(--gold) !important;
-    background: rgba(246, 197, 89, 0.15) !important;
-    transform: scale(1.03);
+    background: rgba(246, 197, 89, 0.2) !important;
+    transform: scale(1.04);
+  }
+  .scheme-tab.is-tab-dragging {
+    opacity: 0.45;
   }
   .tab-icon-prefix {
     font-size: 13px;
@@ -396,19 +434,6 @@
   }
   .tab-icon-prefix:hover {
     transform: scale(1.2);
-  }
-  .scheme-tab .tab-move-btn {
-    color: #94a3b8;
-    font-size: 11px;
-    padding: 0 2px;
-    border-radius: 3px;
-    cursor: pointer;
-    opacity: 0.75;
-  }
-  .scheme-tab .tab-move-btn:hover {
-    color: #38bdf8;
-    opacity: 1;
-    background: rgba(255, 255, 255, 0.1);
   }
   .scheme-tab .tab-del {
     color: #94a3b8;
@@ -516,7 +541,7 @@
     width: max-content;
   }
 
-  /* 经典白底清晰卡牌 */
+  /* 彻底回退至最早版本的原版纯净卡牌样式 */
   .card {
     width: var(--card-w);
     height: var(--card-h);
@@ -536,6 +561,7 @@
   }
   .card:first-child { margin-left: 0 !important; }
 
+  /* 最早版本的鲜艳经典红与深炭黑 */
   .red { color: #e53e3e !important; }
   .black { color: #1a202c !important; }
 
@@ -965,13 +991,14 @@
     <div class="control-island">
       <button id="rulesBtn">📖 掼蛋规则</button>
       <button id="toggleHelpBtn">💡 使用指南</button>
-      <!-- 尺寸选择器 -->
+      <!-- 尺寸选择器（尺寸小号、尺寸中号、尺寸大号、尺寸特大） -->
       <div class="tool-select-wrapper" title="整体界面与牌面尺寸">
         <span class="tool-select-icon">📐</span>
         <select class="tool-select-box" id="fontSizeSelect">
           <option value="small">尺寸小号</option>
           <option value="medium" selected>尺寸中号</option>
           <option value="large">尺寸大号</option>
+          <option value="xlarge">尺寸特大</option>
         </select>
       </div>
       <!-- 语言选择器（🇨🇳 标志） -->
@@ -1110,6 +1137,9 @@
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const modKeySymbol = isMac ? '⌘' : 'Ctrl+';
 
+  // 清除旧主题缓存残留
+  localStorage.removeItem('GUANDAN_CARD_THEME');
+
   // ---------------- 语言字典 (i18n) ----------------
   const I18N = {
     'zh-CN': {
@@ -1129,7 +1159,7 @@
       toggleHelp: '💡 使用指南',
       newSchemeBtn: '+ 新建思路',
       rowLayer: '第{idx}层',
-      rowPlaceholder: '将牌移动此处帮助理牌',
+      rowPlaceholder: '移动手牌到此，帮助理牌',
       wildTag: '配',
       suits: { '♥': '红桃', '♦': '方块', '♠': '黑桃', '♣': '梅花', 'joker': '王牌' },
       bigJoker: '大王',
@@ -1155,7 +1185,7 @@
       cancel: '取消',
       confirmApply: '确认应用到手牌',
       rulesTitle: '📖 掼蛋核心游戏规则与知识图谱',
-      fontOptions: { small: '尺寸小号', medium: '尺寸中号', large: '尺寸大号' },
+      fontOptions: { small: '尺寸小号', medium: '尺寸中号', large: '尺寸大号', xlarge: '尺寸特大' },
       renamePrompt: '请输入此理牌思路的名称：',
       help: [
         {
@@ -1172,7 +1202,7 @@
         },
         {
           title: '⌨️ 效率快捷键与多思路',
-          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">+ 新建思路</span> 可在同一把牌中探索不同拆牌路线；<strong>点击前置图标或双击标签即可重命名</strong>！'
+          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">+ 新建思路</span> 可在同一把牌中探索不同拆牌路线；<strong>鼠标或触屏拖拽标签可调换位置，点击图标或双击即可重命名</strong>！'
         }
       ]
     },
@@ -1193,7 +1223,7 @@
       toggleHelp: '💡 使用指南',
       newSchemeBtn: '+ 新建思路',
       rowLayer: '第{idx}層',
-      rowPlaceholder: '將牌移動此處幫助理牌',
+      rowPlaceholder: '移動手牌到此，幫助理牌',
       wildTag: '配',
       suits: { '♥': '紅心', '♦': '方塊', '♠': '黑桃', '♣': '梅花', 'joker': '王牌' },
       bigJoker: '大王',
@@ -1219,7 +1249,7 @@
       cancel: '取消',
       confirmApply: '確認應用到手牌',
       rulesTitle: '📖 掼蛋核心遊戲規則與知識圖譜',
-      fontOptions: { small: '尺寸小號', medium: '尺寸中號', large: '尺寸大號' },
+      fontOptions: { small: '尺寸小號', medium: '尺寸中號', large: '尺寸大號', xlarge: '尺寸特大' },
       renamePrompt: '請輸入此理牌思路的名稱：',
       help: [
         {
@@ -1236,7 +1266,7 @@
         },
         {
           title: '⌨️ 效率快捷鍵與多思路',
-          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">+ 新建思路</span> 可在同一把牌中探索不同拆牌路線；<strong>點擊前置圖標或雙擊標籤即可重新命名</strong>！'
+          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">+ 新建思路</span> 可在同一把牌中探索不同拆牌路線；<strong>滑鼠或觸屏拖拽標籤可調換位置，點擊圖標或雙擊即可重新命名</strong>！'
         }
       ]
     },
@@ -1257,7 +1287,7 @@
       toggleHelp: '💡 User Guide',
       newSchemeBtn: '+ New Idea',
       rowLayer: 'Tier {idx}',
-      rowPlaceholder: 'Drag cards here to help organize hand',
+      rowPlaceholder: 'Move cards here to help organize hand',
       wildTag: 'WILD',
       suits: { '♥': 'Hearts', '♦': 'Diamonds', '♠': 'Spades', '♣': 'Clubs', 'joker': 'Joker' },
       bigJoker: 'Red Joker',
@@ -1283,7 +1313,7 @@
       cancel: 'Cancel',
       confirmApply: 'Apply to Hand',
       rulesTitle: '📖 Guandan Complete Rules & Master Guide',
-      fontOptions: { small: 'Small Size', medium: 'Medium Size', large: 'Large Size' },
+      fontOptions: { small: 'Small Size', medium: 'Medium Size', large: 'Large Size', xlarge: 'Extra Large' },
       renamePrompt: 'Enter new name for this idea:',
       help: [
         {
@@ -1300,7 +1330,7 @@
         },
         {
           title: '⌨️ Shortcuts & Multi-Ideas',
-          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">+ New Idea</span> to explore distinct strategies; <strong>drag tabs or tap ◀ / ▶ to reorder, click icon or double-click to rename</strong>!'
+          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">+ New Idea</span> to explore distinct strategies; <strong>drag tabs with mouse or finger to reorder, click icon or double-click to rename</strong>!'
         }
       ]
     },
@@ -1347,7 +1377,7 @@
       cancel: 'Cancelar',
       confirmApply: 'Aplicar a la Mano',
       rulesTitle: '📖 Reglas Completas de Guandan y Guía Maestra',
-      fontOptions: { small: 'Tamaño Pequeño', medium: 'Tamaño Mediano', large: 'Tamaño Grande' },
+      fontOptions: { small: 'Tamaño Pequeño', medium: 'Tamaño Mediano', large: 'Tamaño Grande', xlarge: 'Tamaño Extra Grande' },
       renamePrompt: 'Introduce el nuevo nombre para esta idea:',
       help: [
         {
@@ -1364,7 +1394,7 @@
         },
         {
           title: '⌨️ Atajos y Comparativa',
-          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">+ Nueva Idea</span> para comparar; ¡<strong>arrastra las pestañas o pulsa ◀ / ▶ para reordenar, pulsa el icono o doble toque para renombrar</strong>!'
+          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">+ Nueva Idea</span> para comparar; ¡<strong>arrastra las pestañas con ratón o dedo para reordenar, pulsa el icono o doble toque para renombrar</strong>!'
         }
       ]
     }
@@ -1608,6 +1638,7 @@
     fontSelect.options[0].text = fontOpts.small;
     fontSelect.options[1].text = fontOpts.medium;
     fontSelect.options[2].text = fontOpts.large;
+    fontSelect.options[3].text = fontOpts.xlarge;
 
     document.getElementById('levelInfo').textContent = t('levelPrefix', { level: currentLevel });
     updateTotalCount();
@@ -1620,7 +1651,7 @@
 
   // ---------------- 字号持久化应用 ----------------
   function applyFontSize(size) {
-    document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
+    document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large', 'font-size-xlarge');
     document.body.classList.add(`font-size-${size}`);
     currentFontSize = size;
     localStorage.setItem('GUANDAN_FONT_SIZE', size);
@@ -1668,7 +1699,10 @@
   let autoScrollSpeedY = 0;
   let autoScrollSpeedX = 0;
 
+  // 跨端思路标签拖拽排序状态
   let draggedSchemeIndex = null;
+  let isTabDraggingPointer = false;
+  let tabDragStartX = 0;
 
   function pickRandomLevel() {
     return RANKS[Math.floor(Math.random() * RANKS.length)];
@@ -1770,6 +1804,7 @@
     return currentLang === 'en' ? `Idea ${offset}` : (currentLang === 'es' ? `Idea ${offset}` : `思路 ${offset}`);
   }
 
+  // 渲染思路标签栏（全端无箭头，直观拖拽排序）
   function renderSchemesNav() {
     const nav = document.getElementById('schemesNav');
     nav.innerHTML = '';
@@ -1777,7 +1812,6 @@
     schemes.forEach((s, idx) => {
       const tab = document.createElement('div');
       tab.className = 'scheme-tab' + (idx === currentSchemeIndex ? ' active' : '');
-      tab.draggable = true;
       tab.dataset.schemeIdx = idx;
 
       const isAi = (s.name && s.name.includes('AI')) || (s.customName && s.customName.includes('AI')) || (!s.customName && idx === 2);
@@ -1785,43 +1819,65 @@
       const displayName = s.customName || s.name || getDefaultSchemeName(idx);
 
       tab.innerHTML = `
-        ${schemes.length > 1 ? `<span class="tab-move-btn tab-move-left" title="左移">◀</span>` : ''}
         <span class="tab-icon-prefix" title="点击重命名">${prefixEmoji}</span>
         <span class="tab-title-text" title="双击重命名">${displayName}</span>
-        ${schemes.length > 1 ? `<span class="tab-move-btn tab-move-right" title="右移">▶</span>` : ''}
         ${schemes.length > 1 ? `<span class="tab-del" title="删除该思路">✕</span>` : ''}
       `;
 
-      tab.addEventListener('dragstart', (e) => {
+      // 跨端 Pointer 拖动排序引擎（兼容触屏与鼠标）
+      tab.addEventListener('pointerdown', (e) => {
+        if (e.target.classList.contains('tab-del') || e.target.classList.contains('tab-icon-prefix')) return;
         draggedSchemeIndex = idx;
-        e.dataTransfer.effectAllowed = 'move';
+        isTabDraggingPointer = false;
+        tabDragStartX = e.clientX;
+        try { tab.setPointerCapture(e.pointerId); } catch(err) {}
       });
-      tab.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        tab.classList.add('drag-over');
-      });
-      tab.addEventListener('dragleave', () => {
-        tab.classList.remove('drag-over');
-      });
-      tab.addEventListener('drop', (e) => {
-        e.preventDefault();
-        tab.classList.remove('drag-over');
-        if (draggedSchemeIndex !== null && draggedSchemeIndex !== idx) {
-          reorderSchemes(draggedSchemeIndex, idx);
+
+      tab.addEventListener('pointermove', (e) => {
+        if (draggedSchemeIndex === null) return;
+        if (Math.abs(e.clientX - tabDragStartX) > 8) {
+          isTabDraggingPointer = true;
+          tab.classList.add('is-tab-dragging');
+        }
+        if (isTabDraggingPointer) {
+          const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
+          const targetTab = elemBelow ? elemBelow.closest('.scheme-tab') : null;
+          document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
+          if (targetTab && targetTab !== tab) {
+            targetTab.classList.add('drag-over');
+          }
         }
       });
 
+      tab.addEventListener('pointerup', (e) => {
+        if (draggedSchemeIndex === null) return;
+        tab.classList.remove('is-tab-dragging');
+        document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
+
+        if (isTabDraggingPointer) {
+          const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
+          const targetTab = elemBelow ? elemBelow.closest('.scheme-tab') : null;
+          if (targetTab && targetTab !== tab) {
+            const toIdx = parseInt(targetTab.dataset.schemeIdx);
+            reorderSchemes(draggedSchemeIndex, toIdx);
+          }
+        } else {
+          // 普通单击切换
+          switchScheme(idx);
+        }
+        draggedSchemeIndex = null;
+        isTabDraggingPointer = false;
+      });
+
+      tab.addEventListener('pointercancel', () => {
+        tab.classList.remove('is-tab-dragging');
+        document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
+        draggedSchemeIndex = null;
+        isTabDraggingPointer = false;
+      });
+
+      // 删除与重命名事件
       tab.addEventListener('click', (e) => {
-        if (e.target.classList.contains('tab-move-left')) {
-          e.stopPropagation();
-          if (idx > 0) reorderSchemes(idx, idx - 1);
-          return;
-        }
-        if (e.target.classList.contains('tab-move-right')) {
-          e.stopPropagation();
-          if (idx < schemes.length - 1) reorderSchemes(idx, idx + 1);
-          return;
-        }
         if (e.target.classList.contains('tab-del')) {
           e.stopPropagation();
           deleteScheme(idx);
@@ -1830,9 +1886,7 @@
         if (e.target.classList.contains('tab-icon-prefix')) {
           e.stopPropagation();
           promptRenameScheme(idx);
-          return;
         }
-        switchScheme(idx);
       });
 
       tab.addEventListener('dblclick', (e) => {
