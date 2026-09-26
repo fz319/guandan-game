@@ -11,7 +11,6 @@
 <title>掼蛋理牌模拟器 / Guandan Cards Simulator</title>
 <style>
   :root {
-    /* 顶级深林暗调天鹅绒配色体系 */
     --bg-base: #07120e;
     --bg-gradient: radial-gradient(circle at 50% 20%, #163628 0%, #0d1e17 55%, #050d0a 100%);
     --island-bg: rgba(18, 36, 28, 0.85);
@@ -24,7 +23,6 @@
     --btn-glass: rgba(255, 255, 255, 0.07);
     --btn-glass-hover: rgba(255, 255, 255, 0.16);
 
-    /* 全局基准尺寸体系（小号为基准，中号、大号、特大号等比放大） */
     --font-ui-btn: 13px;
     --font-ui-title-level: 16px;
     --font-ui-title-count: 15px;
@@ -41,7 +39,6 @@
     --card-font-val: 17px;
     --card-font-suit: 15px;
 
-    /* 弹窗及所有文本模块全局联动变量 */
     --font-modal-title: 17px;
     --font-modal-body: 14px;
     --font-modal-sec-title: 15px;
@@ -52,7 +49,6 @@
     --picker-btn-h: 72px;
   }
 
-  /* 尺寸小号 */
   body.font-size-small {
     --font-ui-btn: 12.5px;
     --font-ui-title-level: 15px;
@@ -94,7 +90,6 @@
     }
   }
 
-  /* 尺寸中号 (默认推荐) */
   body.font-size-medium {
     --font-ui-btn: 14px;
     --font-ui-title-level: 18px;
@@ -136,7 +131,6 @@
     }
   }
 
-  /* 尺寸大号 */
   body.font-size-large {
     --font-ui-btn: 16px;
     --font-ui-title-level: 21px;
@@ -178,7 +172,6 @@
     }
   }
 
-  /* 尺寸特大 (关爱超大字号) */
   body.font-size-xlarge {
     --font-ui-btn: 18px;
     --font-ui-title-level: 24px;
@@ -220,7 +213,6 @@
     }
   }
 
-  /* 彻底修复：只在 html 开启原生滚动并设置防露白，消除滚动事件拦截 */
   html {
     background-color: var(--bg-base);
     overflow-x: auto;
@@ -253,7 +245,6 @@
     touch-action: manipulation;
   }
 
-  /* 顶部全局主控制台架构 */
   .header-container {
     display: flex;
     flex-direction: column;
@@ -289,7 +280,6 @@
     flex-shrink: 0;
   }
 
-  /* 局况状态微岛 */
   .badge-cluster-island {
     padding: 6px 12px;
     background: rgba(14, 30, 24, 0.95);
@@ -377,16 +367,16 @@
     color: #ffffff;
   }
 
-  button.action-ai-btn {
-    background: linear-gradient(135deg, rgba(147, 51, 234, 0.35) 0%, rgba(79, 70, 229, 0.35) 100%);
-    border: 1px solid rgba(192, 132, 252, 0.4);
-    color: #e9d5ff;
-    box-shadow: 0 2px 8px rgba(147, 51, 234, 0.25);
+  button.action-recommend-btn {
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.25) 0%, rgba(202, 138, 4, 0.35) 100%);
+    border: 1px solid rgba(250, 204, 21, 0.45);
+    color: #fef08a;
+    box-shadow: 0 2px 8px rgba(234, 179, 8, 0.2);
   }
-  button.action-ai-btn:hover:not(:disabled) {
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.5) 0%, rgba(99, 102, 241, 0.5) 100%);
+  button.action-recommend-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, rgba(250, 204, 21, 0.4) 0%, rgba(234, 179, 8, 0.5) 100%);
     color: #ffffff;
-    border-color: rgba(216, 180, 254, 0.6);
+    border-color: rgba(253, 224, 71, 0.65);
   }
 
   button.btn-danger {
@@ -431,7 +421,6 @@
     color: #e2e8f0;
   }
 
-  /* 思路导航栏与全端可拖拽排序标签 */
   .schemes-nav {
     display: flex;
     align-items: center;
@@ -538,7 +527,6 @@
     min-width: 100%;
   }
 
-  /* 提示词跟随全局字号联动放大 */
   .card-row.empty-row::after {
     content: attr(data-placeholder);
     position: absolute;
@@ -559,7 +547,6 @@
   .card-row.row-indicator-top { border-top: 4px solid var(--gold) !important; }
   .card-row.row-indicator-bottom { border-bottom: 4px solid var(--gold) !important; }
 
-  /* 层级手柄与张数显示完全跟随全局尺寸变量 */
   .row-handle {
     display: flex;
     flex-direction: column;
@@ -593,7 +580,6 @@
     width: max-content;
   }
 
-  /* 经典白底清晰卡牌 */
   .card {
     width: var(--card-w);
     height: var(--card-h);
@@ -644,7 +630,6 @@
     margin-top: 3px; 
   }
 
-  /* 逢人配左上角完全防遮挡徽标 */
   .wild-badge-corner {
     margin-top: 4px;
     font-size: 10px;
@@ -714,7 +699,6 @@
     will-change: left, top;
   }
 
-  /* 帮助指南抽屉：字号全局联动 */
   .help-drawer {
     width: 100%;
     min-width: min-content;
@@ -765,7 +749,6 @@
     margin: 0 2px;
   }
 
-  /* 所有弹窗全域缩放 */
   .modal-backdrop {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -874,14 +857,15 @@
   }
   .strategy-box strong { color: #38bdf8; }
 
+  /* 思路比较弹窗样式与移动端纵深滚动优化 */
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
     border-radius: 14px;
     width: 96%;
     max-width: 1480px;
-    height: 88vh;
-    padding: 20px 24px;
+    height: 90vh;
+    padding: 18px 20px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -892,23 +876,36 @@
     overflow-x: auto;
     overflow-y: auto;
     display: flex;
-    gap: 20px;
-    padding: 12px 4px;
+    gap: 16px;
+    padding: 10px 2px;
     -webkit-overflow-scrolling: touch;
+    align-items: flex-start;
   }
   .scheme-column {
     min-width: 440px;
+    max-height: 100%;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 10px;
-    padding: 16px;
+    padding: 14px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     flex-shrink: 0;
+    box-sizing: border-box;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   @media (max-width: 640px) {
-    .scheme-column { min-width: 320px; }
+    .compare-modal-content {
+      width: 98%;
+      height: 94vh;
+      padding: 14px 10px;
+    }
+    .scheme-column {
+      min-width: 86vw;
+      padding: 10px 8px;
+    }
   }
   .scheme-col-header {
     display: flex;
@@ -916,27 +913,63 @@
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 8px;
+    position: sticky;
+    top: 0;
+    background: #0f172a;
+    z-index: 10;
   }
   .scheme-col-title { font-size: var(--font-modal-sec-title); font-weight: bold; color: var(--gold); }
+  
   .scheme-mini-row {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.35);
     border-radius: 6px;
     padding: 8px 10px;
     display: flex;
     align-items: center;
     gap: 8px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .scheme-mini-row-badge {
+    font-size: 13px;
+    font-weight: 700;
+    color: #f6c559;
+    white-space: nowrap;
+    min-width: 52px;
+  }
+  .scheme-mini-cards-wrap {
+    display: flex;
+    align-items: center;
+    padding: 4px 0;
+    overflow: visible;
   }
   .scheme-mini-row .card {
-    width: 46px;
-    height: 72px;
+    width: 48px;
+    height: 74px;
     padding: 4px;
     margin-left: -22px;
     cursor: default;
-    box-shadow: -1px 1px 3px rgba(0,0,0,0.3);
+    box-shadow: -1px 1px 4px rgba(0,0,0,0.4);
+    flex-shrink: 0;
   }
-  .scheme-mini-row .card .card-val { font-size: 13px; }
-  .scheme-mini-row .card .card-suit { font-size: 11px; margin-top: 1px; }
+  .scheme-mini-row .card:first-child {
+    margin-left: 0 !important;
+  }
+  .scheme-mini-row .card .card-val { 
+    font-size: 13.5px; 
+    font-weight: 800;
+  }
+  .scheme-mini-row .card .card-suit { 
+    font-size: 11px; 
+    margin-top: 1px; 
+  }
+  .scheme-mini-row .wild-badge-corner {
+    font-size: 7.5px;
+    padding: 1px 2px;
+    margin-top: 2px;
+  }
 
   .saves-list {
     display: flex;
@@ -1048,7 +1081,6 @@
     <div class="control-island">
       <button id="rulesBtn">📖 掼蛋规则</button>
       <button id="toggleHelpBtn">💡 使用指南</button>
-      <!-- 尺寸选择器（尺寸小号、尺寸中号、尺寸大号、尺寸特大） -->
       <div class="tool-select-wrapper" title="整体界面与牌面尺寸">
         <span class="tool-select-icon">📐</span>
         <select class="tool-select-box" id="fontSizeSelect">
@@ -1058,7 +1090,6 @@
           <option value="xlarge">尺寸特大</option>
         </select>
       </div>
-      <!-- 语言选择器（🇨🇳 标志） -->
       <div class="tool-select-wrapper" title="Language / 语言">
         <span class="tool-select-icon">🌐</span>
         <select class="tool-select-box" id="langSelect">
@@ -1071,7 +1102,7 @@
     </div>
   </div>
 
-  <!-- 第 2 层：打几和手牌张数（单独一层，主标题视觉优先级） -->
+  <!-- 第 2 层：打几和手牌张数（单独一层） -->
   <div class="header-tier-row">
     <div class="control-island badge-cluster-island">
       <div class="badge-cluster">
@@ -1081,17 +1112,23 @@
     </div>
   </div>
 
-  <!-- 第 3 层：发牌、调牌、思路比较 与 AI 推荐思路（单独一层） -->
+  <!-- 第 3 层：发牌与自定义调牌（单独一层） -->
   <div class="header-tier-row">
     <div class="control-island">
       <button class="action-lead-btn" id="dealBtn">🎴 新一局发牌</button>
       <button class="action-accent" id="customHandBtn">🛠️ 自定义调牌</button>
-      <button class="action-accent" id="compareSchemesBtn">⚖️ 思路比较</button>
-      <button class="action-ai-btn" id="aiRecommendBtn" title="一键生成当前手牌最佳理牌思路">✨ AI 推荐思路</button>
     </div>
   </div>
 
-  <!-- 第 4 层：整理工具组（单独一层：批量连选、删除选中、重置排序） -->
+  <!-- 第 4 层：思路比较与推荐思路（单独一层） -->
+  <div class="header-tier-row">
+    <div class="control-island">
+      <button class="action-accent" id="compareSchemesBtn">⚖️ 思路比较</button>
+      <button class="action-recommend-btn" id="aiRecommendBtn" title="一键生成当前手牌推荐理牌思路">💡 推荐思路</button>
+    </div>
+  </div>
+
+  <!-- 第 5 层：整理工具组（单独一层：批量连选、删除选中、重置排序） -->
   <div class="header-tier-row">
     <div class="control-island">
       <button id="multiSelectToggleBtn" title="触屏端批量连选">⚡ 批量连选</button>
@@ -1100,7 +1137,7 @@
     </div>
   </div>
 
-  <!-- 第 5 层：最后一层（存档组 与 撤销重做组 并排） -->
+  <!-- 第 6 层：最后一层（存档组 与 撤销重做组 并排） -->
   <div class="header-tier-row">
     <div class="control-island">
       <button id="saveArchiveBtn">💾 存档</button>
@@ -1123,11 +1160,11 @@
 <div id="dragProxy"></div>
 <div id="rowDragBadge"></div>
 
-<!-- 思路多版本横向比较弹窗 -->
+<!-- 思路比较弹窗 -->
 <div class="modal-backdrop" id="compareModal">
   <div class="compare-modal-content">
     <div class="modal-header">
-      <div class="modal-title" id="compareModalTitle">⚖️ 多版本思路横向比较</div>
+      <div class="modal-title" id="compareModalTitle">⚖️ 思路比较</div>
       <button class="action-lead-btn" id="closeCompareBtn" style="padding: 6px 14px;">返回理牌</button>
     </div>
     <div class="compare-schemes-scroll" id="compareContainer"></div>
@@ -1138,7 +1175,7 @@
 <div class="modal-backdrop" id="rulesModal">
   <div class="rules-modal-content">
     <div class="modal-header">
-      <div class="modal-title" id="rulesModalTitle">📖 掼蛋核心游戏规则与知识图谱</div>
+      <div class="modal-title" id="rulesModalTitle">📖 掼蛋规则</div>
       <button class="action-lead-btn" id="closeRulesBtn" style="padding: 6px 14px;">关闭规则</button>
     </div>
     <div class="rules-scroll-body" id="rulesContentBody"></div>
@@ -1195,10 +1232,8 @@
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const modKeySymbol = isMac ? '⌘' : 'Ctrl+';
 
-  // 清除旧主题缓存残留
   localStorage.removeItem('GUANDAN_CARD_THEME');
 
-  // ---------------- 语言字典 (i18n) ----------------
   const I18N = {
     'zh-CN': {
       levelPrefix: '打：【 {level} 】',
@@ -1206,7 +1241,7 @@
       deal: '🎴 新一局发牌',
       customHand: '🛠️ 自定义调牌',
       compare: '⚖️ 思路比较',
-      aiRecommend: '✨ AI 推荐思路',
+      aiRecommend: '💡 推荐思路',
       rulesBtn: '📖 掼蛋规则',
       saveArchive: '💾 存档',
       openArchive: '📂 存档箱',
@@ -1227,7 +1262,7 @@
       backToPlay: '返回理牌',
       applyScheme: '切换以此排布',
       usingCurrent: '当前使用中',
-      compareTitle: '⚖️ 多版本思路横向比较',
+      compareTitle: '⚖️ 思路比较',
       archiveTitle: '📂 本地手牌存档箱',
       noArchives: '暂无保存的手牌存档。',
       load: '载入',
@@ -1243,7 +1278,7 @@
       clearAll: '清空重选',
       cancel: '取消',
       confirmApply: '确认应用到手牌',
-      rulesTitle: '📖 掼蛋核心游戏规则与知识图谱',
+      rulesTitle: '📖 掼蛋规则',
       fontOptions: { small: '尺寸小号', medium: '尺寸中号', large: '尺寸大号', xlarge: '尺寸特大' },
       renamePrompt: '请输入此理牌思路的名称：',
       help: [
@@ -1261,7 +1296,7 @@
         },
         {
           title: '⌨️ 效率快捷键与多思路',
-          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">✨ AI 推荐思路</span> 可直接生成高手策略；<strong>拖拽标签可调换位置，点击图标或双击即可重命名</strong>！'
+          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">💡 推荐思路</span> 可直接生成高水准策略；<strong>拖拽标签可调换位置，点击图标或双击即可重命名</strong>！'
         }
       ]
     },
@@ -1271,7 +1306,7 @@
       deal: '🎴 新一局發牌',
       customHand: '🛠️ 自訂調牌',
       compare: '⚖️ 思路比較',
-      aiRecommend: '✨ AI 推薦思路',
+      aiRecommend: '💡 推薦思路',
       rulesBtn: '📖 掼蛋規則',
       saveArchive: '💾 存檔',
       openArchive: '📂 存檔箱',
@@ -1292,7 +1327,7 @@
       backToPlay: '返回理牌',
       applyScheme: '切換以此排布',
       usingCurrent: '目前使用中',
-      compareTitle: '⚖️ 多版本思路橫向比較',
+      compareTitle: '⚖️ 思路比較',
       archiveTitle: '📂 本地手牌存檔箱',
       noArchives: '暫無儲存的手牌存檔。',
       load: '載入',
@@ -1308,7 +1343,7 @@
       clearAll: '清空重選',
       cancel: '取消',
       confirmApply: '確認應用到手牌',
-      rulesTitle: '📖 掼蛋核心遊戲規則與知識圖譜',
+      rulesTitle: '📖 掼蛋規則',
       fontOptions: { small: '尺寸小號', medium: '尺寸中號', large: '尺寸大號', xlarge: '尺寸特大' },
       renamePrompt: '請輸入此理牌思路的名稱：',
       help: [
@@ -1326,7 +1361,7 @@
         },
         {
           title: '⌨️ 效率快捷鍵與多思路',
-          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">✨ AI 推薦思路</span> 可直接生成高手策略；<strong>滑鼠或觸屏拖拽標籤可調換位置，點擊圖標或雙擊即可重新命名</strong>！'
+          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">💡 推薦思路</span> 可直接生成高水準策略；<strong>滑鼠或觸屏拖拽標籤可調換位置，點擊圖標或雙擊即可重新命名</strong>！'
         }
       ]
     },
@@ -1336,7 +1371,7 @@
       deal: '🎴 Deal Hand',
       customHand: '🛠️ Custom',
       compare: '⚖️ Compare Ideas',
-      aiRecommend: '✨ AI Recommend',
+      aiRecommend: '💡 Recommend',
       rulesBtn: '📖 Rules',
       saveArchive: '💾 Save',
       openArchive: '📂 Vault',
@@ -1357,7 +1392,7 @@
       backToPlay: 'Back',
       applyScheme: 'Use Scheme',
       usingCurrent: 'In Use',
-      compareTitle: '⚖️ Guandan Ideas Comparisons',
+      compareTitle: '⚖️ Compare Ideas',
       archiveTitle: '📂 Saved Hands Vault',
       noArchives: 'No saved archives found.',
       load: 'Load',
@@ -1373,7 +1408,7 @@
       clearAll: 'Clear All',
       cancel: 'Cancel',
       confirmApply: 'Apply to Hand',
-      rulesTitle: '📖 Guandan Complete Rules & Master Guide',
+      rulesTitle: '📖 Rules',
       fontOptions: { small: 'Small Size', medium: 'Medium Size', large: 'Large Size', xlarge: 'Extra Large' },
       renamePrompt: 'Enter new name for this idea:',
       help: [
@@ -1391,7 +1426,7 @@
         },
         {
           title: '⌨️ Shortcuts & Multi-Ideas',
-          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">✨ AI Recommend</span> to auto-organize hands; <strong>drag tabs or tap ◀ / ▶ to reorder, click icon or double-click to rename</strong>!'
+          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">💡 Recommend</span> for expert combinations; <strong>drag tabs or tap to reorder, click icon or double-click to rename</strong>!'
         }
       ]
     },
@@ -1401,7 +1436,7 @@
       deal: '🎴 Repartir',
       customHand: '🛠️ Personalizar',
       compare: '⚖️ Comparar Ideas',
-      aiRecommend: '✨ Idea de IA',
+      aiRecommend: '💡 Idea Óptima',
       rulesBtn: '📖 Reglas',
       saveArchive: '💾 Guardar',
       openArchive: '📂 Archivos',
@@ -1422,7 +1457,7 @@
       backToPlay: 'Volver',
       applyScheme: 'Usar este',
       usingCurrent: 'En uso',
-      compareTitle: '⚖️ Comparación de Ideas de Juego',
+      compareTitle: '⚖️ Comparar Ideas',
       archiveTitle: '📂 Archivo de Manos Guardadas',
       noArchives: 'No hay partidas guardadas.',
       load: 'Cargar',
@@ -1438,7 +1473,7 @@
       clearAll: 'Limpiar Todo',
       cancel: 'Cancelar',
       confirmApply: 'Aplicar a la Mano',
-      rulesTitle: '📖 Reglas Completas de Guandan y Guía Maestra',
+      rulesTitle: '📖 Reglas',
       fontOptions: { small: 'Tamaño Pequeño', medium: 'Tamaño Mediano', large: 'Tamaño Grande', xlarge: 'Tamaño Extra Grande' },
       renamePrompt: 'Introduce el nuevo nombre para esta idea:',
       help: [
@@ -1456,7 +1491,7 @@
         },
         {
           title: '⌨️ Atajos y Comparativa',
-          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">✨ Idea de IA</span> para ordenar manos como un experto; ¡<strong>arrastra las pestañas o pulsa el icono para renombrar</strong>!'
+          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">💡 Idea Óptima</span> para ver combinaciones recomendadas; ¡<strong>arrastra las pestañas o pulsa el icono para renombrar</strong>!'
         }
       ]
     }
@@ -1712,7 +1747,6 @@
     renderBoard();
   }
 
-  // ---------------- 字号持久化应用 ----------------
   function applyFontSize(size) {
     document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large', 'font-size-xlarge');
     document.body.classList.add(`font-size-${size}`);
@@ -1860,13 +1894,12 @@
       return currentLang === 'en' ? 'Idea 2' : (currentLang === 'es' ? 'Idea 2' : '思路 2');
     }
     if (targetIndex === 2) {
-      return currentLang === 'en' ? 'AI Idea' : (currentLang === 'es' ? 'Idea IA' : 'AI 思路');
+      return currentLang === 'en' ? 'Recommend Idea' : (currentLang === 'es' ? 'Idea Recomendada' : '推荐思路');
     }
     const offset = targetIndex;
     return currentLang === 'en' ? `Idea ${offset}` : (currentLang === 'es' ? `Idea ${offset}` : `思路 ${offset}`);
   }
 
-  // ---------------- 本地内置：启发式智能理牌引擎 (AI Strategy Engine) ----------------
   function generateAIRecommendedRows(cardsPool, level) {
     let pool = sortCards([...cardsPool], level);
     const rows = [];
@@ -1878,13 +1911,11 @@
       return sortCards(taken, level);
     }
 
-    // 1. 优先提取天王炸 (四大天王：2大王 + 2小王)
     const jokers = pool.filter(c => c.isJoker);
     if (jokers.length === 4) {
       rows.push(takeCardsByIds(jokers.map(c => c.id)));
     }
 
-    // 2. 提取 4 张及以上的硬炸弹 (同 rank >= 4)
     const rankBuckets = {};
     pool.forEach(c => {
       if (!c.isJoker) {
@@ -1899,7 +1930,6 @@
       }
     });
 
-    // 3. 寻找“逢人配”与同花顺组合 (Straight Flush 5 cards)
     const wildCards = pool.filter(c => c.rank === level && c.isHeart);
     const standardOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
     const suits = ['♥', '♦', '♠', '♣'];
@@ -1927,7 +1957,6 @@
       }
     }
 
-    // 4. 提取剩余 4 张炸弹（包括用逢人配配出 5 炸 / 6 炸）
     if (wildCards.length > 0) {
       const curBuckets = {};
       pool.forEach(c => {
@@ -1945,7 +1974,6 @@
       }
     }
 
-    // 5. 提取 5 连常规单顺 (从大到小)
     const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
     for (let i = 0; i <= normOrder.length - 5; i++) {
       const windowRanks = normOrder.slice(i, i + 5);
@@ -1967,7 +1995,6 @@
       }
     }
 
-    // 6. 提取三连对与双飞
     const countsMap = {};
     pool.forEach(c => {
       if (!c.isJoker) {
@@ -1976,7 +2003,6 @@
       }
     });
 
-    // 7. 提取三带二
     const trips = [];
     const pairs = [];
     Object.keys(countsMap).forEach(r => {
@@ -1991,7 +2017,6 @@
       rows.push(takeCardsByIds([...tGroup.map(c => c.id), ...pGroup.map(c => c.id)]));
     }
 
-    // 8. 剩余对子
     const remainBuckets = {};
     pool.forEach(c => {
       remainBuckets[c.rank] = remainBuckets[c.rank] || [];
@@ -2004,7 +2029,6 @@
       }
     });
 
-    // 9. 剩余散牌归底
     if (pool.length > 0) {
       rows.push(takeCardsByIds(pool.map(c => c.id)));
     }
@@ -2016,13 +2040,13 @@
     const allCards = getFlattenedCards();
     if (!allCards || allCards.length === 0) return;
 
-    const aiRows = generateAIRecommendedRows(allCards, currentLevel);
-    const aiSchemeName = currentLang === 'en' ? 'AI Idea' : (currentLang === 'es' ? 'Idea IA' : 'AI 思路');
+    const recRows = generateAIRecommendedRows(allCards, currentLevel);
+    const recSchemeName = currentLang === 'en' ? 'Recommend Idea' : (currentLang === 'es' ? 'Idea Recomendada' : '推荐思路');
 
     schemes.push({
-      name: aiSchemeName,
-      customName: aiSchemeName,
-      rows: aiRows,
+      name: recSchemeName,
+      customName: recSchemeName,
+      rows: recRows,
       historyStack: [],
       redoStack: []
     });
@@ -2032,7 +2056,6 @@
 
   document.getElementById('aiRecommendBtn').addEventListener('click', handleGenerateAIRecommend);
 
-  // 渲染思路标签栏
   function renderSchemesNav() {
     const nav = document.getElementById('schemesNav');
     nav.innerHTML = '';
@@ -2042,8 +2065,10 @@
       tab.className = 'scheme-tab' + (idx === currentSchemeIndex ? ' active' : '');
       tab.dataset.schemeIdx = idx;
 
-      const isAi = (s.name && s.name.includes('AI')) || (s.customName && s.customName.includes('AI')) || (!s.customName && idx === 2);
-      const prefixEmoji = isAi ? '🤖' : '💡';
+      const isRec = (s.name && (s.name.includes('推荐') || s.name.includes('Recommend'))) || 
+                    (s.customName && (s.customName.includes('推荐') || s.customName.includes('Recommend'))) || 
+                    (!s.customName && idx === 2);
+      const prefixEmoji = isRec ? '💡' : '📌';
       const displayName = s.customName || s.name || getDefaultSchemeName(idx);
 
       tab.innerHTML = `
@@ -2052,7 +2077,6 @@
         ${schemes.length > 1 ? `<span class="tab-del" title="删除该思路">✕</span>` : ''}
       `;
 
-      // 跨端 Pointer 拖动排序引擎
       tab.addEventListener('pointerdown', (e) => {
         if (e.target.classList.contains('tab-del') || e.target.classList.contains('tab-icon-prefix')) return;
         draggedSchemeIndex = idx;
@@ -2239,8 +2263,6 @@
     return list;
   }
 
-  // ---------------- 物理边缘全向巡航滚动引擎 ----------------
-
   function checkEdgeAutoScroll(clientX, clientY) {
     const vpW = window.innerWidth;
     const vpH = window.innerHeight;
@@ -2305,8 +2327,6 @@
     autoScrollSpeedX = 0;
     autoScrollSpeedY = 0;
   }
-
-  // ---------------- 全平台指针交互引擎 ----------------
 
   document.addEventListener('pointerdown', (e) => {
     if (e.button && e.button !== 0) return;
@@ -2508,7 +2528,6 @@
     hideDropCaret();
   });
 
-  // ---------------- 快捷键绑定 ----------------
   document.addEventListener('keydown', (e) => {
     const isModalOpen = document.getElementById('customModal').style.display.includes('flex') ||
                         document.getElementById('compareModal').style.display.includes('flex') ||
@@ -2552,8 +2571,6 @@
       deleteSelectedCards();
     }
   });
-
-  // ---------------- 整层重排计算 ----------------
 
   function updateRowReorderIndicator(x, y) {
     clearRowIndicators();
@@ -2600,8 +2617,6 @@
     cur.rows.splice(destinationIndex, 0, movedRow);
     renderBoard();
   }
-
-  // ---------------- 插入位置与等宽盲放计算 ----------------
 
   function updateDropCaret(x, y) {
     const caret = document.getElementById('dropCaret');
@@ -2727,8 +2742,6 @@
     renderBoard();
   }
 
-  // ---------------- 删除选中牌 ----------------
-
   function deleteSelectedCards() {
     if (selectedIds.size === 0) return;
     const cur = getCurrentScheme();
@@ -2747,7 +2760,6 @@
     multiToggleBtn.classList.toggle('toggle-active', touchMultiSelectActive);
   });
 
-  // ---------------- 规则弹窗 ----------------
   const rulesModal = document.getElementById('rulesModal');
   document.getElementById('rulesBtn').addEventListener('click', () => {
     renderRulesModalContent();
@@ -2756,8 +2768,6 @@
   document.getElementById('closeRulesBtn').addEventListener('click', () => {
     rulesModal.style.display = 'none';
   });
-
-  // ---------------- 思路横向比较 ----------------
 
   const compareModal = document.getElementById('compareModal');
   const compareContainer = document.getElementById('compareContainer');
@@ -2771,8 +2781,10 @@
 
       const validRows = s.rows.filter(r => r.length > 0);
       const totalCount = validRows.reduce((acc, r) => acc + r.length, 0);
-      const isAi = (s.name && s.name.includes('AI')) || (s.customName && s.customName.includes('AI')) || (!s.customName && idx === 2);
-      const prefixEmoji = isAi ? '🤖' : '💡';
+      const isRec = (s.name && (s.name.includes('推荐') || s.name.includes('Recommend'))) || 
+                    (s.customName && (s.customName.includes('推荐') || s.customName.includes('Recommend'))) || 
+                    (!s.customName && idx === 2);
+      const prefixEmoji = isRec ? '💡' : '📌';
       const displayName = `${prefixEmoji} ${s.customName || s.name || getDefaultSchemeName(idx)}`;
 
       col.innerHTML = `
@@ -2790,21 +2802,22 @@
         miniRow.className = 'scheme-mini-row';
 
         const rowBadge = document.createElement('div');
-        rowBadge.style.fontSize = '12px';
-        rowBadge.style.color = varToCss('--gold');
-        rowBadge.style.fontWeight = 'bold';
-        rowBadge.style.minWidth = '42px';
-        rowBadge.textContent = `${t('rowLayer', { idx: rIdx + 1 })}:`;
+        rowBadge.className = 'scheme-mini-row-badge';
+        rowBadge.textContent = `${t('rowLayer', { idx: rIdx + 1 })} (${r.length}):`;
         miniRow.appendChild(rowBadge);
+
+        const cardsWrap = document.createElement('div');
+        cardsWrap.className = 'scheme-mini-cards-wrap';
 
         r.forEach((c, cIdx) => {
           const miniCard = document.createElement('div');
           miniCard.className = `card ${c.color}`;
           miniCard.style.zIndex = cIdx + 5;
           miniCard.innerHTML = buildCardHTML(c);
-          miniRow.appendChild(miniCard);
+          cardsWrap.appendChild(miniCard);
         });
 
+        miniRow.appendChild(cardsWrap);
         col.appendChild(miniRow);
       });
 
@@ -2827,8 +2840,6 @@
   document.getElementById('closeCompareBtn').addEventListener('click', () => {
     compareModal.style.display = 'none';
   });
-
-  // ---------------- 存档管理 ----------------
 
   const STORAGE_KEY = 'GUANDAN_SAVED_ARCHIVES';
   const archiveModal = document.getElementById('archiveModal');
@@ -2936,15 +2947,11 @@
     renderArchiveList();
   };
 
-  // ---------------- 帮助说明抽屉折叠 ----------------
-
   document.getElementById('toggleHelpBtn').addEventListener('click', () => {
     const drawer = document.getElementById('helpDrawer');
     const isShown = drawer.style.display === 'block';
     drawer.style.display = isShown ? 'none' : 'block';
   });
-
-  // ---------------- 自定义选牌弹窗 ----------------
 
   const modalBackdrop = document.getElementById('customModal');
   const modalCardsList = document.getElementById('modalCardsList');
@@ -3024,8 +3031,8 @@
     el.className = `picker-card-btn ${item.color}` + (count > 0 ? ' has-selected' : '');
     const displayRank = (item.rank === '大王' ? t('bigJoker') : (item.rank === '小王' ? t('smallJoker') : item.rank));
     el.innerHTML = `
-      <div style="font-size: 15px; font-weight: 800; line-height: 1;">${displayRank}</div>
-      <div style="font-size: 13px; line-height: 1; margin-top: 3px;">${item.suit}</div>
+      <div class="card-val">${displayRank}</div>
+      <div class="card-suit">${item.suit}</div>
       <div class="picker-count-badge">${count}</div>
     `;
 
@@ -3102,14 +3109,11 @@
     renderBoard();
   });
 
-  // ---------------- 语言切换监听 ----------------
   const langSelect = document.getElementById('langSelect');
   langSelect.addEventListener('change', (e) => {
     currentLang = e.target.value;
     applyLanguage();
   });
-
-  // ---------------- 撤销、重做、重置、发牌 ----------------
 
   function undo() {
     const cur = getCurrentScheme();
