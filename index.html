@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<!-- 彻底解决 iOS 状态栏发白：匹配桌面墨绿色并关闭半透明白雾 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="掼蛋理牌">
+<meta name="theme-color" content="#0d1e17">
+<meta name="msapplication-navbutton-color" content="#0d1e17">
 <title>掼蛋理牌模拟器 / Guandan Cards Simulator</title>
 <style>
   :root {
@@ -15,17 +18,18 @@
     --card-font-val: 17px;
     --card-font-suit: 15px;
 
-    /* 顶级天鹅绒深绿与钛金/冷晶配色体系 */
-    --bg-gradient: radial-gradient(circle at 50% 25%, #19382b 0%, #0d1e17 65%, #08130e 100%);
-    --island-bg: rgba(22, 38, 30, 0.65);
+    /* 顶级深林天鹅绒沉浸暗色体系 */
+    --bg-base: #0a1712;
+    --bg-gradient: radial-gradient(circle at 50% 25%, #19382b 0%, #0d1e17 65%, #07120e 100%);
+    --island-bg: rgba(18, 36, 28, 0.75);
     --island-border: rgba(255, 255, 255, 0.1);
     --gold: #f6c559;
     --gold-glow: rgba(246, 197, 89, 0.35);
     --blue: #38bdf8;
     --red-lead: #e11d48;
     --red-lead-glow: rgba(225, 29, 72, 0.45);
-    --btn-glass: rgba(255, 255, 255, 0.06);
-    --btn-glass-hover: rgba(255, 255, 255, 0.14);
+    --btn-glass: rgba(255, 255, 255, 0.07);
+    --btn-glass-hover: rgba(255, 255, 255, 0.15);
   }
 
   @media (max-width: 640px) {
@@ -38,6 +42,13 @@
     }
   }
 
+  /* 彻底禁用上下拉橡皮筋露白 */
+  html {
+    background-color: var(--bg-base);
+    overscroll-behavior: none;
+    -webkit-overscroll-behavior: none;
+  }
+
   html, body {
     width: 100%;
     min-height: 100vh;
@@ -45,19 +56,23 @@
     padding: 0;
     background: var(--bg-gradient);
     background-attachment: fixed;
+    background-color: var(--bg-base);
     overflow-x: auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
+    -webkit-overscroll-behavior: none;
     touch-action: manipulation;
   }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
-    padding-top: max(18px, calc(env(safe-area-inset-top) + 6px));
-    padding-bottom: max(30px, calc(env(safe-area-inset-bottom) + 12px));
-    padding-left: max(14px, env(safe-area-inset-left));
-    padding-right: max(14px, env(safe-area-inset-right));
+    /* 严格安全区防护：保证在 iPhone 桌面 App 模式下灵动岛下方有充足留白，不遮挡按钮 */
+    padding-top: max(22px, calc(env(safe-area-inset-top) + 10px));
+    padding-bottom: max(34px, calc(env(safe-area-inset-bottom) + 14px));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -67,7 +82,6 @@
     box-sizing: border-box;
   }
 
-  /* 顶部全局主控制面板：独立岛状群组 */
   .header-container {
     display: flex;
     flex-direction: column;
@@ -89,22 +103,21 @@
     width: 100%;
   }
 
-  /* 独立微岛胶囊组 (Micro-Islands) */
+  /* 独立微岛胶囊 */
   .control-island {
     display: flex;
     align-items: center;
     gap: 6px;
     background: var(--island-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     border: 1px solid var(--island-border);
     border-radius: 10px;
-    padding: 5px 8px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    padding: 6px 9px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     flex-wrap: wrap;
   }
 
-  /* 局况状态显示 */
   .status-cluster {
     display: inline-flex;
     align-items: center;
@@ -132,7 +145,6 @@
     border: 1px solid rgba(56, 189, 248, 0.25);
   }
 
-  /* 现代质感微按键 */
   button {
     background-color: var(--btn-glass);
     color: #e2e8f0;
@@ -161,7 +173,6 @@
   button:active:not(:disabled) { transform: translateY(1px); }
   button:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  /* 核心主行动键（新一局发牌） */
   button.action-primary {
     background: linear-gradient(135deg, #f43f5e 0%, var(--red-lead) 100%);
     border: 1px solid rgba(255, 148, 170, 0.35);
@@ -174,7 +185,6 @@
     box-shadow: 0 4px 14px var(--red-lead-glow);
   }
 
-  /* 功能辅助键 */
   button.action-accent {
     background: rgba(56, 189, 248, 0.12);
     border-color: rgba(56, 189, 248, 0.3);
@@ -202,18 +212,33 @@
     box-shadow: 0 0 10px var(--gold-glow);
   }
 
-  .lang-select-box {
+  .lang-select-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     background: rgba(0, 0, 0, 0.35);
-    color: #cbd5e1;
     border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 5px 8px;
     border-radius: 6px;
+    padding: 0 6px 0 8px;
+  }
+  .lang-icon {
+    font-size: 13px;
+    color: #94a3b8;
+  }
+  .lang-select-box {
+    background: transparent;
+    color: #cbd5e1;
+    border: none;
+    padding: 6px 2px;
     font-size: 12px;
     font-weight: 600;
     outline: none;
     cursor: pointer;
   }
-  .lang-select-box:focus { border-color: var(--blue); }
+  .lang-select-box option {
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
 
   .schemes-nav {
     display: flex;
@@ -266,7 +291,7 @@
     gap: 16px;
     width: max-content;
     min-width: 100%;
-    padding-bottom: 200px;
+    padding-bottom: 220px;
     position: relative;
     align-items: stretch;
   }
@@ -458,25 +483,52 @@
     width: 100%;
     min-width: min-content;
     max-width: 1380px;
-    background: rgba(15, 23, 42, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
     padding: 16px 20px;
     margin-bottom: 14px;
     box-sizing: border-box;
     display: none;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
     animation: fadeIn 0.2s ease-out;
   }
   .help-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
   }
-  .help-item h4 { margin: 0 0 6px 0; color: var(--gold); font-size: 14px; }
-  .help-item p { margin: 0; font-size: 12px; color: #cbd5e1; line-height: 1.5; }
+  .help-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .help-item h4 {
+    margin: 0 0 8px 0;
+    color: var(--gold);
+    font-size: 13.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .help-item p {
+    margin: 0;
+    font-size: 12px;
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+  .help-pill {
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #38bdf8;
+    font-weight: 700;
+    font-size: 11px;
+    margin: 0 2px;
+  }
 
-  /* 模态框基础 */
   .modal-backdrop {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -743,7 +795,7 @@
 
 <header class="header-container">
   <div class="header-main-row">
-    <!-- 模块一：核心牌况与主打行动组 -->
+    <!-- 模块一：核心牌局状态与主要操作 -->
     <div class="control-island">
       <div class="status-cluster">
         <div class="badge-tag badge-level" id="levelInfo">打：--</div>
@@ -755,30 +807,29 @@
       <button class="btn-danger" id="deleteBtn" disabled>删除选中 (0)</button>
     </div>
 
-    <!-- 模块二：数据存档与知识指南组 -->
-    <div class="control-island">
-      <button id="saveArchiveBtn">💾 存档</button>
-      <button id="openArchiveBtn">📂 存档箱</button>
-      <button id="rulesBtn">📖 规则手册</button>
-    </div>
-
-    <!-- 模块三：触控理牌辅助与历史控制组 -->
+    <!-- 模块二：理牌操作与历史控制 -->
     <div class="control-island">
       <button id="multiSelectToggleBtn" title="触屏端批量连选">⚡ 批量连选</button>
       <button id="undoBtn" disabled>↩ 撤销</button>
       <button id="redoBtn" disabled>↪ 重做</button>
       <button id="resetBtn">重置排序</button>
+      <button id="saveArchiveBtn">💾 存档</button>
+      <button id="openArchiveBtn">📂 存档箱</button>
     </div>
 
-    <!-- 模块四：帮助与语言偏好 -->
+    <!-- 模块三：帮助指南与语言知识中心（更名并聚合） -->
     <div class="control-island">
-      <button id="toggleHelpBtn">❓ 指南</button>
-      <select class="lang-select-box" id="langSelect">
-        <option value="zh-CN">简体中文</option>
-        <option value="zh-TW">繁體中文</option>
-        <option value="en">English</option>
-        <option value="es">Español</option>
-      </select>
+      <button id="toggleHelpBtn">💡 使用指南</button>
+      <button id="rulesBtn">📖 掼蛋规则</button>
+      <div class="lang-select-wrapper" title="Language / 语言">
+        <span class="lang-icon">🌐</span>
+        <select class="lang-select-box" id="langSelect">
+          <option value="zh-CN">🇨🇳 简体中文</option>
+          <option value="zh-TW">🇹🇼 繁體中文</option>
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇪🇸 Español</option>
+        </select>
+      </div>
     </div>
   </div>
 </header>
@@ -853,7 +904,6 @@
 </div>
 
 <script>
-  // 屏蔽 iOS 双击快速缩放手势
   let lastTouchEnd = 0;
   document.addEventListener('touchend', (e) => {
     const now = Date.now();
@@ -863,7 +913,6 @@
     lastTouchEnd = now;
   }, { passive: false });
 
-  // 快捷键平台标识符（Mac 显示 ⌘，Win/Linux 显示 Ctrl）
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const modKeySymbol = isMac ? '⌘' : 'Ctrl+';
 
@@ -875,7 +924,7 @@
       deal: '新一局发牌',
       customHand: '自定义调牌',
       compare: '📊 方案对比',
-      rulesBtn: '📖 规则手册',
+      rulesBtn: '📖 掼蛋规则',
       saveArchive: '💾 存档',
       openArchive: '📂 存档箱',
       deleteSelected: '删除选中 ({count})',
@@ -883,7 +932,7 @@
       undo: '↩ 撤销',
       redo: '↪ 重做',
       resetSort: '重置排序',
-      toggleHelp: '❓ 指南',
+      toggleHelp: '💡 使用指南',
       newSchemeBtn: '+ 新建方案',
       schemeName: '方案 {name}',
       rowLayer: '第{idx}层',
@@ -914,10 +963,22 @@
       confirmApply: '确认应用到手牌',
       rulesTitle: '📖 掼蛋核心游戏规则与知识图谱',
       help: [
-        { title: '🃏 1. 选牌与放回', desc: '• 单击牌立起；再次单击该牌放平。<br>• <strong>一键全部放回</strong>：按住 Shift 或 ⌘/Ctrl（触屏开启【⚡ 批量连选】）点击任意已立起牌，所有牌<strong>全员归位</strong>。<br>• <strong>快速连选</strong>：点选第一张后按住 Shift 点另一张未选牌，区间内所有牌连选立起。<br>• 点击空白处一键收回所有牌。' },
-        { title: '🎯 2. 全向穿插与自动回滚', desc: '• <strong>跨层穿插</strong>：在第1层最右侧选中牌后，<strong>按住往屏幕左侧拖动</strong>，视口会自动平滑向左回滚，让你精准插入第2层左侧或中间。<br>• <strong>等宽盲放感应</strong>：每一层的接收范围与最长一层等宽，在右侧拉下即可盲放进入该层。<br>• <strong>边缘自动巡航</strong>：拖拽靠近屏幕任意边缘，视口自动平滑滚动。' },
-        { title: '📑 3. 多方案对比与存档', desc: '• 点击标签栏 <strong>“+ 新建方案”</strong> 尝试全新理牌思路。<br>• 点击 <strong>“📊 方案对比”</strong> 可横向对比不同版本的打法结构。<br>• 点击 <strong>“💾 存档”</strong>（或快捷键 ' + modKeySymbol + 'S）可长久保存。' },
-        { title: '⌨️ 4. 键盘专属快捷键', desc: '• <strong>空格 / N</strong>：新一局发牌<br>• <strong>' + modKeySymbol + 'Z</strong>：撤销 | <strong>' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</strong>：重做<br>• <strong>' + modKeySymbol + 'S</strong>：保存当前存档<br>• <strong>Delete / Backspace</strong>：删除选中牌<br>• <strong>R</strong>：重置初始排序' }
+        {
+          title: '🃏 选牌与放平',
+          desc: '• <span class="help-pill">单击</span> 任何一张牌即可立起选中。<br>• 再次点击这张牌本身即可放平。<br>• <strong>一键收回</strong>：点桌面空白处，所有立起的牌全员归位。<br>• <strong>连选多张</strong>：点第一张后按住 <span class="help-pill">Shift</span> 点另一张，中间整段全选。'
+        },
+        {
+          title: '🎯 拖拽与智能分层',
+          desc: '• <strong>整组打包</strong>：立起几张牌后，拖动其中任意一张，整组牌一起移动。<br>• <strong>黄色光标指引</strong>：光标指示精确插牌空隙，松手即落位。<br>• <strong>无限分层</strong>：拖到底部虚线槽自动成立新一层；拖住层左侧 <span class="help-pill">≡</span> 手柄可上下调整整层顺序。'
+        },
+        {
+          title: '📱 手机与触屏手感',
+          desc: '• <strong>左右自由滑屏</strong>：竖屏查看第一层所有 27 张牌，直接用手指横向划屏查看。<br>• <strong>全向巡航滚屏</strong>：按住选中的牌往屏幕左侧或下边缘靠拢，页面会自动平滑回滚，轻松把最右侧的牌插进左边或第二层。<br>• 触屏可开启顶部 <span class="help-pill">⚡ 批量连选</span> 开关代替电脑 Shift 键。'
+        },
+        {
+          title: '⌨️ 效率快捷键与多方案',
+          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">+ 新建方案</span> 可在同一把牌中探索不同拆牌路线并横向对比。'
+        }
       ]
     },
     'zh-TW': {
@@ -926,7 +987,7 @@
       deal: '新一局發牌',
       customHand: '自訂調牌',
       compare: '📊 方案對比',
-      rulesBtn: '📖 規則手冊',
+      rulesBtn: '📖 掼蛋規則',
       saveArchive: '💾 存檔',
       openArchive: '📂 存檔箱',
       deleteSelected: '刪除選取 ({count})',
@@ -934,7 +995,7 @@
       undo: '↩ 復原',
       redo: '↪ 重做',
       resetSort: '重置排序',
-      toggleHelp: '❓ 指南',
+      toggleHelp: '💡 使用指南',
       newSchemeBtn: '+ 新建方案',
       schemeName: '方案 {name}',
       rowLayer: '第{idx}層',
@@ -965,10 +1026,22 @@
       confirmApply: '確認應用到手牌',
       rulesTitle: '📖 掼蛋核心遊戲規則與知識圖譜',
       help: [
-        { title: '🃏 1. 選牌與放回', desc: '• 單擊牌立起；再次單擊該牌放平。<br>• <strong>一鍵全部放回</strong>：按住 Shift 或 ⌘/Ctrl（觸控開啟【⚡ 批量連選】）點擊任意已立起牌，所有牌<strong>全體歸位</strong>。<br>• <strong>快速連選</strong>：點選第一張後按住 Shift 點另一張未選牌，區間內所有牌連選立起。<br>• 點擊空白處一鍵收回所有牌。' },
-        { title: '🎯 2. 全向穿插與自動回滾', desc: '• <strong>跨層穿插</strong>：在第1層最右側選中牌後，<strong>按住往螢幕左側拖動</strong>，視口會自動平滑向左回滾，讓您精準插入第2層左側或中間。<br>• <strong>等寬盲放感應</strong>：每一層接收範圍與最長一層等寬，在右側拉下即可盲放進入該層。<br>• <strong>邊緣自動巡航</strong>：拖拽靠近螢幕任意邊緣，視口自動平滑滾動。' },
-        { title: '📑 3. 多方案對比與存檔', desc: '• 點擊標籤欄 <strong>「+ 新建方案」</strong> 嘗試全新理牌思路。<br>• 點擊 <strong>「📊 方案對比」</strong> 可橫向對比不同版本的打法結構。<br>• 點擊 <strong>「💾 存檔」</strong>（或快捷鍵 ' + modKeySymbol + 'S）可長久儲存。' },
-        { title: '⌨️ 4. 鍵盤專屬快捷鍵', desc: '• <strong>空白鍵 / N</strong>：新一局發牌<br>• <strong>' + modKeySymbol + 'Z</strong>：復原 | <strong>' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</strong>：重做<br>• <strong>' + modKeySymbol + 'S</strong>：儲存目前存檔<br>• <strong>Delete / Backspace</strong>：刪除選取牌<br>• <strong>R</strong>：重置初始排序' }
+        {
+          title: '🃏 選牌與放平',
+          desc: '• <span class="help-pill">單擊</span> 任何一張牌即可立起選取。<br>• 再次點擊這張牌本身即可放平。<br>• <strong>一鍵收回</strong>：點桌面空白處，所有立起的牌全員歸位。<br>• <strong>連選多張</strong>：點第一張後按住 <span class="help-pill">Shift</span> 點另一張，中間整段全選。'
+        },
+        {
+          title: '🎯 拖曳與智慧分層',
+          desc: '• <strong>整組打包</strong>：立起幾張牌後，拖曳其中任意一張，整組牌一起移動。<br>• <strong>黃色游標指引</strong>：游標指示精確插牌空隙，鬆手即落位。<br>• <strong>無限分層</strong>：拖到底部虛線槽自動成立新一層；拖住層左側 <span class="help-pill">≡</span> 手柄可上下調整整層順序。'
+        },
+        {
+          title: '📱 手機與觸控螢幕手感',
+          desc: '• <strong>左右自由滑屏</strong>：直屏查看第一層所有 27 張牌，直接用手指橫向劃屏查看。<br>• <strong>全向巡航滾屏</strong>：按住選取的牌往螢幕左側或下邊緣靠攏，頁面會自動平滑回滾，輕鬆把最右側的牌插進左邊或第二層。<br>• 觸控螢幕可開啟頂部 <span class="help-pill">⚡ 批量連選</span> 開關代替電腦 Shift 鍵。'
+        },
+        {
+          title: '⌨️ 效率快捷鍵與多方案',
+          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">+ 新建方案</span> 可在同一把牌中探索不同拆牌路線並橫向對比。'
+        }
       ]
     },
     'en': {
@@ -985,7 +1058,7 @@
       undo: '↩ Undo',
       redo: '↪ Redo',
       resetSort: 'Reset Sort',
-      toggleHelp: '❓ Guide',
+      toggleHelp: '💡 User Guide',
       newSchemeBtn: '+ New Scheme',
       schemeName: 'Scheme {name}',
       rowLayer: 'Tier {idx}',
@@ -1016,10 +1089,22 @@
       confirmApply: 'Apply to Hand',
       rulesTitle: '📖 Guandan Complete Rules & Master Guide',
       help: [
-        { title: '🃏 1. Selecting Cards', desc: '• Click any card to pop it up; click again to lay down.<br>• <strong>Instant Clear All</strong>: Hold Shift or ⌘/Ctrl (or toggle [⚡ Multi] on touch) and click any raised card to drop all.<br>• <strong>Range Select</strong>: Pick the 1st card, hold Shift, and click another card to select the whole interval.<br>• Click outside to unselect all.' },
-        { title: '🎯 2. Drag & Edge Auto-Scroll', desc: '• Drag any selected card to move the whole combo.<br>• <strong>Auto-Scroll Cruise</strong>: Drag cards toward screen edges to scroll smoothly in any direction, easily reaching other tiers.<br>• <strong>Blind Drop Sensor</strong>: Every row has full-width drop zones, making dropping cards into shorter rows smooth and reliable.' },
-        { title: '📑 3. Multiple Schemes & Saves', desc: '• Click <strong>[+ New Scheme]</strong> to test alternative combinations.<br>• Click <strong>[📊 Compare]</strong> to review all layouts side by side.<br>• Click <strong>[💾 Save]</strong> (' + modKeySymbol + 'S) to preserve interesting puzzles forever.' },
-        { title: '⌨️ 4. Keyboard Shortcuts', desc: '• <strong>Space / N</strong>: Deal New Hand<br>• <strong>' + modKeySymbol + 'Z</strong>: Undo | <strong>' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</strong>: Redo<br>• <strong>' + modKeySymbol + 'S</strong>: Quick Save<br>• <strong>Delete / Backspace</strong>: Delete Selected<br>• <strong>R</strong>: Reset Sort' }
+        {
+          title: '🃏 Pick & Drop Cards',
+          desc: '• <span class="help-pill">Tap</span> any card to raise it up; tap again to drop it down.<br>• <strong>Instant Clear</strong>: Tap any empty table background to drop all raised cards.<br>• <strong>Interval Select</strong>: Tap the 1st card, hold <span class="help-pill">Shift</span> and tap another card to select the whole sequence.'
+        },
+        {
+          title: '🎯 Smooth Drag & Auto Tiering',
+          desc: '• <strong>Group Drag</strong>: Once multiple cards are raised, drag any one card to move the entire combo together.<br>• <strong>Caret Sensor</strong>: Follow the luminous yellow caret for accurate insertion.<br>• <strong>New Tiers</strong>: Drop cards onto the bottom dashed box to open a new tier instantly. Drag the left <span class="help-pill">≡</span> handle to reorder rows.'
+        },
+        {
+          title: '📱 Mobile Touch Navigation',
+          desc: '• <strong>Horizontal Pan</strong>: Swipe your finger horizontally anywhere to inspect all 27 cards in portrait mode.<br>• <strong>Edge Auto-Cruise</strong>: While dragging cards, move near screen edges to smoothly auto-scroll into previous tiers or rightward gaps.<br>• Toggle <span class="help-pill">⚡ Multi</span> on top to select intervals easily on touch screens.'
+        },
+        {
+          title: '⌨️ Shortcuts & Multi-Schemes',
+          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">+ New Scheme</span> to test and contrast distinct strategies side by side.'
+        }
       ]
     },
     'es': {
@@ -1036,7 +1121,7 @@
       undo: '↩ Deshacer',
       redo: '↪ Rehacer',
       resetSort: 'Reiniciar Orden',
-      toggleHelp: '❓ Guía',
+      toggleHelp: '💡 Guía de Uso',
       newSchemeBtn: '+ Nuevo Plan',
       schemeName: 'Plan {name}',
       rowLayer: 'Fila {idx}',
@@ -1067,10 +1152,22 @@
       confirmApply: 'Aplicar a la Mano',
       rulesTitle: '📖 Reglas Completas de Guandan y Guía Maestra',
       help: [
-        { title: '🃏 1. Selección de Cartas', desc: '• Toca una carta para levantarla; toca de nuevo para bajarla.<br>• <strong>Bajar Todo Rápido</strong>: Mantén Shift o ⌘/Ctrl (o activa [⚡ Multiselección] en táctil) y toca una carta levantada para bajar todas.<br>• <strong>Selección en Rango</strong>: Elige la 1ª carta, mantén Shift y toca otra para seleccionar el bloque entero.<br>• Toca en el fondo vacío para deseleccionar todo.' },
-        { title: '🎯 2. Arrastre y Desplazamiento', desc: '• Arrastra cualquier carta seleccionada para mover todo el grupo.<br>• <strong>Desplazamiento Automático</strong>: Arrastra hacia los bordes de la pantalla para deslizar la vista suavemente en cualquier dirección.<br>• <strong>Zona Amplia</strong>: Cada fila acepta cartas a lo largo de todo su ancho.' },
-        { title: '📑 3. Múltiples Planes y Guardado', desc: '• Haz clic en <strong>[+ Nuevo Plan]</strong> para probar otra forma de ordenar.<br>• Haz clic en <strong>[📊 Comparar]</strong> para ver todas las estrategias juntas.<br>• Usa <strong>[💾 Guardar]</strong> (' + modKeySymbol + 'S) para guardar jugadas para siempre.' },
-        { title: '⌨️ 4. Atajos de Teclado', desc: '• <strong>Espacio / N</strong>: Repartir Mano<br>• <strong>' + modKeySymbol + 'Z</strong>: Deshacer | <strong>' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</strong>: Rehacer<br>• <strong>' + modKeySymbol + 'S</strong>: Guardar Mano<br>• <strong>Delete / Backspace</strong>: Eliminar Cartas<br>• <strong>R</strong>: Reiniciar Orden' }
+        {
+          title: '🃏 Levantar y Bajar Cartas',
+          desc: '• <span class="help-pill">Toca</span> una carta para levantarla; toca de nuevo para bajarla.<br>• <strong>Bajar Todo Rápido</strong>: Toca el fondo vacío de la mesa para bajar todas las cartas seleccionadas.<br>• <strong>Selección en Bloque</strong>: Elige una carta, mantén <span class="help-pill">Shift</span> y toca otra para seleccionar el rango.'
+        },
+        {
+          title: '🎯 Arrastre Suave y Filas Nuevas',
+          desc: '• <strong>Mover en Grupo</strong>: Con cartas levantadas, arrastra una cualquiera para mover el combo entero.<br>• <strong>Cursor Luminoso</strong>: Suelta donde indique la flecha amarilla para insertar con precisión.<br>• <strong>Nuevas Filas</strong>: Suelta en el cajón de puntos abajo para crear otra fila. Arrastra el icono <span class="help-pill">≡</span> para reordenar filas.'
+        },
+        {
+          title: '📱 Pantalla Táctil y Móvil',
+          desc: '• <strong>Deslizamiento Libre</strong>: En móvil desliza horizontalmente con el dedo para ver todas las 27 cartas.<br>• <strong>Crucero en Bordes</strong>: Arrastra cartas cerca de los bordes para que la pantalla se desplace sola hacia atrás o adelante suavemente.<br>• Activa <span class="help-pill">⚡ Multiselección</span> arriba para suplir la tecla Shift en pantallas táctiles.'
+        },
+        {
+          title: '⌨️ Atajos y Comparativa',
+          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">+ Nuevo Plan</span> para probar distintas formas de combinar y compararlas.'
+        }
       ]
     }
   };
@@ -1231,7 +1328,6 @@
     document.getElementById('resetBtn').textContent = t('resetSort');
     document.getElementById('toggleHelpBtn').textContent = t('toggleHelp');
 
-    // 绑定悬浮快捷键提示
     document.getElementById('dealBtn').title = `${t('deal')} (Space / N)`;
     document.getElementById('undoBtn').title = `${t('undo')} (${modKeySymbol}Z)`;
     document.getElementById('redoBtn').title = `${t('redo')} (${modKeySymbol}${isMac ? '⇧Z' : 'Y'})`;
@@ -1777,7 +1873,6 @@
 
   // ---------------- 快捷键绑定 ----------------
   document.addEventListener('keydown', (e) => {
-    // 若当前在弹窗输入或交互中，不拦截快捷键
     const isModalOpen = document.getElementById('customModal').style.display.includes('flex') ||
                         document.getElementById('compareModal').style.display.includes('flex') ||
                         document.getElementById('rulesModal').style.display.includes('flex') ||
@@ -1786,42 +1881,36 @@
 
     const isCmdOrCtrl = e.metaKey || e.ctrlKey;
 
-    // 1. 撤销 (Cmd+Z / Ctrl+Z)
     if (isCmdOrCtrl && !e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
       e.preventDefault();
       undo();
       return;
     }
 
-    // 2. 重做 (Cmd+Shift+Z / Ctrl+Y / Cmd+Y)
     if ((isCmdOrCtrl && e.shiftKey && (e.key === 'z' || e.key === 'Z')) || (isCmdOrCtrl && (e.key === 'y' || e.key === 'Y'))) {
       e.preventDefault();
       redo();
       return;
     }
 
-    // 3. 存档 (Cmd+S / Ctrl+S)
     if (isCmdOrCtrl && (e.key === 's' || e.key === 'S')) {
       e.preventDefault();
       document.getElementById('saveArchiveBtn').click();
       return;
     }
 
-    // 4. 重置排序 (R)
     if (!isCmdOrCtrl && (e.key === 'r' || e.key === 'R')) {
       e.preventDefault();
       resetSort();
       return;
     }
 
-    // 5. 新一局发牌 (Space 或 N)
     if (!isCmdOrCtrl && (e.code === 'Space' || e.key === 'n' || e.key === 'N')) {
       e.preventDefault();
       startNewGame();
       return;
     }
 
-    // 6. 删除选中牌 (Delete / Backspace)
     if (e.key === 'Delete' || e.key === 'Backspace') {
       deleteSelectedCards();
     }
@@ -2021,7 +2110,7 @@
     multiToggleBtn.classList.toggle('toggle-active', touchMultiSelectActive);
   });
 
-  // ---------------- 规则弹窗逻辑 ----------------
+  // ---------------- 规则弹窗 ----------------
   const rulesModal = document.getElementById('rulesModal');
   document.getElementById('rulesBtn').addEventListener('click', () => {
     renderRulesModalContent();
@@ -2208,7 +2297,7 @@
     renderArchiveList();
   };
 
-  // ---------------- 帮助说明折叠控制 ----------------
+  // ---------------- 帮助说明抽屉折叠 ----------------
 
   document.getElementById('toggleHelpBtn').addEventListener('click', () => {
     const drawer = document.getElementById('helpDrawer');
