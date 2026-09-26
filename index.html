@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes, viewport-fit=cover">
+<!-- 彻底禁用任何系统层面的缩放干扰，激活全边框刘海安全区 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="掼蛋理牌">
@@ -26,6 +27,7 @@
     }
   }
 
+  /* 彻底禁用 iOS 微信和 Safari 的双击缩放 */
   html, body {
     width: 100%;
     min-height: 100vh;
@@ -35,13 +37,17 @@
     overflow-x: auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x pan-y pinch-zoom;
+    touch-action: manipulation;
   }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
-    padding: 14px 16px calc(30px + env(safe-area-inset-bottom));
+    /* 解决灵动岛/刘海遮挡：严格使用 max 保证顶部避开物理摄像头 */
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-bottom: max(30px, env(safe-area-inset-bottom));
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -51,6 +57,7 @@
     box-sizing: border-box;
   }
 
+  /* 顶部全局主控制栏：避开灵动岛，独立层级支持丝滑点击 */
   .controls-bar {
     display: flex;
     align-items: center;
@@ -58,14 +65,15 @@
     width: 100%;
     min-width: min-content;
     max-width: 1360px;
-    background: rgba(0, 0, 0, 0.45);
-    padding: 8px 16px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.55);
+    padding: 10px 16px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
     margin-bottom: 12px;
     flex-wrap: wrap;
     gap: 10px;
-    z-index: 200;
+    z-index: 500;
+    position: relative;
   }
   .controls-left, .controls-right {
     display: flex;
@@ -77,10 +85,10 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.08);
-    padding: 5px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
     border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
   .level-info { font-size: 16px; font-weight: bold; color: #ffd700; white-space: nowrap; }
   .count-info { font-size: 14px; font-weight: bold; color: #63b3ed; white-space: nowrap; }
@@ -89,7 +97,7 @@
     background-color: #4a5568;
     color: white;
     border: none;
-    padding: 7px 13px;
+    padding: 8px 14px;
     font-size: 13px;
     font-weight: bold;
     border-radius: 6px;
@@ -101,6 +109,7 @@
     gap: 4px;
     white-space: nowrap;
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
   button:hover:not(:disabled) { transform: translateY(-1px); background-color: #5a677d; }
   button:active:not(:disabled) { transform: translateY(1px); }
@@ -165,19 +174,17 @@
     padding: 0 4px;
   }
 
-  /* 主理牌区域：宽度根据内容自动展开，允许左右顺畅滑动 */
   #board {
     display: flex;
     flex-direction: column;
     gap: 16px;
     width: max-content;
     min-width: 100%;
-    padding-bottom: 180px;
+    padding-bottom: 200px;
     position: relative;
-    align-items: stretch; /* 确保子项撑满整个横向宽度 */
+    align-items: stretch;
   }
 
-  /* 核心修复：每一层宽度统一撑满视口或最长层的宽度，并提供整行盲放感应 */
   .card-row {
     background: rgba(255, 255, 255, 0.04);
     border: 1px dashed rgba(255, 255, 255, 0.2);
@@ -185,16 +192,16 @@
     min-height: calc(var(--card-h) + 75px);
     display: flex;
     align-items: center;
-    padding: 56px 36px 14px 14px;
+    padding: 56px 40px 14px 14px;
     box-sizing: border-box;
     position: relative;
-    width: 100%; /* 统一与最宽层等宽 */
+    width: 100%;
     min-width: max-content;
     overflow: visible !important;
     transition: background-color 0.2s, border-color 0.2s;
   }
   @media (max-width: 640px) {
-    .card-row { padding: 48px 28px 12px 10px; }
+    .card-row { padding: 48px 30px 12px 10px; }
   }
 
   .card-row.empty-row {
@@ -331,7 +338,6 @@
     font-size: 12px;
   }
 
-  /* 浮动预览容器：解除物理局限，跟随视口全向自由平移 */
   #dragProxy {
     position: fixed;
     pointer-events: none;
@@ -620,8 +626,8 @@
       <p>• 单击牌立即立起；再次单击该牌自身可放平。<br>• <strong>一键全部放回</strong>：按住 <strong>Shift</strong> 或 <strong>Command / Ctrl</strong>（触屏开启右上方<strong>【⚡ 批量连选】</strong>）点击任意已立起的牌，所有立起的牌<strong>全员归位</strong>。<br>• <strong>Shift 快速连选</strong>：点选第一张后按住 Shift（或开启【⚡ 批量连选】）点另一张未选牌，区间内所有牌连选立起。<br>• 点击空白处一键收回所有牌。</p>
     </div>
     <div class="help-item">
-      <h4>🎯 2. 全向盲移与自动巡航</h4>
-      <p>• <strong>全向自由拖动</strong>：立起的牌可随手指在屏幕任意位置自由左右、上下移动。<br>• <strong>等宽盲放感应</strong>：即使第二层只有 1 张牌，它右侧的接收范围也与最长一层等宽，在右侧拉下即可盲放进入该层。<br>• <strong>边缘自动滚屏</strong>：拖拽卡牌靠近屏幕边缘时，视口会自动向该方向平滑巡航滚动。</p>
+      <h4>🎯 2. 全向穿插与自动回滚</h4>
+      <p>• <strong>跨层穿插</strong>：在第1层最右侧选中牌后，<strong>按住往屏幕左侧拖动</strong>，视口会自动平滑向左回滚，让你轻松精准插入第2层左侧或中间。<br>• <strong>等宽盲放感应</strong>：即使第二层只有1张牌，它右侧的接收范围也与最长一层等宽，在右侧拉下即可盲放进入该层。<br>• <strong>边缘自动巡航</strong>：拖拽靠近屏幕任意边缘，视口自动平滑滚动。</p>
     </div>
     <div class="help-item">
       <h4>📑 3. 多方案对比与存档</h4>
@@ -686,6 +692,16 @@
 </div>
 
 <script>
+  // 彻底拦截 iOS 连续双击缩放默认行为
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+
   const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
   const SUITS = [
     { name: '♥', color: 'red', label: '红桃', isHeart: true },
@@ -719,7 +735,7 @@
   let rowTargetDrop = null;
   let modalSelectionMap = {};
 
-  // 全向双轴边缘自动滚动
+  // 全向自适应边缘滚屏引擎
   let autoScrollAnimationId = null;
   let autoScrollSpeedY = 0;
   let autoScrollSpeedX = 0;
@@ -922,32 +938,33 @@
     return list;
   }
 
-  // ---------------- 全向物理自动巡航滚屏 ----------------
+  // ---------------- 物理边缘全向巡航滚动引擎 ----------------
 
   function checkEdgeAutoScroll(clientX, clientY) {
     const vpW = window.innerWidth;
     const vpH = window.innerHeight;
-    const edge = 75;
-    const maxSpd = 15;
+    const edgeX = 90; // 加宽横向感应区，单手更容易触发向左或向右自动回滚
+    const edgeY = 80;
+    const maxSpd = 16;
 
-    // Y 轴滚动
-    if (clientY > vpH - edge) {
-      const ratio = (clientY - (vpH - edge)) / edge;
+    // Y 轴感应
+    if (clientY > vpH - edgeY) {
+      const ratio = (clientY - (vpH - edgeY)) / edgeY;
       autoScrollSpeedY = Math.min(maxSpd, Math.max(3, ratio * maxSpd));
-    } else if (clientY < edge) {
-      const ratio = (edge - clientY) / edge;
+    } else if (clientY < edgeY) {
+      const ratio = (edgeY - clientY) / edgeY;
       autoScrollSpeedY = -Math.min(maxSpd, Math.max(3, ratio * maxSpd));
     } else {
       autoScrollSpeedY = 0;
     }
 
-    // X 轴滚动
-    if (clientX > vpW - edge) {
-      const ratio = (clientX - (vpW - edge)) / edge;
-      autoScrollSpeedX = Math.min(maxSpd, Math.max(3, ratio * maxSpd));
-    } else if (clientX < edge) {
-      const ratio = (edge - clientX) / edge;
-      autoScrollSpeedX = -Math.min(maxSpd, Math.max(3, ratio * maxSpd));
+    // X 轴感应（支持把最右侧的牌拖到最左侧）
+    if (clientX > vpW - edgeX) {
+      const ratio = (clientX - (vpW - edgeX)) / edgeX;
+      autoScrollSpeedX = Math.min(maxSpd, Math.max(4, ratio * maxSpd));
+    } else if (clientX < edgeX) {
+      const ratio = (edgeX - clientX) / edgeX;
+      autoScrollSpeedX = -Math.min(maxSpd, Math.max(4, ratio * maxSpd));
     } else {
       autoScrollSpeedX = 0;
     }
@@ -963,7 +980,10 @@
     if (autoScrollAnimationId) return;
     function loop() {
       if ((autoScrollSpeedX !== 0 || autoScrollSpeedY !== 0) && (interactionMode === 'dragging' || interactionMode === 'row-reorder')) {
+        // 双向同步驱动窗口与根容器滚动
         window.scrollBy(autoScrollSpeedX, autoScrollSpeedY);
+        document.documentElement.scrollLeft += autoScrollSpeedX;
+        document.body.scrollLeft += autoScrollSpeedX;
 
         if (interactionMode === 'dragging') {
           updateDropCaret(currentClientX, currentClientY);
@@ -1047,7 +1067,6 @@
     }
 
     if (clickedCardInitialSelected) {
-      // 关键优化：不调用 setPointerCapture，保证手指全向平移与全局坐标监听顺畅
       interactionMode = 'dragging';
     } else {
       selectedIds.add(cardId);
@@ -1128,7 +1147,6 @@
         });
       }
 
-      // 视口浮动层全向跟随
       proxy.style.left = `${e.clientX}px`;
       proxy.style.top = `${e.clientY}px`;
       updateDropCaret(e.clientX, e.clientY);
@@ -1258,7 +1276,7 @@
     const targetRowIndex = parseInt(rowEl.dataset.rowIndex);
     const validCards = Array.from(rowEl.querySelectorAll('.card:not(.ghost)'));
 
-    // 核心优化：如果该层为空，或手指落点已经超出该层现有卡牌的最右侧（实现右侧盲放）
+    // 空行直接作为第 0 个位置
     if (validCards.length === 0) {
       const rowRect = rowEl.getBoundingClientRect();
       caret.style.display = 'block';
@@ -1272,7 +1290,7 @@
     const lastCard = validCards[validCards.length - 1];
     const lastRect = lastCard.getBoundingClientRect();
 
-    // 手指落点在所有牌右侧（盲放接纳）：直接追加到该层末尾
+    // 手指落在现有卡牌右侧任何地方（等宽盲放）：直接追加到该层末尾
     if (x >= lastRect.right - 10) {
       caret.style.display = 'block';
       caret.style.left = `${lastRect.right + 6 + window.scrollX}px`;
@@ -1282,7 +1300,7 @@
       return;
     }
 
-    // 手指落在现有卡牌之间或左侧
+    // 手指落在卡牌之间或左侧缝隙
     let chosenIndex = 0;
     let caretX = 0;
     let caretY = 0;
