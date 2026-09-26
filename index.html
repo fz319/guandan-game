@@ -216,8 +216,14 @@
     }
   }
 
+  /* 彻底修复：消除右侧全黑 BUG，背景全局覆盖固定 */
   html {
     background-color: var(--bg-base);
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    background-size: cover;
+    min-height: 100%;
+    width: 100%;
     overflow-x: auto;
     overflow-y: auto;
     overscroll-behavior: none;
@@ -225,13 +231,12 @@
   }
 
   body {
-    width: 100%;
     min-height: 100vh;
+    min-width: 100%;
+    width: max-content;
     margin: 0;
     padding: 0;
-    background: var(--bg-gradient);
-    background-attachment: fixed;
-    background-color: var(--bg-base);
+    background: transparent; /* 背景移至 html，防止横向滚动截断变黑 */
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
@@ -1420,8 +1425,8 @@
           desc: '• <strong>左右自由滑屏</strong>：直屏查看第一層所有 27 張牌，直接用手指橫向劃屏查看。<br>• <strong>全向巡航滾屏</strong>：按住選取的牌往螢幕左側或下邊緣靠攏，頁面會自動平滑回滾，輕鬆把最右側的牌插進左邊或第二層。<br>• 觸控螢幕可開啟頂部 <span class="help-pill">⚡ 批量連選</span> 開關代替電腦 Shift 鍵。'
         },
         {
-          title: '⚖️ 對比復盤與差異高亮',
-          desc: '• 點擊 <span class="help-pill">⚖️ 思路比較</span>，系統會自動與內置最佳算法比對。<br>• 若思路與推薦一致，直接點亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span> 勳章；若有拆法出入，自動高亮標註差異層！'
+          title: '⌨️ 效率快捷鍵與多思路',
+          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">💡 推薦思路</span> 可直接生成高水準策略；<strong>滑鼠或觸屏拖拽標籤可調換位置，點擊圖標或雙擊即可重新命名</strong>！'
         }
       ]
     },
@@ -2126,7 +2131,6 @@
     return cards.length === 6;
   }
 
-  // 点击“💡 推荐思路”
   function handleGenerateAIRecommend() {
     const allCards = getFlattenedCards();
     if (!allCards || allCards.length === 0) return;
@@ -2149,7 +2153,6 @@
 
   document.getElementById('aiRecommendBtn').addEventListener('click', handleGenerateAIRecommend);
 
-  // 主桌面紧凑 / 完整视图切换
   document.getElementById('mainViewFullBtn').addEventListener('click', () => {
     mainDeskCompactMode = false;
     updateMainTogglePillState();
@@ -2329,9 +2332,8 @@
     const cur = getCurrentScheme();
     if (!cur) return;
 
-    cur.rows = cur.rows.filter(r => r.length > 0);
+    cur.rows = cur.rows.filter(r => r && r.length > 0);
 
-    // 推荐思路主桌面“紧凑归类”
     if (mainDeskCompactMode && (cur.isRecommended || (cur.name && cur.name.includes('推荐')))) {
       const compactGroups = buildCompactRows(cur.rows, currentLevel);
       compactGroups.forEach((grp) => {
@@ -2416,9 +2418,13 @@
 
   function getFlattenedCards() {
     const cur = getCurrentScheme();
-    if (!cur) return [];
+    if (!cur || !cur.rows) return [];
     const list = [];
-    cur.rows.forEach(r => r.forEach(c => list.push(c)));
+    cur.rows.forEach(r => {
+      if (r && Array.isArray(r)) {
+        r.forEach(c => list.push(c));
+      }
+    });
     return list;
   }
 
@@ -2608,9 +2614,13 @@
         proxy.innerHTML = '';
 
         const sortedSelectedCards = [];
-        cur.rows.forEach(r => r.forEach(c => {
-          if (selectedIds.has(c.id)) sortedSelectedCards.push(c);
-        }));
+        cur.rows.forEach(r => {
+          if (r && Array.isArray(r)) {
+            r.forEach(c => {
+              if (selectedIds.has(c.id)) sortedSelectedCards.push(c);
+            });
+          }
+        });
 
         sortedSelectedCards.forEach(c => {
           const ghostCard = document.createElement('div');
@@ -2886,9 +2896,13 @@
     pushState();
 
     const movingCards = [];
-    cur.rows.forEach(r => r.forEach(c => {
-      if (selectedIds.has(c.id)) movingCards.push(c);
-    }));
+    cur.rows.forEach(r => {
+      if (r && Array.isArray(r)) {
+        r.forEach(c => {
+          if (selectedIds.has(c.id)) movingCards.push(c);
+        });
+      }
+    });
 
     cur.rows = cur.rows.map(r => r.filter(c => !selectedIds.has(c.id)));
 
@@ -2928,8 +2942,6 @@
     rulesModal.style.display = 'none';
   });
 
-  // ---------------- 思路比较弹窗 ----------------
-
   const compareModal = document.getElementById('compareModal');
   const compareContainer = document.getElementById('compareContainer');
 
@@ -2962,7 +2974,7 @@
       const col = document.createElement('div');
       col.className = 'scheme-column';
 
-      const validRows = s.rows.filter(r => r.length > 0);
+      const validRows = (s.rows || []).filter(r => r && r.length > 0);
       const totalCount = validRows.reduce((acc, r) => acc + r.length, 0);
 
       const isRec = s.isRecommended || (s.name && (s.name.includes('推荐') || s.name.includes('Recommend'))) || 
@@ -2977,7 +2989,6 @@
         col.classList.add('is-exact-match');
       }
 
-      // 修复文案：共 N 层 · N 张
       const summaryText = t('compareSummary', { tiers: validRows.length, cards: totalCount });
 
       col.innerHTML = `
@@ -3351,34 +3362,44 @@
     applyLanguage();
   });
 
+  // ---------------- 撤销与重做安全回滚 ----------------
+
   function undo() {
     const cur = getCurrentScheme();
     if (!cur || !cur.historyStack || cur.historyStack.length === 0) return;
     
-    const currentSnapshot = JSON.stringify(cur.rows.filter(r => r.length > 0));
-    cur.redoStack.push(currentSnapshot);
+    try {
+      const currentSnapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
+      cur.redoStack.push(currentSnapshot);
 
-    const prevSnapshot = cur.historyStack.pop();
-    cur.rows = JSON.parse(prevSnapshot);
+      const prevSnapshot = cur.historyStack.pop();
+      cur.rows = JSON.parse(prevSnapshot);
 
-    selectedIds.clear();
-    lastAnchorCardId = null;
-    renderBoard();
+      selectedIds.clear();
+      lastAnchorCardId = null;
+      renderBoard();
+    } catch (err) {
+      console.error('Undo failed:', err);
+    }
   }
 
   function redo() {
     const cur = getCurrentScheme();
     if (!cur || !cur.redoStack || cur.redoStack.length === 0) return;
 
-    const currentSnapshot = JSON.stringify(cur.rows.filter(r => r.length > 0));
-    cur.historyStack.push(currentSnapshot);
+    try {
+      const currentSnapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
+      cur.historyStack.push(currentSnapshot);
 
-    const nextSnapshot = cur.redoStack.pop();
-    cur.rows = JSON.parse(nextSnapshot);
+      const nextSnapshot = cur.redoStack.pop();
+      cur.rows = JSON.parse(nextSnapshot);
 
-    selectedIds.clear();
-    lastAnchorCardId = null;
-    renderBoard();
+      selectedIds.clear();
+      lastAnchorCardId = null;
+      renderBoard();
+    } catch (err) {
+      console.error('Redo failed:', err);
+    }
   }
 
   function resetSort() {
