@@ -2,12 +2,11 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<!-- 彻底禁用任何系统层面的缩放干扰，激活全边框刘海安全区 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="掼蛋理牌">
-<title>掼蛋理牌模拟器</title>
+<title>掼蛋理牌模拟器 / Guandan Cards Simulator</title>
 <style>
   :root {
     --card-w: 68px;
@@ -27,7 +26,6 @@
     }
   }
 
-  /* 彻底禁用 iOS 微信和 Safari 的双击缩放 */
   html, body {
     width: 100%;
     min-height: 100vh;
@@ -43,7 +41,6 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
-    /* 解决灵动岛/刘海遮挡：严格使用 max 保证顶部避开物理摄像头 */
     padding-top: max(16px, env(safe-area-inset-top));
     padding-bottom: max(30px, env(safe-area-inset-bottom));
     padding-left: max(14px, env(safe-area-inset-left));
@@ -57,7 +54,6 @@
     box-sizing: border-box;
   }
 
-  /* 顶部全局主控制栏：避开灵动岛，独立层级支持丝滑点击 */
   .controls-bar {
     display: flex;
     align-items: center;
@@ -126,11 +122,25 @@
   button.success:hover:not(:disabled) { background-color: #2f855a; }
   button.compare-btn { background: linear-gradient(135deg, #805ad5, #6b46c1); }
   button.compare-btn:hover:not(:disabled) { background: linear-gradient(135deg, #9f7aea, #805ad5); }
+  button.rules-btn { background: linear-gradient(135deg, #2b6cb0, #2c5282); }
+  button.rules-btn:hover:not(:disabled) { background: linear-gradient(135deg, #3182ce, #2b6cb0); }
 
   button.toggle-active {
     background-color: #d69e2e !important;
     color: #fff !important;
     box-shadow: 0 0 8px #ecc94b;
+  }
+
+  .lang-select-box {
+    background: #2d3748;
+    color: #ffd700;
+    border: 1px solid #4a5568;
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    outline: none;
+    cursor: pointer;
   }
 
   .schemes-nav {
@@ -211,7 +221,7 @@
     min-width: 100%;
   }
   .card-row.empty-row::after {
-    content: "将牌拖到此处开启新的一层";
+    content: attr(data-placeholder);
     position: absolute;
     left: 120px;
     top: 50%;
@@ -233,7 +243,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 48px;
+    width: 52px;
     height: var(--card-h);
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -249,8 +259,8 @@
   .row-handle:hover { background: rgba(255, 255, 255, 0.15); border-color: #ecc94b; }
   .row-handle:active { cursor: grabbing; }
   .row-handle .handle-icon { font-size: 15px; color: #e2e8f0; line-height: 1; }
-  .row-handle .handle-label { font-size: 11px; color: #ffd700; font-weight: bold; margin-top: 4px; }
-  .row-handle .handle-count { font-size: 11px; color: #63b3ed; font-weight: bold; margin-top: 2px; }
+  .row-handle .handle-label { font-size: 10px; color: #ffd700; font-weight: bold; margin-top: 4px; }
+  .row-handle .handle-count { font-size: 10px; color: #63b3ed; font-weight: bold; margin-top: 2px; }
 
   .cards-wrapper {
     display: flex;
@@ -390,6 +400,66 @@
   .help-item h4 { margin: 0 0 6px 0; color: #ffd700; font-size: 14px; }
   .help-item p { margin: 0; font-size: 12px; color: #cbd5e1; line-height: 1.5; }
 
+  /* 规则与知识图谱弹窗样式 */
+  .rules-modal-content {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 1100px;
+    height: 88vh;
+    padding: 20px 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+  }
+  .rules-scroll-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: #e2e8f0;
+    line-height: 1.6;
+    font-size: 14px;
+  }
+  .rule-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .rule-section h3 {
+    margin: 0 0 10px 0;
+    color: #ffd700;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .rule-card-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0;
+    flex-wrap: wrap;
+  }
+  .mini-chip {
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: #1e293b;
+    border: 1px solid #475569;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .mini-chip.red { color: #f87171; }
+  .mini-chip.gold { color: #facc15; border-color: #ca8a04; }
+
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
@@ -528,7 +598,7 @@
     border-radius: 8px;
     flex-wrap: wrap;
   }
-  .picker-label { width: 48px; font-weight: bold; font-size: 15px; color: #cbd5e1; }
+  .picker-label { width: 56px; font-weight: bold; font-size: 14px; color: #cbd5e1; }
   .picker-cards-grid { display: flex; flex-wrap: wrap; gap: 8px; flex-grow: 1; }
   .picker-card-btn {
     display: flex;
@@ -606,11 +676,18 @@
     <button class="primary" id="dealBtn">新一局发牌</button>
     <button class="accent" id="customHandBtn">自定义选牌/调牌</button>
     <button class="compare-btn" id="compareSchemesBtn">📊 方案横向对比</button>
+    <button class="rules-btn" id="rulesBtn">📖 掼蛋完整规则</button>
     <button class="success" id="saveArchiveBtn">💾 保存当前存档</button>
     <button class="warn" id="openArchiveBtn">📂 打开存档箱</button>
     <button class="danger" id="deleteBtn" disabled>删除选中 (0)</button>
   </div>
   <div class="controls-right">
+    <select class="lang-select-box" id="langSelect">
+      <option value="zh-CN">简体中文</option>
+      <option value="zh-TW">繁體中文</option>
+      <option value="en">English</option>
+      <option value="es">Español</option>
+    </select>
     <button id="multiSelectToggleBtn" title="触屏端连选模式">⚡ 批量连选</button>
     <button id="undoBtn" disabled>上一步 (撤销)</button>
     <button id="redoBtn" disabled>下一步 (重做)</button>
@@ -620,24 +697,7 @@
 </div>
 
 <div class="help-drawer" id="helpDrawer">
-  <div class="help-grid">
-    <div class="help-item">
-      <h4>🃏 1. 选牌与放回</h4>
-      <p>• 单击牌立即立起；再次单击该牌自身可放平。<br>• <strong>一键全部放回</strong>：按住 <strong>Shift</strong> 或 <strong>Command / Ctrl</strong>（触屏开启右上方<strong>【⚡ 批量连选】</strong>）点击任意已立起的牌，所有立起的牌<strong>全员归位</strong>。<br>• <strong>Shift 快速连选</strong>：点选第一张后按住 Shift（或开启【⚡ 批量连选】）点另一张未选牌，区间内所有牌连选立起。<br>• 点击空白处一键收回所有牌。</p>
-    </div>
-    <div class="help-item">
-      <h4>🎯 2. 全向穿插与自动回滚</h4>
-      <p>• <strong>跨层穿插</strong>：在第1层最右侧选中牌后，<strong>按住往屏幕左侧拖动</strong>，视口会自动平滑向左回滚，让你轻松精准插入第2层左侧或中间。<br>• <strong>等宽盲放感应</strong>：即使第二层只有1张牌，它右侧的接收范围也与最长一层等宽，在右侧拉下即可盲放进入该层。<br>• <strong>边缘自动巡航</strong>：拖拽靠近屏幕任意边缘，视口自动平滑滚动。</p>
-    </div>
-    <div class="help-item">
-      <h4>📑 3. 多方案对比与存档</h4>
-      <p>• 点击标签栏 <strong>“+ 新建方案”</strong> 尝试全新理牌思路。<br>• 点击 <strong>“📊 方案横向对比”</strong> 可横向对比不同版本的打法结构。<br>• 点击 <strong>“💾 保存当前存档”</strong> 可自主命名长久保存，日后随时打开继续理牌。</p>
-    </div>
-    <div class="help-item">
-      <h4>⚙️ 4. 整层调序与残局调牌</h4>
-      <p>• 按住每层左侧的 <strong>“≡ 手柄”</strong> 可上下调换整层顺序。<br>• “自定义选牌/调牌”可在 108 张全牌库中自定手牌或残局。<br>• 电脑键盘按 <strong>Delete / Backspace</strong> 亦可快速删除立起牌。</p>
-    </div>
-  </div>
+  <div class="help-grid" id="helpGridContent"></div>
 </div>
 
 <div class="schemes-nav" id="schemesNav"></div>
@@ -646,20 +706,33 @@
 <div id="dragProxy"></div>
 <div id="rowDragBadge"></div>
 
+<!-- 方案多版本横向对比弹窗 -->
 <div class="modal-backdrop" id="compareModal">
   <div class="compare-modal-content">
     <div class="modal-header">
-      <div class="modal-title">📊 多方案理牌思路横向对比</div>
+      <div class="modal-title" id="compareModalTitle">📊 多方案理牌思路横向对比</div>
       <button class="primary" id="closeCompareBtn" style="padding: 6px 14px;">返回理牌</button>
     </div>
     <div class="compare-schemes-scroll" id="compareContainer"></div>
   </div>
 </div>
 
+<!-- 完整规则学习指南弹窗 -->
+<div class="modal-backdrop" id="rulesModal">
+  <div class="rules-modal-content">
+    <div class="modal-header">
+      <div class="modal-title" id="rulesModalTitle">📖 掼蛋核心游戏规则与知识图谱</div>
+      <button class="primary" id="closeRulesBtn" style="padding: 6px 14px;">关闭规则</button>
+    </div>
+    <div class="rules-scroll-body" id="rulesContentBody"></div>
+  </div>
+</div>
+
+<!-- 存档箱弹窗 -->
 <div class="modal-backdrop" id="archiveModal">
   <div class="modal-content" style="max-width: 680px;">
     <div class="modal-header">
-      <div class="modal-title">📂 本地手牌存档箱</div>
+      <div class="modal-title" id="archiveModalTitle">📂 本地手牌存档箱</div>
       <button class="primary" id="closeArchiveBtn" style="padding: 4px 10px;">关闭</button>
     </div>
     <div class="modal-body" style="padding: 4px 0;">
@@ -668,18 +741,19 @@
   </div>
 </div>
 
+<!-- 自定义选牌弹窗 -->
 <div class="modal-backdrop" id="customModal">
   <div class="modal-content">
     <div class="modal-header">
-      <div class="modal-title">自定义手牌与残局配置（两副牌·共108张库）</div>
+      <div class="modal-title" id="customModalTitle">自定义手牌与残局配置（两副牌·共108张库）</div>
       <div style="font-size: 14px; color: #94a3b8;">
-        当前选中: <strong id="modalSelectedCount" style="color: #ecc94b; font-size: 17px;">0</strong> 张
+        <span id="customSelectedLabel">当前选中</span>: <strong id="modalSelectedCount" style="color: #ecc94b; font-size: 17px;">0</strong> <span id="customCardUnit">张</span>
       </div>
     </div>
     <div class="modal-body" id="modalCardsList"></div>
     <div class="modal-footer">
       <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #cbd5e1;">
-        <span>设置当前打几：</span>
+        <span id="customLevelSetLabel">设置当前打几：</span>
         <select id="modalLevelSelect"></select>
       </div>
       <div style="display: flex; gap: 10px;">
@@ -702,12 +776,438 @@
     lastTouchEnd = now;
   }, { passive: false });
 
+  // ---------------- 语言包国际化字典 (i18n) ----------------
+  const I18N = {
+    'zh-CN': {
+      levelPrefix: '打：【 {level} 】',
+      cardsCount: '手牌：{count} 张',
+      deal: '新一局发牌',
+      customHand: '自定义选牌/调牌',
+      compare: '📊 方案横向对比',
+      rulesBtn: '📖 掼蛋完整规则',
+      saveArchive: '💾 保存当前存档',
+      openArchive: '📂 打开存档箱',
+      deleteSelected: '删除选中 ({count})',
+      multiSelectToggle: '⚡ 批量连选',
+      undo: '上一步 (撤销)',
+      redo: '下一步 (重做)',
+      resetSort: '重置初始排序',
+      toggleHelp: '❓ 操作指南',
+      newSchemeBtn: '+ 新建方案理牌',
+      schemeName: '方案 {name}',
+      rowLayer: '第{idx}层',
+      rowPlaceholder: '将牌拖到此处开启新的一层',
+      wildTag: '逢人配',
+      suits: { '♥': '红桃', '♦': '方块', '♠': '黑桃', '♣': '梅花', 'joker': '王牌' },
+      bigJoker: '大王',
+      smallJoker: '小王',
+      close: '关闭',
+      backToPlay: '返回理牌',
+      applyScheme: '切换以此排布',
+      usingCurrent: '当前使用中',
+      compareTitle: '📊 多方案理牌思路横向对比',
+      archiveTitle: '📂 本地手牌存档箱',
+      noArchives: '暂无保存的手牌存档。',
+      load: '载入',
+      delete: '删除',
+      savePrompt: '请为当前手牌存档命名：',
+      saveDefault: '牌局存档 - 打{level}',
+      saveSuccess: '保存成功！随时可在“打开存档箱”中调取继续理牌。',
+      confirmDelArchive: '确定要删除这条存档吗？此操作不可逆。',
+      customTitle: '自定义手牌与残局配置（两副牌·共108张库）',
+      customSelected: '当前选中',
+      cardUnit: '张',
+      customSetLevel: '设置当前打几：',
+      clearAll: '清空重选',
+      cancel: '取消',
+      confirmApply: '确认应用到手牌',
+      rulesTitle: '📖 掼蛋核心游戏规则与知识图谱',
+      help: [
+        { title: '🃏 1. 选牌与放回', desc: '• 单击牌立即立起；再次单击该牌自身可放平。<br>• <strong>一键全部放回</strong>：按住 Shift 或 Command/Ctrl（触屏开启【⚡ 批量连选】）点击任意已立起的牌，所有立起的牌<strong>全员归位</strong>。<br>• <strong>快速连选</strong>：点选第一张后按住 Shift（或开启【⚡ 批量连选】）点另一张未选牌，区间内所有牌连选立起。<br>• 点击空白处一键收回所有牌。' },
+        { title: '🎯 2. 全向穿插与自动回滚', desc: '• <strong>跨层穿插</strong>：在第1层最右侧选中牌后，<strong>按住往屏幕左侧拖动</strong>，视口会自动平滑向左回滚，让你轻松精准插入第2层左侧或中间。<br>• <strong>等宽盲放感应</strong>：即使第二层只有1张牌，它右侧的接收范围也与最长一层等宽，在右侧拉下即可盲放进入该层。<br>• <strong>边缘自动巡航</strong>：拖拽靠近屏幕任意边缘，视口自动平滑滚动。' },
+        { title: '📑 3. 多方案对比与存档', desc: '• 点击标签栏 <strong>“+ 新建方案”</strong> 尝试全新理牌思路。<br>• 点击 <strong>“📊 方案横向对比”</strong> 可横向对比不同版本的打法结构。<br>• 点击 <strong>“💾 保存当前存档”</strong> 可自主命名长久保存，日后随时打开继续理牌。' },
+        { title: '⚙️ 4. 整层调序与残局调牌', desc: '• 按住每层左侧的 <strong>“≡ 手柄”</strong> 可上下调换整层顺序。<br>• “自定义选牌/调牌”可在 108 张全牌库中自定手牌或残局。<br>• 电脑键盘按 <strong>Delete / Backspace</strong> 亦可快速删除立起牌。' }
+      ]
+    },
+    'zh-TW': {
+      levelPrefix: '打：【 {level} 】',
+      cardsCount: '手牌：{count} 張',
+      deal: '新一局發牌',
+      customHand: '自訂選牌/調牌',
+      compare: '📊 方案橫向對比',
+      rulesBtn: '📖 掼蛋完整規則',
+      saveArchive: '💾 儲存目前存檔',
+      openArchive: '📂 打開存檔箱',
+      deleteSelected: '刪除選取 ({count})',
+      multiSelectToggle: '⚡ 批量連選',
+      undo: '上一步 (復原)',
+      redo: '下一步 (重做)',
+      resetSort: '重置初始排序',
+      toggleHelp: '❓ 操作指南',
+      newSchemeBtn: '+ 新建方案理牌',
+      schemeName: '方案 {name}',
+      rowLayer: '第{idx}層',
+      rowPlaceholder: '將牌拖到此處開啟新的一層',
+      wildTag: '逢人配',
+      suits: { '♥': '紅心', '♦': '方塊', '♠': '黑桃', '♣': '梅花', 'joker': '王牌' },
+      bigJoker: '大王',
+      smallJoker: '小王',
+      close: '關閉',
+      backToPlay: '返回理牌',
+      applyScheme: '切換以此排布',
+      usingCurrent: '目前使用中',
+      compareTitle: '📊 多方案理牌思路橫向對比',
+      archiveTitle: '📂 本地手牌存檔箱',
+      noArchives: '暫無儲存的手牌存檔。',
+      load: '載入',
+      delete: '刪除',
+      savePrompt: '請為目前手牌存檔命名：',
+      saveDefault: '牌局存檔 - 打{level}',
+      saveSuccess: '儲存成功！隨時可在「打開存檔箱」中調取繼續理牌。',
+      confirmDelArchive: '確定要刪除這條存檔嗎？此操作不可逆。',
+      customTitle: '自訂手牌與殘局配置（兩副牌·共108張庫）',
+      customSelected: '目前選取',
+      cardUnit: '張',
+      customSetLevel: '設定目前打幾：',
+      clearAll: '清空重選',
+      cancel: '取消',
+      confirmApply: '確認應用到手牌',
+      rulesTitle: '📖 掼蛋核心遊戲規則與知識圖譜',
+      help: [
+        { title: '🃏 1. 選牌與放回', desc: '• 單擊牌立即立起；再次單擊該牌自身可放平。<br>• <strong>一鍵全部放回</strong>：按住 Shift 或 Command/Ctrl（觸控螢幕開啟【⚡ 批量連選】）點擊任意已立起的牌，所有立起的牌<strong>全體歸位</strong>。<br>• <strong>快速連選</strong>：點選第一張後按住 Shift（或開啟【⚡ 批量連選】）點另一張未選牌，區間內所有牌連選立起。<br>• 點擊空白處一鍵收回所有牌。' },
+        { title: '🎯 2. 全向穿插與自動回滾', desc: '• <strong>跨層穿插</strong>：在第1層最右側選中牌後，<strong>按住往螢幕左側拖動</strong>，視口會自動平滑向左回滾，讓您輕鬆精準插入第2層左側或中間。<br>• <strong>等寬盲放感應</strong>：即使第二層只有1張牌，它右側的接收範圍也與最長一層等寬，在右側拉下即可盲放進入該層。<br>• <strong>邊緣自動巡航</strong>：拖拽靠近螢幕任意邊緣，視口自動平滑滾動。' },
+        { title: '📑 3. 多方案對比與存檔', desc: '• 點擊標籤欄 <strong>「+ 新建方案」</strong> 嘗試全新理牌思路。<br>• 點擊 <strong>「📊 方案橫向對比」</strong> 可橫向對比不同版本的打法結構。<br>• 點擊 <strong>「💾 儲存目前存檔」</strong> 可自主命名長久保存，日後隨時打開繼續理牌。' },
+        { title: '⚙️ 4. 整層調序與殘局調牌', desc: '• 按住每層左側的 <strong>「≡ 手柄」</strong> 可上下調換整層順序。<br>• 「自訂選牌/調牌」可在 108 張全牌庫中自定手牌或殘局。<br>• 電腦鍵盤按 <strong>Delete / Backspace</strong> 亦可快速刪除立起牌。' }
+      ]
+    },
+    'en': {
+      levelPrefix: 'Rank: [ {level} ]',
+      cardsCount: 'Hand: {count} cards',
+      deal: 'Deal New Hand',
+      customHand: 'Customize Hand',
+      compare: '📊 Compare Schemes',
+      rulesBtn: '📖 Guandan Rules',
+      saveArchive: '💾 Save Archive',
+      openArchive: '📂 Open Archives',
+      deleteSelected: 'Delete ({count})',
+      multiSelectToggle: '⚡ Multi-Select',
+      undo: 'Undo',
+      redo: 'Redo',
+      resetSort: 'Reset Sort',
+      toggleHelp: '❓ Guide',
+      newSchemeBtn: '+ New Scheme',
+      schemeName: 'Scheme {name}',
+      rowLayer: 'Tier {idx}',
+      rowPlaceholder: 'Drag cards here to create a new tier',
+      wildTag: 'Wild',
+      suits: { '♥': 'Hearts', '♦': 'Diamonds', '♠': 'Spades', '♣': 'Clubs', 'joker': 'Joker' },
+      bigJoker: 'Red Joker',
+      smallJoker: 'Black Joker',
+      close: 'Close',
+      backToPlay: 'Back',
+      applyScheme: 'Use Scheme',
+      usingCurrent: 'In Use',
+      compareTitle: '📊 Guandan Scheme Comparisons',
+      archiveTitle: '📂 Saved Hands Vault',
+      noArchives: 'No saved archives found.',
+      load: 'Load',
+      delete: 'Delete',
+      savePrompt: 'Name your hand archive:',
+      saveDefault: 'Hand Save - Rank {level}',
+      saveSuccess: 'Saved successfully! Access it anytime from the vault.',
+      confirmDelArchive: 'Are you sure you want to delete this archive?',
+      customTitle: 'Customize Cards & Endgame (108 Deck Pool)',
+      customSelected: 'Selected',
+      cardUnit: 'cards',
+      customSetLevel: 'Set Current Rank:',
+      clearAll: 'Clear All',
+      cancel: 'Cancel',
+      confirmApply: 'Apply to Hand',
+      rulesTitle: '📖 Guandan Complete Rules & Master Guide',
+      help: [
+        { title: '🃏 1. Selecting Cards', desc: '• Click any card to pop it up; click again to lay down.<br>• <strong>Instant Clear All</strong>: Hold Shift or Command/Ctrl (or toggle [⚡ Multi-Select] on touch) and click any raised card to drop all.<br>• <strong>Shift Range Select</strong>: Pick the 1st card, hold Shift, and click another card to select the whole interval.<br>• Click outside to unselect all.' },
+        { title: '🎯 2. Drag & Edge Auto-Scroll', desc: '• Drag any selected card to move the whole combo.<br>• <strong>Auto-Scroll Cruise</strong>: Drag cards toward screen edges to scroll smoothly in any direction, easily reaching other tiers.<br>• <strong>Blind Drop Sensor</strong>: Every row has full-width drop zones, making dropping cards into shorter rows smooth and reliable.' },
+        { title: '📑 3. Multiple Schemes & Saves', desc: '• Click <strong>[+ New Scheme]</strong> to test alternative combinations.<br>• Click <strong>[📊 Compare Schemes]</strong> to review all layouts side by side.<br>• Click <strong>[💾 Save Archive]</strong> to preserve interesting puzzles forever.' },
+        { title: '⚙️ 4. Tier Reorder & Endgame', desc: '• Drag the left <strong>"≡" handle</strong> to reorder entire tiers vertically.<br>• Open "Customize Hand" to configure any custom hand or endgame setup.<br>• Press <strong>Delete / Backspace</strong> to remove selected cards quickly.' }
+      ]
+    },
+    'es': {
+      levelPrefix: 'Nivel: [ {level} ]',
+      cardsCount: 'Mano: {count} cartas',
+      deal: 'Repartir Mano',
+      customHand: 'Personalizar',
+      compare: '📊 Comparar Planes',
+      rulesBtn: '📖 Reglas de Guandan',
+      saveArchive: '💾 Guardar Mano',
+      openArchive: '📂 Abrir Archivos',
+      deleteSelected: 'Eliminar ({count})',
+      multiSelectToggle: '⚡ Multiselección',
+      undo: 'Deshacer',
+      redo: 'Rehacer',
+      resetSort: 'Reiniciar Orden',
+      toggleHelp: '❓ Guía',
+      newSchemeBtn: '+ Nuevo Plan',
+      schemeName: 'Plan {name}',
+      rowLayer: 'Fila {idx}',
+      rowPlaceholder: 'Arrastra cartas aquí para crear una nueva fila',
+      wildTag: 'Comodín',
+      suits: { '♥': 'Corazones', '♦': 'Diamantes', '♠': 'Picas', '♣': 'Tréboles', 'joker': 'Comodines' },
+      bigJoker: 'Joker Rojo',
+      smallJoker: 'Joker Negro',
+      close: 'Cerrar',
+      backToPlay: 'Volver',
+      applyScheme: 'Usar este',
+      usingCurrent: 'En uso',
+      compareTitle: '📊 Comparación de Planes de Juego',
+      archiveTitle: '📂 Archivo de Manos Guardadas',
+      noArchives: 'No hay partidas guardadas.',
+      load: 'Cargar',
+      delete: 'Borrar',
+      savePrompt: 'Nombre para este archivo de mano:',
+      saveDefault: 'Mano Guardada - Nivel {level}',
+      saveSuccess: '¡Guardado con éxito! Puedes acceder desde el menú en cualquier momento.',
+      confirmDelArchive: '¿Estás seguro de eliminar este archivo?',
+      customTitle: 'Configuración Personalizada y Finales (108 Cartas)',
+      customSelected: 'Seleccionado',
+      cardUnit: 'cartas',
+      customSetLevel: 'Nivel Actual:',
+      clearAll: 'Limpiar Todo',
+      cancel: 'Cancelar',
+      confirmApply: 'Aplicar a la Mano',
+      rulesTitle: '📖 Reglas Completas de Guandan y Guía Maestra',
+      help: [
+        { title: '🃏 1. Selección de Cartas', desc: '• Toca una carta para levantarla; toca de nuevo para bajarla.<br>• <strong>Bajar Todo Rápido</strong>: Mantén Shift o Command/Ctrl (o activa [⚡ Multiselección] en pantalla táctil) y toca una carta levantada para bajar todas.<br>• <strong>Selección en Rango</strong>: Elige la 1ª carta, mantén Shift y toca otra para seleccionar el bloque entero.<br>• Toca en el fondo vacío para deseleccionar todo.' },
+        { title: '🎯 2. Arrastre y Desplazamiento', desc: '• Arrastra cualquier carta seleccionada para mover todo el grupo.<br>• <strong>Desplazamiento Automático</strong>: Arrastra hacia los bordes de la pantalla para deslizar la vista suavemente en cualquier dirección.<br>• <strong>Zona Amplia</strong>: Cada fila acepta cartas a lo largo de todo su ancho, facilitando organizar filas cortas.' },
+        { title: '📑 3. Múltiples Planes y Guardado', desc: '• Haz clic en <strong>[+ Nuevo Plan]</strong> para probar otra forma de ordenar.<br>• Haz clic en <strong>[📊 Comparar Planes]</strong> para ver todas las estrategias juntas.<br>• Usa <strong>[💾 Guardar Mano]</strong> para guardar jugadas de práctica para siempre.' },
+        { title: '⚙️ 4. Reordenar Filas y Finales', desc: '• Arrastra el <strong>icono "≡"</strong> a la izquierda de cada fila para moverla arriba o abajo.<br>• Usa "Personalizar" para crear cualquier final de partida con las 108 cartas.<br>• Pulsa <strong>Delete / Backspace</strong> en el teclado para eliminar cartas.' }
+      ]
+    }
+  };
+
+  let currentLang = 'zh-CN';
+
+  function t(key, params = {}) {
+    let str = I18N[currentLang][key] || I18N['zh-CN'][key] || key;
+    if (typeof str === 'string') {
+      for (const [k, v] of Object.entries(params)) {
+        str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
+      }
+    }
+    return str;
+  }
+
+  // 渲染图文并茂的规则手册
+  function renderRulesModalContent() {
+    const container = document.getElementById('rulesContentBody');
+    if (currentLang === 'en') {
+      container.innerHTML = `
+        <div class="rule-section">
+          <h3>🏆 1. Overview & Objectives</h3>
+          <p><strong>Guandan (掼蛋)</strong> is a partner climbing card game played by 4 players (teams of two seated opposite each other) using two standard 54-card decks (108 cards in total). The objective is to work together with your teammate to empty your hands before opponents do.</p>
+        </div>
+        <div class="rule-section">
+          <h3>⭐ 2. Rank & Wild Cards ("Feng Ren Pei")</h3>
+          <p>• <strong>Current Rank (级牌)</strong>: The game plays through ranks 2 to Ace. If playing Rank 5, all 5s are promoted above Aces.<br>
+          • <strong>Heart Wild Card (红桃级牌·逢人配)</strong>: The two <strong>Heart cards of current rank</strong> are universal Wild Cards. They can substitute any card (except Jokers) to form straights, flushes, bombs, or full houses.<br>
+          • <strong>Card Hierarchy</strong>: Red Joker > Black Joker > Heart Rank Wild > Normal Rank Cards > A > K > Q > J > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3 > 2 (Rank card is elevated).</p>
+        </div>
+        <div class="rule-section">
+          <h3>💣 3. Combinations & Bomb Rankings</h3>
+          <p>From lowest to highest power:</p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">Single (单张)</span> <span class="mini-chip">Pair (对子)</span> <span class="mini-chip">Trips (三张)</span> <span class="mini-chip">Full House (三带二)</span>
+            <span class="mini-chip">Straight (顺子: 5 cards)</span> <span class="mini-chip">Tubes (三连对: 3 consecutive pairs)</span> <span class="mini-chip">Plates (双飞/钢板: 2 consecutive trips)</span>
+          </div>
+          <p><strong>Bomb Power Hierarchy (Bombs beat all non-bomb hands):</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">4-of-a-kind Bomb</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">5-of-a-kind Bomb</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip red">Straight Flush (同花顺 5 cards)</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">6-of-a-kind</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">7-of-a-kind</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">8-of-a-kind</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip gold">👑 4-Joker Supreme Bomb (天王炸 / 四大天王)</span>
+          </div>
+          <p style="font-size:12px; color:#94a3b8;">* Note: A 5-card Straight Flush beats any 4-of-a-kind or 5-of-a-kind bomb, but loses to 6-of-a-kind and higher!</p>
+        </div>
+        <div class="rule-section">
+          <h3>🎯 4. Essential Hand Sorting Strategy</h3>
+          <p>1. <strong>Spot the Wilds first</strong>: Separate Heart rank cards immediately; test if they turn a broken hand into a Straight Flush or high bomb.<br>
+          2. <strong>Identify Bombs</strong>: Group 4+ matching cards to secure control.<br>
+          3. <strong>Streamline Singles</strong>: Assemble loose cards into Straights, Tubes, or Full Houses to avoid getting stuck with isolated low singles.</p>
+        </div>
+      `;
+    } else if (currentLang === 'es') {
+      container.innerHTML = `
+        <div class="rule-section">
+          <h3>🏆 1. Descripción y Objetivo</h3>
+          <p><strong>Guandan (掼蛋)</strong> se juega entre 4 jugadores en parejas (compañeros sentados frente a frente) con 2 barajas de 54 cartas (108 cartas en total). El objetivo es vaciar la mano antes que los rivales colaborando con tu compañero.</p>
+        </div>
+        <div class="rule-section">
+          <h3>⭐ 2. Nivel Actual y Comodín Universal ("Feng Ren Pei")</h3>
+          <p>• <strong>Carta de Nivel (级牌)</strong>: Se juega del 2 al As. Si se juega el 5, todos los 5s suben por encima del As.<br>
+          • <strong>Comodín de Corazones (逢人配)</strong>: Las dos cartas de <strong>Corazones del nivel actual</strong> son comodines universales. Pueden reemplazar cualquier carta (excepto Jokers) para formar escaleras, colores o bombas.<br>
+          • <strong>Jerarquía</strong>: Joker Rojo > Joker Negro > Comodín de Nivel > Cartas de Nivel > A > K > Q > J > 10 > ... > 2.</p>
+        </div>
+        <div class="rule-section">
+          <h3>💣 3. Combinaciones y Bombas</h3>
+          <p>Combinaciones estándar:</p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">Individual</span> <span class="mini-chip">Pareja</span> <span class="mini-chip">Trío</span> <span class="mini-chip">Full (Trío + Pareja)</span>
+            <span class="mini-chip">Escalera (5 cartas)</span> <span class="mini-chip">3 Parejas Consecutivas</span> <span class="mini-chip">2 Tríos Consecutivos</span>
+          </div>
+          <p><strong>Jerarquía de Bombas (vencen a cualquier jugada normal):</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">Bomba de 4</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">Bomba de 5</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip red">Escalera de Color (5 cartas)</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">Bomba de 6+</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip gold">👑 Bomba Suprema (4 Jokers)</span>
+          </div>
+        </div>
+        <div class="rule-section">
+          <h3>🎯 4. Estrategia de Organización de Mano</h3>
+          <p>1. <strong>Localiza los comodines</strong>: Aparta los comodines de corazones para construir escaleras de color.<br>
+          2. <strong>Consolida bombas</strong>: Protege las bombas de 4 o más cartas.<br>
+          3. <strong>Reduce cartas sueltas</strong>: Junta cartas bajas en escaleras o tríos para no quedarte atrapado con cartas sueltas.</p>
+        </div>
+      `;
+    } else if (currentLang === 'zh-TW') {
+      container.innerHTML = `
+        <div class="rule-section">
+          <h3>🏆 1. 遊戲綜述與勝負目標</h3>
+          <p><strong>掼蛋</strong>源自江蘇淮安，採用<strong>兩副牌（共 108 張）</strong>，4人參與，對家兩人為一組配合。遊戲核心目標是在隊友的戰術掩護下，儘早將手中的 27 張牌全部出完（第一名出完者稱為「頭遊」）。</p>
+        </div>
+        <div class="rule-section">
+          <h3>⭐ 2. 級牌體系與「逢人配」萬能牌</h3>
+          <p>• <strong>級牌（本局打幾）</strong>：從打 2 開始升至打 A。若當前打 5，則所有的 5 點數權重被拔高，大於 A 且僅次於小王。<br>
+          • <strong>逢人配（紅心級牌）</strong>：兩張<strong>紅心級牌</strong>為萬能百搭牌（除大小王外），可替代任意點數和花色湊成同花順、順子、炸彈等。<br>
+          • <strong>大小順序</strong>：大王 ＞ 小王 ＞ 紅心逢人配 ＞ 其他花色級牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2（級牌位自動抽離提升）。</p>
+        </div>
+        <div class="rule-section">
+          <h3>💣 3. 牌型圖譜與炸彈威力天梯</h3>
+          <p><strong>【常規牌型】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">單張</span> <span class="mini-chip">對子</span> <span class="mini-chip">三張</span> <span class="mini-chip">三帶二</span>
+            <span class="mini-chip">單順 (5張連牌)</span> <span class="mini-chip">三連對 (木板)</span> <span class="mini-chip">雙飛 (鋼板: 2個連續三張)</span>
+          </div>
+          <p><strong>【炸彈威力比拼（壓制所有常規牌型）】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">四張炸彈</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">五張炸彈</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip red">同花順 (5張同花連續)</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">六張炸彈</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">七張炸彈</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">八張炸彈</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip gold">👑 四大天王 (四張大小王天王炸)</span>
+          </div>
+          <p style="font-size:12px; color:#94a3b8;">* 關鍵特權：同花順威力大於五張炸彈，但小於六張炸彈！天王炸（大王+大王+小王+小王）為全場最大神牌。</p>
+        </div>
+        <div class="rule-section">
+          <h3>🎯 4. 新手前程理牌黃金法則</h3>
+          <p>1. <strong>先抽萬能牌</strong>：開局第一時間拎出紅心逢人配，觀察能否填補出極高威力的同花順或組成6炸。<br>
+          2. <strong>定死炸彈庫</strong>：將 4 張以上的硬炸彈單獨成層收納，非必要不輕易拆開。<br>
+          3. <strong>化整消單</strong>：將落單的碎牌優先編入 5 連順、三連對或三帶二中，減少手上無法走脫的單牌數量。</p>
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div class="rule-section">
+          <h3>🏆 1. 游戏综述与胜负目标</h3>
+          <p><strong>掼蛋</strong>源自江苏淮安，采用<strong>两副牌（共 108 张）</strong>，4人参与，对家两人为一组配合。游戏核心目标是在队友的战术掩护下，尽早将手中的 27 张牌全部出完（第一名出完者称为“头游”）。</p>
+        </div>
+        <div class="rule-section">
+          <h3>⭐ 2. 级牌体系与“逢人配”万能牌</h3>
+          <p>• <strong>级牌（本局打几）</strong>：从打 2 开始升至打 A。若当前打 5，则所有的 5 点数权重被拔高，大于 A 且仅次于小王。<br>
+          • <strong>逢人配（红心级牌）</strong>：两张<strong>红心级牌</strong>为万能百搭牌（除大小王外），可替代任意点数和花色凑成同花顺、顺子、炸弹等。<br>
+          • <strong>大小顺序</strong>：大王 ＞ 小王 ＞ 红心逢人配 ＞ 其他花色级牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2（级牌位自动抽离提升）。</p>
+        </div>
+        <div class="rule-section">
+          <h3>💣 3. 牌型图谱与炸弹威力天梯</h3>
+          <p><strong>【常规牌型】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">单张</span> <span class="mini-chip">对子</span> <span class="mini-chip">三张</span> <span class="mini-chip">三带二</span>
+            <span class="mini-chip">单顺 (5张连牌)</span> <span class="mini-chip">三连对 (木板)</span> <span class="mini-chip">双飞 (钢板: 2个连续三张)</span>
+          </div>
+          <p><strong>【炸弹威力比拼（压制所有常规牌型）】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">四张炸弹</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">五张炸弹</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip red">同花顺 (5张同花连续)</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">六张炸弹</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">七张炸弹</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">八张炸弹</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip gold">👑 四大天王 (四张大小王天王炸)</span>
+          </div>
+          <p style="font-size:12px; color:#94a3b8;">* 关键特权：同花顺威力大于五张炸弹，但小于六张炸弹！天王炸（大王+大王+小王+小王）为全场最大神牌。</p>
+        </div>
+        <div class="rule-section">
+          <h3>🎯 4. 新手前期理牌黄金法则</h3>
+          <p>1. <strong>先抽万能牌</strong>：开局第一时间拎出红心逢人配，观察能否填补出极高威力的同花顺或组成6炸。<br>
+          2. <strong>定死炸弹库</strong>：将 4 张以上的硬炸弹单独成层收纳，非必要不轻易拆开。<br>
+          3. <strong>化整消单</strong>：将落单的碎牌优先编入 5 连顺、三连对或三带二中，减少手上无法走脱的单牌数量。</p>
+        </div>
+      `;
+    }
+  }
+
+  // 更新帮助说明文字
+  function updateHelpDrawerContent() {
+    const grid = document.getElementById('helpGridContent');
+    grid.innerHTML = '';
+    const items = I18N[currentLang].help;
+    items.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'help-item';
+      el.innerHTML = `<h4>${item.title}</h4><p>${item.desc}</p>`;
+      grid.appendChild(el);
+    });
+  }
+
+  // 刷新全界面文本
+  function applyLanguage() {
+    document.getElementById('dealBtn').textContent = t('deal');
+    document.getElementById('customHandBtn').textContent = t('customHand');
+    document.getElementById('compareSchemesBtn').textContent = t('compare');
+    document.getElementById('rulesBtn').textContent = t('rulesBtn');
+    document.getElementById('saveArchiveBtn').textContent = t('saveArchive');
+    document.getElementById('openArchiveBtn').textContent = t('openArchive');
+    document.getElementById('multiSelectToggleBtn').textContent = t('multiSelectToggle');
+    document.getElementById('undoBtn').textContent = t('undo');
+    document.getElementById('redoBtn').textContent = t('redo');
+    document.getElementById('resetBtn').textContent = t('resetSort');
+    document.getElementById('toggleHelpBtn').textContent = t('toggleHelp');
+
+    document.getElementById('compareModalTitle').textContent = t('compareTitle');
+    document.getElementById('closeCompareBtn').textContent = t('backToPlay');
+    document.getElementById('rulesModalTitle').textContent = t('rulesTitle');
+    document.getElementById('closeRulesBtn').textContent = t('close');
+    document.getElementById('archiveModalTitle').textContent = t('archiveTitle');
+    document.getElementById('closeArchiveBtn').textContent = t('close');
+
+    document.getElementById('customModalTitle').textContent = t('customTitle');
+    document.getElementById('customSelectedLabel').textContent = t('customSelected');
+    document.getElementById('customCardUnit').textContent = t('cardUnit');
+    document.getElementById('customLevelSetLabel').textContent = t('customSetLevel');
+    document.getElementById('clearAllModalBtn').textContent = t('clearAll');
+    document.getElementById('cancelModalBtn').textContent = t('cancel');
+    document.getElementById('confirmModalBtn').textContent = t('confirmApply');
+
+    document.getElementById('levelInfo').textContent = t('levelPrefix', { level: currentLevel });
+    updateTotalCount();
+    updateButtonStates();
+    updateHelpDrawerContent();
+    renderRulesModalContent();
+    renderSchemesNav();
+    renderBoard();
+  }
+
   const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
   const SUITS = [
-    { name: '♥', color: 'red', label: '红桃', isHeart: true },
-    { name: '♦', color: 'red', label: '方块', isHeart: false },
-    { name: '♠', color: 'black', label: '黑桃', isHeart: false },
-    { name: '♣', color: 'black', label: '梅花', isHeart: false }
+    { name: '♥', color: 'red', isHeart: true },
+    { name: '♦', color: 'red', isHeart: false },
+    { name: '♠', color: 'black', isHeart: false },
+    { name: '♣', color: 'black', isHeart: false }
   ];
 
   let currentLevel = '2';
@@ -735,7 +1235,6 @@
   let rowTargetDrop = null;
   let modalSelectionMap = {};
 
-  // 全向自适应边缘滚屏引擎
   let autoScrollAnimationId = null;
   let autoScrollSpeedY = 0;
   let autoScrollSpeedX = 0;
@@ -799,23 +1298,30 @@
     document.getElementById('redoBtn').disabled = !cur || cur.redoStack.length === 0;
     const delBtn = document.getElementById('deleteBtn');
     delBtn.disabled = selectedIds.size === 0;
-    delBtn.textContent = `删除选中 (${selectedIds.size})`;
+    delBtn.textContent = t('deleteSelected', { count: selectedIds.size });
   }
 
   function updateTotalCount() {
     const cur = getCurrentScheme();
     const total = cur ? cur.rows.reduce((acc, r) => acc + r.length, 0) : 0;
-    document.getElementById('totalCountInfo').textContent = `手牌：${total} 张`;
+    document.getElementById('totalCountInfo').textContent = t('cardsCount', { count: total });
+  }
+
+  function getCardDisplayRank(card) {
+    if (card.isJoker) {
+      return card.jokerType === 'big' ? t('bigJoker') : t('smallJoker');
+    }
+    return card.rank;
   }
 
   function buildCardHTML(card) {
     const isWild = (card.rank === currentLevel && card.isHeart);
     return `
       <div class="card-top">
-        <div class="card-val">${card.rank}</div>
+        <div class="card-val">${getCardDisplayRank(card)}</div>
         <div class="card-suit">${card.suit}</div>
       </div>
-      ${isWild ? '<div class="wild-badge">逢人配</div>' : ''}
+      ${isWild ? `<div class="wild-badge">${t('wildTag')}</div>` : ''}
     `;
   }
 
@@ -826,8 +1332,9 @@
     schemes.forEach((s, idx) => {
       const tab = document.createElement('div');
       tab.className = 'scheme-tab' + (idx === currentSchemeIndex ? ' active' : '');
+      const schemeLetter = String.fromCharCode(65 + idx);
       tab.innerHTML = `
-        <span>${s.name}</span>
+        <span>${t('schemeName', { name: schemeLetter })}</span>
         ${schemes.length > 1 ? `<span class="tab-del" title="删除该方案">✕</span>` : ''}
       `;
 
@@ -845,7 +1352,7 @@
 
     const addBtn = document.createElement('button');
     addBtn.style.padding = '6px 12px';
-    addBtn.innerHTML = '+ 新建方案理牌';
+    addBtn.innerHTML = t('newSchemeBtn');
     addBtn.addEventListener('click', addNewScheme);
     nav.appendChild(addBtn);
   }
@@ -862,7 +1369,7 @@
     const letter = String.fromCharCode(65 + schemes.length);
     const clonedCards = getFlattenedCards();
     schemes.push({
-      name: `方案 ${letter}`,
+      name: `Scheme ${letter}`,
       rows: [sortCards(clonedCards, currentLevel)],
       historyStack: [],
       redoStack: []
@@ -892,16 +1399,16 @@
       const isEmpty = rowCards.length === 0;
       rowEl.className = 'card-row' + (isEmpty ? ' empty-row' : '');
       rowEl.dataset.rowIndex = rIndex;
+      rowEl.setAttribute('data-placeholder', t('rowPlaceholder'));
 
       if (!isEmpty) {
         const handle = document.createElement('div');
         handle.className = 'row-handle';
         handle.dataset.rowIndex = rIndex;
-        handle.title = '按住上下拖拽整层';
         handle.innerHTML = `
           <div class="handle-icon">≡</div>
-          <div class="handle-label">第${rIndex + 1}层</div>
-          <div class="handle-count">${rowCards.length}张</div>
+          <div class="handle-label">${t('rowLayer', { idx: rIndex + 1 })}</div>
+          <div class="handle-count">${rowCards.length} ${t('cardUnit')}</div>
         `;
         rowEl.appendChild(handle);
       }
@@ -943,11 +1450,10 @@
   function checkEdgeAutoScroll(clientX, clientY) {
     const vpW = window.innerWidth;
     const vpH = window.innerHeight;
-    const edgeX = 90; // 加宽横向感应区，单手更容易触发向左或向右自动回滚
+    const edgeX = 90;
     const edgeY = 80;
     const maxSpd = 16;
 
-    // Y 轴感应
     if (clientY > vpH - edgeY) {
       const ratio = (clientY - (vpH - edgeY)) / edgeY;
       autoScrollSpeedY = Math.min(maxSpd, Math.max(3, ratio * maxSpd));
@@ -958,7 +1464,6 @@
       autoScrollSpeedY = 0;
     }
 
-    // X 轴感应（支持把最右侧的牌拖到最左侧）
     if (clientX > vpW - edgeX) {
       const ratio = (clientX - (vpW - edgeX)) / edgeX;
       autoScrollSpeedX = Math.min(maxSpd, Math.max(4, ratio * maxSpd));
@@ -980,7 +1485,6 @@
     if (autoScrollAnimationId) return;
     function loop() {
       if ((autoScrollSpeedX !== 0 || autoScrollSpeedY !== 0) && (interactionMode === 'dragging' || interactionMode === 'row-reorder')) {
-        // 双向同步驱动窗口与根容器滚动
         window.scrollBy(autoScrollSpeedX, autoScrollSpeedY);
         document.documentElement.scrollLeft += autoScrollSpeedX;
         document.body.scrollLeft += autoScrollSpeedX;
@@ -1099,7 +1603,7 @@
 
       const badge = document.getElementById('rowDragBadge');
       badge.style.display = 'block';
-      badge.textContent = `移动：第 ${draggedRowIndex + 1} 层 (${cur.rows[draggedRowIndex].length} 张)`;
+      badge.textContent = `${t('rowLayer', { idx: draggedRowIndex + 1 })} (${cur.rows[draggedRowIndex].length})`;
       badge.style.left = `${e.clientX}px`;
       badge.style.top = `${e.clientY}px`;
 
@@ -1276,7 +1780,6 @@
     const targetRowIndex = parseInt(rowEl.dataset.rowIndex);
     const validCards = Array.from(rowEl.querySelectorAll('.card:not(.ghost)'));
 
-    // 空行直接作为第 0 个位置
     if (validCards.length === 0) {
       const rowRect = rowEl.getBoundingClientRect();
       caret.style.display = 'block';
@@ -1290,7 +1793,6 @@
     const lastCard = validCards[validCards.length - 1];
     const lastRect = lastCard.getBoundingClientRect();
 
-    // 手指落在现有卡牌右侧任何地方（等宽盲放）：直接追加到该层末尾
     if (x >= lastRect.right - 10) {
       caret.style.display = 'block';
       caret.style.left = `${lastRect.right + 6 + window.scrollX}px`;
@@ -1300,7 +1802,6 @@
       return;
     }
 
-    // 手指落在卡牌之间或左侧缝隙
     let chosenIndex = 0;
     let caretX = 0;
     let caretY = 0;
@@ -1396,6 +1897,7 @@
     if ((e.key === 'Delete' || e.key === 'Backspace') &&
         !document.getElementById('customModal').style.display.includes('flex') &&
         !document.getElementById('compareModal').style.display.includes('flex') &&
+        !document.getElementById('rulesModal').style.display.includes('flex') &&
         !document.getElementById('archiveModal').style.display.includes('flex')) {
       deleteSelectedCards();
     }
@@ -1405,6 +1907,16 @@
   multiToggleBtn.addEventListener('click', () => {
     touchMultiSelectActive = !touchMultiSelectActive;
     multiToggleBtn.classList.toggle('toggle-active', touchMultiSelectActive);
+  });
+
+  // ---------------- 规则弹窗逻辑 ----------------
+  const rulesModal = document.getElementById('rulesModal');
+  document.getElementById('rulesBtn').addEventListener('click', () => {
+    renderRulesModalContent();
+    rulesModal.style.display = 'flex';
+  });
+  document.getElementById('closeRulesBtn').addEventListener('click', () => {
+    rulesModal.style.display = 'none';
   });
 
   // ---------------- 方案横向对比 ----------------
@@ -1421,14 +1933,15 @@
 
       const validRows = s.rows.filter(r => r.length > 0);
       const totalCount = validRows.reduce((acc, r) => acc + r.length, 0);
+      const schemeLetter = String.fromCharCode(65 + idx);
 
       col.innerHTML = `
         <div class="scheme-col-header">
           <div>
-            <span class="scheme-col-title">${s.name}</span>
-            <span style="font-size: 13px; color: #94a3b8; margin-left: 8px;">(${totalCount} 张 · ${validRows.length} 层)</span>
+            <span class="scheme-col-title">${t('schemeName', { name: schemeLetter })}</span>
+            <span style="font-size: 13px; color: #94a3b8; margin-left: 8px;">(${totalCount} ${t('cardUnit')} · ${validRows.length} ${t('rowLayer', { idx: '' })})</span>
           </div>
-          ${idx !== currentSchemeIndex ? `<button class="primary" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">切换以此排布</button>` : `<span style="font-size: 12px; color: #68d391; font-weight: bold;">当前使用中</span>`}
+          ${idx !== currentSchemeIndex ? `<button class="primary" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #68d391; font-weight: bold;">${t('usingCurrent')}</span>`}
         </div>
       `;
 
@@ -1441,7 +1954,7 @@
         rowBadge.style.color = '#ffd700';
         rowBadge.style.fontWeight = 'bold';
         rowBadge.style.minWidth = '42px';
-        rowBadge.textContent = `第${rIdx + 1}层:`;
+        rowBadge.textContent = `${t('rowLayer', { idx: rIdx + 1 })}:`;
         miniRow.appendChild(rowBadge);
 
         r.forEach((c, cIdx) => {
@@ -1491,8 +2004,8 @@
   }
 
   document.getElementById('saveArchiveBtn').addEventListener('click', () => {
-    const defaultName = `牌局存档 - 打${currentLevel} (${new Date().toLocaleDateString()})`;
-    const customName = prompt('请为当前手牌存档命名：', defaultName);
+    const defaultName = `${t('saveDefault', { level: currentLevel })} (${new Date().toLocaleDateString()})`;
+    const customName = prompt(t('savePrompt'), defaultName);
     if (!customName) return;
 
     const archives = getSavedArchives();
@@ -1508,7 +2021,7 @@
 
     archives.unshift(newRecord);
     setSavedArchives(archives);
-    alert('保存成功！随时可在“打开存档箱”中调取继续理牌。');
+    alert(t('saveSuccess'));
   });
 
   document.getElementById('openArchiveBtn').addEventListener('click', () => {
@@ -1525,7 +2038,7 @@
     const archives = getSavedArchives();
 
     if (archives.length === 0) {
-      archiveListContainer.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 24px 0;">暂无保存的手牌存档。</div>`;
+      archiveListContainer.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 24px 0;">${t('noArchives')}</div>`;
       return;
     }
 
@@ -1539,12 +2052,12 @@
         <div style="flex-grow: 1;">
           <div class="save-info-title">${item.name}</div>
           <div class="save-info-meta">
-            打【${item.currentLevel}】 · ${totalCards} 张牌 · ${item.schemes.length} 个方案 · ${item.date}
+            ${t('levelPrefix', { level: item.currentLevel })} · ${totalCards} ${t('cardUnit')} · ${item.schemes.length} ${t('schemeName', { name: '' })} · ${item.date}
           </div>
         </div>
         <div style="display: flex; gap: 8px;">
-          <button class="primary" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">载入</button>
-          <button class="danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">删除</button>
+          <button class="primary" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
+          <button class="danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">${t('delete')}</button>
         </div>
       `;
       archiveListContainer.appendChild(cardEl);
@@ -1557,7 +2070,7 @@
     if (!target) return;
 
     currentLevel = target.currentLevel;
-    document.getElementById('levelInfo').textContent = `打：【 ${currentLevel} 】`;
+    document.getElementById('levelInfo').textContent = t('levelPrefix', { level: currentLevel });
 
     initialCards = JSON.parse(JSON.stringify(target.initialCards || []));
     schemes = JSON.parse(JSON.stringify(target.schemes || []));
@@ -1572,7 +2085,7 @@
   };
 
   window.deleteArchive = function(id) {
-    if (!confirm('确定要删除这条存档吗？此操作不可逆。')) return;
+    if (!confirm(t('confirmDelArchive'))) return;
     let archives = getSavedArchives();
     archives = archives.filter(a => a.id !== id);
     setSavedArchives(archives);
@@ -1594,15 +2107,19 @@
   const modalLevelSelect = document.getElementById('modalLevelSelect');
   const modalSelectedCount = document.getElementById('modalSelectedCount');
 
-  RANKS.forEach(r => {
-    const opt = document.createElement('option');
-    opt.value = r;
-    opt.textContent = `打 ${r}`;
-    modalLevelSelect.appendChild(opt);
-  });
+  function renderLevelSelectOptions() {
+    modalLevelSelect.innerHTML = '';
+    RANKS.forEach(r => {
+      const opt = document.createElement('option');
+      opt.value = r;
+      opt.textContent = `${t('levelPrefix', { level: r })}`;
+      modalLevelSelect.appendChild(opt);
+    });
+  }
 
   function openCustomModal() {
     modalSelectionMap = {};
+    renderLevelSelectOptions();
     modalLevelSelect.value = currentLevel;
 
     const flat = getFlattenedCards();
@@ -1625,7 +2142,7 @@
 
     const jokerRow = document.createElement('div');
     jokerRow.className = 'picker-row';
-    jokerRow.innerHTML = `<div class="picker-label">王牌</div><div class="picker-cards-grid"></div>`;
+    jokerRow.innerHTML = `<div class="picker-label">${t('suits')['joker']}</div><div class="picker-cards-grid"></div>`;
     const jokerGrid = jokerRow.querySelector('.picker-cards-grid');
 
     [
@@ -1642,7 +2159,8 @@
     SUITS.forEach(s => {
       const row = document.createElement('div');
       row.className = 'picker-row';
-      row.innerHTML = `<div class="picker-label ${s.color}">${s.label}</div><div class="picker-cards-grid"></div>`;
+      const suitLabel = t('suits')[s.name] || s.name;
+      row.innerHTML = `<div class="picker-label ${s.color}">${suitLabel}</div><div class="picker-cards-grid"></div>`;
       const grid = row.querySelector('.picker-cards-grid');
 
       [...RANKS].reverse().forEach(r => {
@@ -1660,9 +2178,10 @@
   function createPickerCardEl(item, count, key) {
     const el = document.createElement('div');
     el.className = `picker-card-btn ${item.color}` + (count > 0 ? ' has-selected' : '');
+    const displayRank = (item.rank === '大王' ? t('bigJoker') : (item.rank === '小王' ? t('smallJoker') : item.rank));
     el.innerHTML = `
-      <div style="font-size: 16px; font-weight: 800; line-height: 1;">${item.rank}</div>
-      <div style="font-size: 14px; line-height: 1; margin-top: 3px;">${item.suit}</div>
+      <div style="font-size: 15px; font-weight: 800; line-height: 1;">${displayRank}</div>
+      <div style="font-size: 13px; line-height: 1; margin-top: 3px;">${item.suit}</div>
       <div class="picker-count-badge">${count}</div>
     `;
 
@@ -1693,7 +2212,7 @@
 
   document.getElementById('confirmModalBtn').addEventListener('click', () => {
     currentLevel = modalLevelSelect.value;
-    document.getElementById('levelInfo').textContent = `打：【 ${currentLevel} 】`;
+    document.getElementById('levelInfo').textContent = t('levelPrefix', { level: currentLevel });
 
     const newCards = [];
     let idGen = 1000;
@@ -1722,7 +2241,7 @@
 
     schemes = [
       {
-        name: '方案 A',
+        name: 'Scheme A',
         rows: [sortCards(newCards, currentLevel)],
         historyStack: [],
         redoStack: []
@@ -1736,6 +2255,13 @@
     closeCustomModal();
     renderSchemesNav();
     renderBoard();
+  });
+
+  // ---------------- 语言切换监听 ----------------
+  const langSelect = document.getElementById('langSelect');
+  langSelect.addEventListener('change', (e) => {
+    currentLang = e.target.value;
+    applyLanguage();
   });
 
   // ---------------- 撤销、重做、重置、发牌 ----------------
@@ -1775,14 +2301,14 @@
 
   function startNewGame() {
     currentLevel = pickRandomLevel();
-    document.getElementById('levelInfo').textContent = `打：【 ${currentLevel} 】`;
+    document.getElementById('levelInfo').textContent = t('levelPrefix', { level: currentLevel });
 
     const rawHand = dealHand();
     initialCards = [...rawHand];
 
     schemes = [
       {
-        name: '方案 A',
+        name: 'Scheme A',
         rows: [sortCards(rawHand, currentLevel)],
         historyStack: [],
         redoStack: []
@@ -1802,7 +2328,10 @@
   document.getElementById('redoBtn').addEventListener('click', redo);
   document.getElementById('resetBtn').addEventListener('click', resetSort);
 
-  window.onload = startNewGame;
+  window.onload = () => {
+    applyLanguage();
+    startNewGame();
+  };
 </script>
 </body>
 </html>
