@@ -220,13 +220,16 @@
     }
   }
 
+  /* 彻底修复：只在 html 开启原生滚动并设置防露白，消除滚动事件拦截 */
   html {
     background-color: var(--bg-base);
+    overflow-x: auto;
+    overflow-y: auto;
     overscroll-behavior: none;
     -webkit-overscroll-behavior: none;
   }
 
-  html, body {
+  body {
     width: 100%;
     min-height: 100vh;
     margin: 0;
@@ -234,15 +237,7 @@
     background: var(--bg-gradient);
     background-attachment: fixed;
     background-color: var(--bg-base);
-    overflow-x: auto;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: none;
-    -webkit-overscroll-behavior: none;
-    touch-action: manipulation;
-  }
-
-  body {
+    box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
     padding-top: max(38px, calc(env(safe-area-inset-top) + 24px));
@@ -255,7 +250,7 @@
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
-    box-sizing: border-box;
+    touch-action: manipulation;
   }
 
   /* 顶部全局主控制台架构 */
@@ -1767,7 +1762,6 @@
   let autoScrollSpeedY = 0;
   let autoScrollSpeedX = 0;
 
-  // 跨端思路标签拖拽排序状态
   let draggedSchemeIndex = null;
   let isTabDraggingPointer = false;
   let tabDragStartX = 0;
@@ -1877,7 +1871,6 @@
     let pool = sortCards([...cardsPool], level);
     const rows = [];
 
-    // 辅助工具：从 pool 中安全抽取指定 IDs 的牌
     function takeCardsByIds(ids) {
       const set = new Set(ids);
       const taken = pool.filter(c => set.has(c.id));
@@ -1908,14 +1901,12 @@
 
     // 3. 寻找“逢人配”与同花顺组合 (Straight Flush 5 cards)
     const wildCards = pool.filter(c => c.rank === level && c.isHeart);
-    const standardOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A']; // A 可作首尾
+    const standardOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
     const suits = ['♥', '♦', '♠', '♣'];
 
     for (let s of suits) {
       const suitCards = pool.filter(c => c.suit === s && !(c.rank === level && c.isHeart) && !c.isJoker);
-      const suitRanks = new Set(suitCards.map(c => c.rank));
 
-      // 尝试 5 连顺滑窗
       for (let i = 0; i <= standardOrder.length - 5; i++) {
         const windowRanks = standardOrder.slice(i, i + 5);
         let missing = [];
@@ -1927,7 +1918,6 @@
           else missing.push(wr);
         });
 
-        // 缺牌数量可以用手里的逢人配补齐
         if (missing.length > 0 && missing.length <= wildCards.length && (matched.length + missing.length === 5)) {
           const usedWilds = wildCards.splice(0, missing.length);
           const comboIds = [...matched.map(c => c.id), ...usedWilds.map(c => c.id)];
@@ -1939,7 +1929,6 @@
 
     // 4. 提取剩余 4 张炸弹（包括用逢人配配出 5 炸 / 6 炸）
     if (wildCards.length > 0) {
-      // 重新统计池子里 3 张相同的牌，用配牌补成炸弹
       const curBuckets = {};
       pool.forEach(c => {
         if (!c.isJoker && !(c.rank === level && c.isHeart)) {
@@ -1978,7 +1967,7 @@
       }
     }
 
-    // 6. 提取三连对 (木板) 与 钢板 (双飞)
+    // 6. 提取三连对与双飞
     const countsMap = {};
     pool.forEach(c => {
       if (!c.isJoker) {
@@ -1987,7 +1976,7 @@
       }
     });
 
-    // 7. 提取三带二 (三张配对子)
+    // 7. 提取三带二
     const trips = [];
     const pairs = [];
     Object.keys(countsMap).forEach(r => {
@@ -2002,7 +1991,7 @@
       rows.push(takeCardsByIds([...tGroup.map(c => c.id), ...pGroup.map(c => c.id)]));
     }
 
-    // 8. 剩余成组对子
+    // 8. 剩余对子
     const remainBuckets = {};
     pool.forEach(c => {
       remainBuckets[c.rank] = remainBuckets[c.rank] || [];
@@ -2015,7 +2004,7 @@
       }
     });
 
-    // 9. 剩余所有碎单牌（合并归为底盘一层，便于观察走脱）
+    // 9. 剩余散牌归底
     if (pool.length > 0) {
       rows.push(takeCardsByIds(pool.map(c => c.id)));
     }
@@ -2023,7 +2012,6 @@
     return rows.filter(r => r.length > 0);
   }
 
-  // 一键生成 AI 推荐思路
   function handleGenerateAIRecommend() {
     const allCards = getFlattenedCards();
     if (!allCards || allCards.length === 0) return;
