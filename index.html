@@ -391,6 +391,11 @@
     font-size: 13px;
     line-height: 1;
     flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.12s ease;
+  }
+  .tab-icon-prefix:hover {
+    transform: scale(1.2);
   }
   .scheme-tab .tab-move-btn {
     color: #94a3b8;
@@ -403,17 +408,6 @@
   .scheme-tab .tab-move-btn:hover {
     color: #38bdf8;
     opacity: 1;
-    background: rgba(255, 255, 255, 0.1);
-  }
-  .scheme-tab .tab-edit-btn {
-    color: #94a3b8;
-    font-size: 11px;
-    padding: 0 2px;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  .scheme-tab .tab-edit-btn:hover {
-    color: var(--gold);
     background: rgba(255, 255, 255, 0.1);
   }
   .scheme-tab .tab-del {
@@ -1003,12 +997,12 @@
     </div>
   </div>
 
-  <!-- 第 3 层：发牌、调牌与方案比较（单独一层） -->
+  <!-- 第 3 层：发牌、调牌与思路比较（单独一层） -->
   <div class="header-tier-row">
     <div class="control-island">
       <button class="action-lead-btn" id="dealBtn">🎴 新一局发牌</button>
       <button class="action-accent" id="customHandBtn">🛠️ 自定义调牌</button>
-      <button class="action-accent" id="compareSchemesBtn">⚖️ 方案比较</button>
+      <button class="action-accent" id="compareSchemesBtn">⚖️ 思路比较</button>
     </div>
   </div>
 
@@ -1044,11 +1038,11 @@
 <div id="dragProxy"></div>
 <div id="rowDragBadge"></div>
 
-<!-- 方案多版本横向比较弹窗 -->
+<!-- 思路多版本横向比较弹窗 -->
 <div class="modal-backdrop" id="compareModal">
   <div class="compare-modal-content">
     <div class="modal-header">
-      <div class="modal-title" id="compareModalTitle">⚖️ 多方案理牌思路横向比较</div>
+      <div class="modal-title" id="compareModalTitle">⚖️ 多版本思路横向比较</div>
       <button class="action-lead-btn" id="closeCompareBtn" style="padding: 6px 14px;">返回理牌</button>
     </div>
     <div class="compare-schemes-scroll" id="compareContainer"></div>
@@ -1116,9 +1110,6 @@
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const modKeySymbol = isMac ? '⌘' : 'Ctrl+';
 
-  // 清除旧主题缓存
-  localStorage.removeItem('GUANDAN_CARD_THEME');
-
   // ---------------- 语言字典 (i18n) ----------------
   const I18N = {
     'zh-CN': {
@@ -1126,7 +1117,7 @@
       cardsCount: '手牌：{count} 张',
       deal: '🎴 新一局发牌',
       customHand: '🛠️ 自定义调牌',
-      compare: '⚖️ 方案比较',
+      compare: '⚖️ 思路比较',
       rulesBtn: '📖 掼蛋规则',
       saveArchive: '💾 存档',
       openArchive: '📂 存档箱',
@@ -1147,7 +1138,7 @@
       backToPlay: '返回理牌',
       applyScheme: '切换以此排布',
       usingCurrent: '当前使用中',
-      compareTitle: '⚖️ 多方案理牌思路横向比较',
+      compareTitle: '⚖️ 多版本思路横向比较',
       archiveTitle: '📂 本地手牌存档箱',
       noArchives: '暂无保存的手牌存档。',
       load: '载入',
@@ -1181,7 +1172,7 @@
         },
         {
           title: '⌨️ 效率快捷键与多思路',
-          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">+ 新建思路</span> 可在同一把牌中探索不同拆牌路线；<strong>拖拽标签可调换位置，双击或点✏️即可重命名</strong>！'
+          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">+ 新建思路</span> 可在同一把牌中探索不同拆牌路线；<strong>点击前置图标或双击标签即可重命名</strong>！'
         }
       ]
     },
@@ -1190,7 +1181,7 @@
       cardsCount: '手牌：{count} 張',
       deal: '🎴 新一局發牌',
       customHand: '🛠️ 自訂調牌',
-      compare: '⚖️ 方案比較',
+      compare: '⚖️ 思路比較',
       rulesBtn: '📖 掼蛋規則',
       saveArchive: '💾 存檔',
       openArchive: '📂 存檔箱',
@@ -1211,7 +1202,7 @@
       backToPlay: '返回理牌',
       applyScheme: '切換以此排布',
       usingCurrent: '目前使用中',
-      compareTitle: '⚖️ 多方案理牌思路橫向比較',
+      compareTitle: '⚖️ 多版本思路橫向比較',
       archiveTitle: '📂 本地手牌存檔箱',
       noArchives: '暫無儲存的手牌存檔。',
       load: '載入',
@@ -1245,7 +1236,7 @@
         },
         {
           title: '⌨️ 效率快捷鍵與多思路',
-          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">+ 新建思路</span> 可在同一把牌中探索不同拆牌路線；<strong>拖曳標籤可調換位置，雙擊或點✏️即可重新命名</strong>！'
+          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">+ 新建思路</span> 可在同一把牌中探索不同拆牌路線；<strong>點擊前置圖標或雙擊標籤即可重新命名</strong>！'
         }
       ]
     },
@@ -1254,7 +1245,7 @@
       cardsCount: 'Hand: {count} cards',
       deal: '🎴 Deal Hand',
       customHand: '🛠️ Custom',
-      compare: '⚖️ Compare',
+      compare: '⚖️ Compare Ideas',
       rulesBtn: '📖 Rules',
       saveArchive: '💾 Save',
       openArchive: '📂 Vault',
@@ -1275,7 +1266,7 @@
       backToPlay: 'Back',
       applyScheme: 'Use Scheme',
       usingCurrent: 'In Use',
-      compareTitle: '⚖️ Guandan Scheme Comparisons',
+      compareTitle: '⚖️ Guandan Ideas Comparisons',
       archiveTitle: '📂 Saved Hands Vault',
       noArchives: 'No saved archives found.',
       load: 'Load',
@@ -1309,7 +1300,7 @@
         },
         {
           title: '⌨️ Shortcuts & Multi-Ideas',
-          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">+ New Idea</span> to explore distinct strategies; <strong>drag tabs or tap ◀ / ▶ to reorder, double-click or tap ✏️ to rename</strong>!'
+          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">+ New Idea</span> to explore distinct strategies; <strong>drag tabs or tap ◀ / ▶ to reorder, click icon or double-click to rename</strong>!'
         }
       ]
     },
@@ -1318,7 +1309,7 @@
       cardsCount: 'Mano: {count} cartas',
       deal: '🎴 Repartir',
       customHand: '🛠️ Personalizar',
-      compare: '⚖️ Comparar',
+      compare: '⚖️ Comparar Ideas',
       rulesBtn: '📖 Reglas',
       saveArchive: '💾 Guardar',
       openArchive: '📂 Archivos',
@@ -1339,7 +1330,7 @@
       backToPlay: 'Volver',
       applyScheme: 'Usar este',
       usingCurrent: 'En uso',
-      compareTitle: '⚖️ Comparación de Planes de Juego',
+      compareTitle: '⚖️ Comparación de Ideas de Juego',
       archiveTitle: '📂 Archivo de Manos Guardadas',
       noArchives: 'No hay partidas guardadas.',
       load: 'Cargar',
@@ -1373,7 +1364,7 @@
         },
         {
           title: '⌨️ Atajos y Comparativa',
-          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">+ Nueva Idea</span> para comparar; ¡<strong>arrastra las pestañas o pulsa ◀ / ▶ para reordenar, doble toque o ✏️ para renombrar</strong>!'
+          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">+ Nueva Idea</span> para comparar; ¡<strong>arrastra las pestañas o pulsa ◀ / ▶ para reordenar, pulsa el icono o doble toque para renombrar</strong>!'
         }
       ]
     }
@@ -1677,7 +1668,6 @@
   let autoScrollSpeedY = 0;
   let autoScrollSpeedX = 0;
 
-  // 拖动排序思路标签状态
   let draggedSchemeIndex = null;
 
   function pickRandomLevel() {
@@ -1766,7 +1756,6 @@
     `;
   }
 
-  // 计算思路默认名称（思路 1、思路 2、AI 思路、思路 3...）
   function getDefaultSchemeName(targetIndex) {
     if (targetIndex === 0) {
       return currentLang === 'en' ? 'Idea 1' : (currentLang === 'es' ? 'Idea 1' : '思路 1');
@@ -1781,7 +1770,6 @@
     return currentLang === 'en' ? `Idea ${offset}` : (currentLang === 'es' ? `Idea ${offset}` : `思路 ${offset}`);
   }
 
-  // 渲染思路标签栏（含左右排序移动与拖拽支持）
   function renderSchemesNav() {
     const nav = document.getElementById('schemesNav');
     nav.innerHTML = '';
@@ -1798,14 +1786,12 @@
 
       tab.innerHTML = `
         ${schemes.length > 1 ? `<span class="tab-move-btn tab-move-left" title="左移">◀</span>` : ''}
-        <span class="tab-icon-prefix">${prefixEmoji}</span>
+        <span class="tab-icon-prefix" title="点击重命名">${prefixEmoji}</span>
         <span class="tab-title-text" title="双击重命名">${displayName}</span>
-        <span class="tab-edit-btn" title="重命名思路">✏️</span>
         ${schemes.length > 1 ? `<span class="tab-move-btn tab-move-right" title="右移">▶</span>` : ''}
         ${schemes.length > 1 ? `<span class="tab-del" title="删除该思路">✕</span>` : ''}
       `;
 
-      // 拖拽排序逻辑
       tab.addEventListener('dragstart', (e) => {
         draggedSchemeIndex = idx;
         e.dataTransfer.effectAllowed = 'move';
@@ -1825,7 +1811,6 @@
         }
       });
 
-      // 左右移动按钮与交互
       tab.addEventListener('click', (e) => {
         if (e.target.classList.contains('tab-move-left')) {
           e.stopPropagation();
@@ -1842,7 +1827,7 @@
           deleteScheme(idx);
           return;
         }
-        if (e.target.classList.contains('tab-edit-btn')) {
+        if (e.target.classList.contains('tab-icon-prefix')) {
           e.stopPropagation();
           promptRenameScheme(idx);
           return;
@@ -1865,7 +1850,6 @@
     nav.appendChild(addBtn);
   }
 
-  // 调换思路位置
   function reorderSchemes(fromIdx, toIdx) {
     const activeSchemeObj = schemes[currentSchemeIndex];
     const [moved] = schemes.splice(fromIdx, 1);
@@ -2493,7 +2477,7 @@
     rulesModal.style.display = 'none';
   });
 
-  // ---------------- 方案横向比较 ----------------
+  // ---------------- 思路横向比较 ----------------
 
   const compareModal = document.getElementById('compareModal');
   const compareContainer = document.getElementById('compareContainer');
