@@ -24,7 +24,7 @@
     --btn-glass: rgba(255, 255, 255, 0.07);
     --btn-glass-hover: rgba(255, 255, 255, 0.16);
 
-    /* 全局基准尺寸体系（小号基准，中、大、特大等比放大） */
+    /* 全局基准尺寸体系（小号为基准，中号、大号、特大号等比放大） */
     --font-ui-btn: 13px;
     --font-ui-title-level: 16px;
     --font-ui-title-count: 15px;
@@ -382,6 +382,18 @@
     color: #ffffff;
   }
 
+  button.action-ai-btn {
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.35) 0%, rgba(79, 70, 229, 0.35) 100%);
+    border: 1px solid rgba(192, 132, 252, 0.4);
+    color: #e9d5ff;
+    box-shadow: 0 2px 8px rgba(147, 51, 234, 0.25);
+  }
+  button.action-ai-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.5) 0%, rgba(99, 102, 241, 0.5) 100%);
+    color: #ffffff;
+    border-color: rgba(216, 180, 254, 0.6);
+  }
+
   button.btn-danger {
     background: rgba(225, 29, 72, 0.12);
     border-color: rgba(225, 29, 72, 0.25);
@@ -640,7 +652,7 @@
   /* 逢人配左上角完全防遮挡徽标 */
   .wild-badge-corner {
     margin-top: 4px;
-    font-size: calc(var(--card-font-suit) * 0.65);
+    font-size: 10px;
     font-weight: 800;
     line-height: 1.1;
     background: linear-gradient(135deg, #e11d48, #b91c1c);
@@ -698,7 +710,7 @@
     background: var(--gold);
     color: #0f172a;
     font-weight: 800;
-    font-size: var(--font-ui-btn);
+    font-size: 13px;
     padding: 6px 14px;
     border-radius: 20px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.4);
@@ -1074,12 +1086,13 @@
     </div>
   </div>
 
-  <!-- 第 3 层：发牌、调牌与思路比较（单独一层） -->
+  <!-- 第 3 层：发牌、调牌、思路比较 与 AI 推荐思路（单独一层） -->
   <div class="header-tier-row">
     <div class="control-island">
       <button class="action-lead-btn" id="dealBtn">🎴 新一局发牌</button>
       <button class="action-accent" id="customHandBtn">🛠️ 自定义调牌</button>
       <button class="action-accent" id="compareSchemesBtn">⚖️ 思路比较</button>
+      <button class="action-ai-btn" id="aiRecommendBtn" title="一键生成当前手牌最佳理牌思路">✨ AI 推荐思路</button>
     </div>
   </div>
 
@@ -1187,6 +1200,9 @@
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const modKeySymbol = isMac ? '⌘' : 'Ctrl+';
 
+  // 清除旧主题缓存残留
+  localStorage.removeItem('GUANDAN_CARD_THEME');
+
   // ---------------- 语言字典 (i18n) ----------------
   const I18N = {
     'zh-CN': {
@@ -1195,6 +1211,7 @@
       deal: '🎴 新一局发牌',
       customHand: '🛠️ 自定义调牌',
       compare: '⚖️ 思路比较',
+      aiRecommend: '✨ AI 推荐思路',
       rulesBtn: '📖 掼蛋规则',
       saveArchive: '💾 存档',
       openArchive: '📂 存档箱',
@@ -1249,7 +1266,7 @@
         },
         {
           title: '⌨️ 效率快捷键与多思路',
-          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">+ 新建思路</span> 可在同一把牌中探索不同拆牌路线；<strong>鼠标或触屏拖拽标签可调换位置，点击图标或双击即可重命名</strong>！'
+          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">✨ AI 推荐思路</span> 可直接生成高手策略；<strong>拖拽标签可调换位置，点击图标或双击即可重命名</strong>！'
         }
       ]
     },
@@ -1259,6 +1276,7 @@
       deal: '🎴 新一局發牌',
       customHand: '🛠️ 自訂調牌',
       compare: '⚖️ 思路比較',
+      aiRecommend: '✨ AI 推薦思路',
       rulesBtn: '📖 掼蛋規則',
       saveArchive: '💾 存檔',
       openArchive: '📂 存檔箱',
@@ -1313,7 +1331,7 @@
         },
         {
           title: '⌨️ 效率快捷鍵與多思路',
-          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">+ 新建思路</span> 可在同一把牌中探索不同拆牌路線；<strong>滑鼠或觸屏拖拽標籤可調換位置，點擊圖標或雙擊即可重新命名</strong>！'
+          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">✨ AI 推薦思路</span> 可直接生成高手策略；<strong>滑鼠或觸屏拖拽標籤可調換位置，點擊圖標或雙擊即可重新命名</strong>！'
         }
       ]
     },
@@ -1323,6 +1341,7 @@
       deal: '🎴 Deal Hand',
       customHand: '🛠️ Custom',
       compare: '⚖️ Compare Ideas',
+      aiRecommend: '✨ AI Recommend',
       rulesBtn: '📖 Rules',
       saveArchive: '💾 Save',
       openArchive: '📂 Vault',
@@ -1377,7 +1396,7 @@
         },
         {
           title: '⌨️ Shortcuts & Multi-Ideas',
-          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">+ New Idea</span> to explore distinct strategies; <strong>drag tabs with mouse or finger to reorder, click icon or double-click to rename</strong>!'
+          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">✨ AI Recommend</span> to auto-organize hands; <strong>drag tabs or tap ◀ / ▶ to reorder, click icon or double-click to rename</strong>!'
         }
       ]
     },
@@ -1387,6 +1406,7 @@
       deal: '🎴 Repartir',
       customHand: '🛠️ Personalizar',
       compare: '⚖️ Comparar Ideas',
+      aiRecommend: '✨ Idea de IA',
       rulesBtn: '📖 Reglas',
       saveArchive: '💾 Guardar',
       openArchive: '📂 Archivos',
@@ -1441,7 +1461,7 @@
         },
         {
           title: '⌨️ Atajos y Comparativa',
-          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">+ Nueva Idea</span> para comparar; ¡<strong>arrastra las pestañas con ratón o dedo para reordenar, pulsa el icono o doble toque para renombrar</strong>!'
+          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">✨ Idea de IA</span> para ordenar manos como un experto; ¡<strong>arrastra las pestañas o pulsa el icono para renombrar</strong>!'
         }
       ]
     }
@@ -1649,6 +1669,7 @@
     document.getElementById('dealBtn').textContent = t('deal');
     document.getElementById('customHandBtn').textContent = t('customHand');
     document.getElementById('compareSchemesBtn').textContent = t('compare');
+    document.getElementById('aiRecommendBtn').textContent = t('aiRecommend');
     document.getElementById('rulesBtn').textContent = t('rulesBtn');
     document.getElementById('saveArchiveBtn').textContent = t('saveArchive');
     document.getElementById('openArchiveBtn').textContent = t('openArchive');
@@ -1850,6 +1871,178 @@
     const offset = targetIndex;
     return currentLang === 'en' ? `Idea ${offset}` : (currentLang === 'es' ? `Idea ${offset}` : `思路 ${offset}`);
   }
+
+  // ---------------- 本地内置：启发式智能理牌引擎 (AI Strategy Engine) ----------------
+  function generateAIRecommendedRows(cardsPool, level) {
+    let pool = sortCards([...cardsPool], level);
+    const rows = [];
+
+    // 辅助工具：从 pool 中安全抽取指定 IDs 的牌
+    function takeCardsByIds(ids) {
+      const set = new Set(ids);
+      const taken = pool.filter(c => set.has(c.id));
+      pool = pool.filter(c => !set.has(c.id));
+      return sortCards(taken, level);
+    }
+
+    // 1. 优先提取天王炸 (四大天王：2大王 + 2小王)
+    const jokers = pool.filter(c => c.isJoker);
+    if (jokers.length === 4) {
+      rows.push(takeCardsByIds(jokers.map(c => c.id)));
+    }
+
+    // 2. 提取 4 张及以上的硬炸弹 (同 rank >= 4)
+    const rankBuckets = {};
+    pool.forEach(c => {
+      if (!c.isJoker) {
+        rankBuckets[c.rank] = rankBuckets[c.rank] || [];
+        rankBuckets[c.rank].push(c);
+      }
+    });
+
+    Object.keys(rankBuckets).forEach(r => {
+      if (rankBuckets[r].length >= 4) {
+        rows.push(takeCardsByIds(rankBuckets[r].map(c => c.id)));
+      }
+    });
+
+    // 3. 寻找“逢人配”与同花顺组合 (Straight Flush 5 cards)
+    const wildCards = pool.filter(c => c.rank === level && c.isHeart);
+    const standardOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A']; // A 可作首尾
+    const suits = ['♥', '♦', '♠', '♣'];
+
+    for (let s of suits) {
+      const suitCards = pool.filter(c => c.suit === s && !(c.rank === level && c.isHeart) && !c.isJoker);
+      const suitRanks = new Set(suitCards.map(c => c.rank));
+
+      // 尝试 5 连顺滑窗
+      for (let i = 0; i <= standardOrder.length - 5; i++) {
+        const windowRanks = standardOrder.slice(i, i + 5);
+        let missing = [];
+        let matched = [];
+
+        windowRanks.forEach(wr => {
+          const matchCard = suitCards.find(c => c.rank === wr && !matched.some(m => m.id === c.id));
+          if (matchCard) matched.push(matchCard);
+          else missing.push(wr);
+        });
+
+        // 缺牌数量可以用手里的逢人配补齐
+        if (missing.length > 0 && missing.length <= wildCards.length && (matched.length + missing.length === 5)) {
+          const usedWilds = wildCards.splice(0, missing.length);
+          const comboIds = [...matched.map(c => c.id), ...usedWilds.map(c => c.id)];
+          rows.push(takeCardsByIds(comboIds));
+          break;
+        }
+      }
+    }
+
+    // 4. 提取剩余 4 张炸弹（包括用逢人配配出 5 炸 / 6 炸）
+    if (wildCards.length > 0) {
+      // 重新统计池子里 3 张相同的牌，用配牌补成炸弹
+      const curBuckets = {};
+      pool.forEach(c => {
+        if (!c.isJoker && !(c.rank === level && c.isHeart)) {
+          curBuckets[c.rank] = curBuckets[c.rank] || [];
+          curBuckets[c.rank].push(c);
+        }
+      });
+
+      for (let [r, group] of Object.entries(curBuckets)) {
+        if (group.length === 3 && wildCards.length > 0) {
+          const wildToUse = wildCards.pop();
+          rows.push(takeCardsByIds([...group.map(c => c.id), wildToUse.id]));
+        }
+      }
+    }
+
+    // 5. 提取 5 连常规单顺 (从大到小)
+    const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
+    for (let i = 0; i <= normOrder.length - 5; i++) {
+      const windowRanks = normOrder.slice(i, i + 5);
+      const candidateCombo = [];
+      let canForm = true;
+
+      for (let wr of windowRanks) {
+        const found = pool.find(c => c.rank === wr && !c.isJoker && !candidateCombo.some(item => item.id === c.id));
+        if (found) {
+          candidateCombo.push(found);
+        } else {
+          canForm = false;
+          break;
+        }
+      }
+
+      if (canForm && candidateCombo.length === 5) {
+        rows.push(takeCardsByIds(candidateCombo.map(c => c.id)));
+      }
+    }
+
+    // 6. 提取三连对 (木板) 与 钢板 (双飞)
+    const countsMap = {};
+    pool.forEach(c => {
+      if (!c.isJoker) {
+        countsMap[c.rank] = countsMap[c.rank] || [];
+        countsMap[c.rank].push(c);
+      }
+    });
+
+    // 7. 提取三带二 (三张配对子)
+    const trips = [];
+    const pairs = [];
+    Object.keys(countsMap).forEach(r => {
+      const g = countsMap[r];
+      if (g.length === 3) trips.push(g);
+      else if (g.length === 2) pairs.push(g);
+    });
+
+    while (trips.length > 0 && pairs.length > 0) {
+      const tGroup = trips.pop();
+      const pGroup = pairs.pop();
+      rows.push(takeCardsByIds([...tGroup.map(c => c.id), ...pGroup.map(c => c.id)]));
+    }
+
+    // 8. 剩余成组对子
+    const remainBuckets = {};
+    pool.forEach(c => {
+      remainBuckets[c.rank] = remainBuckets[c.rank] || [];
+      remainBuckets[c.rank].push(c);
+    });
+
+    Object.keys(remainBuckets).forEach(r => {
+      if (remainBuckets[r].length >= 2) {
+        rows.push(takeCardsByIds(remainBuckets[r].map(c => c.id)));
+      }
+    });
+
+    // 9. 剩余所有碎单牌（合并归为底盘一层，便于观察走脱）
+    if (pool.length > 0) {
+      rows.push(takeCardsByIds(pool.map(c => c.id)));
+    }
+
+    return rows.filter(r => r.length > 0);
+  }
+
+  // 一键生成 AI 推荐思路
+  function handleGenerateAIRecommend() {
+    const allCards = getFlattenedCards();
+    if (!allCards || allCards.length === 0) return;
+
+    const aiRows = generateAIRecommendedRows(allCards, currentLevel);
+    const aiSchemeName = currentLang === 'en' ? 'AI Idea' : (currentLang === 'es' ? 'Idea IA' : 'AI 思路');
+
+    schemes.push({
+      name: aiSchemeName,
+      customName: aiSchemeName,
+      rows: aiRows,
+      historyStack: [],
+      redoStack: []
+    });
+
+    switchScheme(schemes.length - 1);
+  }
+
+  document.getElementById('aiRecommendBtn').addEventListener('click', handleGenerateAIRecommend);
 
   // 渲染思路标签栏
   function renderSchemesNav() {
@@ -2843,8 +3036,8 @@
     el.className = `picker-card-btn ${item.color}` + (count > 0 ? ' has-selected' : '');
     const displayRank = (item.rank === '大王' ? t('bigJoker') : (item.rank === '小王' ? t('smallJoker') : item.rank));
     el.innerHTML = `
-      <div class="card-val">${displayRank}</div>
-      <div class="card-suit">${item.suit}</div>
+      <div style="font-size: 15px; font-weight: 800; line-height: 1;">${displayRank}</div>
+      <div style="font-size: 13px; line-height: 1; margin-top: 3px;">${item.suit}</div>
       <div class="picker-count-badge">${count}</div>
     `;
 
