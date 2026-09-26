@@ -11,7 +11,7 @@
 <title>掼蛋理牌模拟器 / Guandan Cards Simulator</title>
 <style>
   :root {
-    /* 深林暗调天鹅绒配色体系 */
+    /* 顶级深林暗调天鹅绒配色体系 */
     --bg-base: #07120e;
     --bg-gradient: radial-gradient(circle at 50% 20%, #163628 0%, #0d1e17 55%, #050d0a 100%);
     --island-bg: rgba(18, 36, 28, 0.85);
@@ -216,18 +216,17 @@
     }
   }
 
-  /* 彻底修复：消除右侧全黑 BUG，背景全局覆盖固定 */
+  /* 彻底消除 iOS 顶部白色毛玻璃与横向变黑的黄金方案 */
   html {
-    background-color: var(--bg-base);
-    background: var(--bg-gradient);
+    background-color: #07120e;
+    background-image: radial-gradient(circle at 50% 20%, #163628 0%, #0d1e17 55%, #050d0a 100%);
     background-attachment: fixed;
     background-size: cover;
     min-height: 100%;
     width: 100%;
     overflow-x: auto;
     overflow-y: auto;
-    overscroll-behavior: none;
-    -webkit-overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
@@ -236,11 +235,12 @@
     width: max-content;
     margin: 0;
     padding: 0;
-    background: transparent; /* 背景移至 html，防止横向滚动截断变黑 */
+    background-color: transparent;
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
-    padding-top: max(38px, calc(env(safe-area-inset-top) + 24px));
+    /* 充足的安全边距，彻底避让硬件刘海/灵动岛 */
+    padding-top: max(32px, calc(env(safe-area-inset-top) + 20px));
     padding-bottom: max(34px, calc(env(safe-area-inset-bottom) + 16px));
     padding-left: max(16px, env(safe-area-inset-left));
     padding-right: max(16px, env(safe-area-inset-right));
@@ -842,7 +842,34 @@
     align-items: center;
     gap: 6px;
   }
+  .rule-card-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0;
+    flex-wrap: wrap;
+  }
+  .mini-chip {
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: var(--font-modal-small);
+    font-weight: 600;
+  }
+  .mini-chip.red { color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
+  .mini-chip.gold { color: var(--gold); border-color: rgba(246, 197, 89, 0.4); }
 
+  .strategy-box {
+    background: rgba(56, 189, 248, 0.05);
+    border-left: 3px solid #38bdf8;
+    padding: 10px 14px;
+    margin-top: 8px;
+    border-radius: 0 6px 6px 0;
+  }
+  .strategy-box strong { color: #38bdf8; }
+
+  /* 思路比较弹窗样式 */
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
@@ -1163,7 +1190,7 @@
     </div>
   </div>
 
-  <!-- 第 3 层：发牌与自定义调牌（自定义调牌无背景色） -->
+  <!-- 第 3 层：发牌与自定义调牌 -->
   <div class="header-tier-row">
     <div class="control-island">
       <button class="action-lead-btn" id="dealBtn">🎴 新一局发牌</button>
@@ -1179,7 +1206,7 @@
     </div>
   </div>
 
-  <!-- 第 5 层：整理工具组（删除选中无背景色） -->
+  <!-- 第 5 层：整理工具组 -->
   <div class="header-tier-row">
     <div class="control-island">
       <button id="multiSelectToggleBtn" title="触屏端批量连选">⚡ 批量连选</button>
@@ -1425,8 +1452,8 @@
           desc: '• <strong>左右自由滑屏</strong>：直屏查看第一層所有 27 張牌，直接用手指橫向劃屏查看。<br>• <strong>全向巡航滾屏</strong>：按住選取的牌往螢幕左側或下邊緣靠攏，頁面會自動平滑回滾，輕鬆把最右側的牌插進左邊或第二層。<br>• 觸控螢幕可開啟頂部 <span class="help-pill">⚡ 批量連選</span> 開關代替電腦 Shift 鍵。'
         },
         {
-          title: '⌨️ 效率快捷鍵與多思路',
-          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">💡 推薦思路</span> 可直接生成高水準策略；<strong>滑鼠或觸屏拖拽標籤可調換位置，點擊圖標或雙擊即可重新命名</strong>！'
+          title: '⚖️ 對比復盤與差異高亮',
+          desc: '• 點擊 <span class="help-pill">⚖️ 思路比較</span>，系統會自動與內置最佳算法比對。<br>• 若思路與推薦一致，直接點亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span> 勳章；若有拆法出入，自動高亮標註差異層！'
         }
       ]
     },
@@ -1523,7 +1550,7 @@
       backToPlay: 'Volver',
       applyScheme: 'Usar este',
       usingCurrent: 'En uso',
-      compareTitle: '⚖️ Comparar Ideas',
+      compareTitle: '⚖️ Comparación de Ideas',
       archiveTitle: '📂 Archivo de Manos Guardadas',
       noArchives: 'No hay partidas guardadas.',
       load: 'Cargar',
@@ -1577,54 +1604,175 @@
     return str;
   }
 
+  // 完整实战进阶战略知识库
   function renderRulesModalContent() {
     const container = document.getElementById('rulesContentBody');
     if (currentLang === 'en') {
       container.innerHTML = `
         <div class="rule-section">
           <h3>🏆 1. Overview & Objectives</h3>
-          <p><strong>Guandan (掼蛋)</strong> is a climbing card game played by 4 players using two 54-card decks (108 cards in total). Cooperate with your partner to empty your hands first.</p>
+          <p><strong>Guandan (掼蛋)</strong> is a climbing card game played by 4 players (teams of two seated opposite each other) using two standard 54-card decks (108 cards in total). The objective is to work together with your teammate to empty your hands before opponents do.</p>
         </div>
         <div class="rule-section">
           <h3>⭐ 2. Rank & Wild Cards ("Feng Ren Pei")</h3>
-          <p>• <strong>Current Rank (级牌)</strong>: Plays from 2 to Ace. Rank cards are promoted above Aces.<br>
-          • <strong>Heart Wild Card (红桃级牌·逢人配)</strong>: The two Heart cards of current rank substitute any non-joker card.<br>
-          • <strong>Hierarchy</strong>: Red Joker > Black Joker > Heart Wild > Other Rank Cards > A > K > Q > J > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3 > 2.</p>
+          <p>• <strong>Current Rank (级牌)</strong>: The game plays through ranks 2 to Ace. If playing Rank 5, all 5s are promoted above Aces.<br>
+          • <strong>Heart Wild Card (红桃级牌·逢人配)</strong>: The two <strong>Heart cards of current rank</strong> are universal Wild Cards. They can substitute any card (except Jokers) to form straights, flushes, bombs, or full houses.<br>
+          • <strong>Card Hierarchy</strong>: Red Joker > Black Joker > Heart Rank Wild > Normal Rank Cards > A > K > Q > J > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3 > 2.</p>
         </div>
         <div class="rule-section">
-          <h3>💣 3. Bomb Rankings</h3>
-          <p>4-Bomb &lt; 5-Bomb &lt; Straight Flush (5 cards) &lt; 6-Bomb &lt; 7-Bomb &lt; 8-Bomb &lt; 👑 4-Joker Supreme Bomb.</p>
+          <h3>💣 3. Combinations & Bomb Rankings</h3>
+          <p><strong>Bomb Hierarchy (Bombs beat all non-bomb combinations):</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">4-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">5-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">Straight Flush (5 cards)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">6-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">7-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">8-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip gold">👑 4-Joker Supreme Bomb</span>
+          </div>
+          <p style="font-size:var(--font-modal-small); color:#94a3b8;">* Note: Straight Flush beats 4-Bomb and 5-Bomb, but loses to 6-Bomb and higher!</p>
+        </div>
+        <div class="rule-section">
+          <h3>💡 4. Master Tactics & Philosophy for Beginners</h3>
+          <div class="strategy-box">
+            <p><strong>1. "Wilds make Bombs" Priority</strong>: Never waste your Heart Wild cards on basic pairs or full houses. Always look to build a <em>Straight Flush</em> or 5/6-card Bomb first. Turning a single into an explosive bomb is the single highest-value play in Guandan.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>2. Partner Synergy & Division of Roles</strong>: Pay close attention to what your partner leads. If your partner has an aggressive hand, your role is to suppress the opponent's strong plays and pass control back to your partner. Win together, not alone.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>3. Keep the Key Counters in Mind</strong>: You don't need to count every card, but track these 3 essentials: How many Jokers have been played? Are all current rank cards out? How many cards are left in opponents' hands (under 6 cards means beware of singles/bombs)?</p>
+          </div>
+        </div>
+      `;
+    } else if (currentLang === 'es') {
+      container.innerHTML = `
+        <div class="rule-section">
+          <h3>🏆 1. Descripción y Objetivo</h3>
+          <p><strong>Guandan (掼蛋)</strong> se juega entre 4 jugadores en parejas con 2 barajas (108 cartas en total). El objetivo es vaciar la mano antes que los rivales colaborando con tu compañero.</p>
+        </div>
+        <div class="rule-section">
+          <h3>⭐ 2. Nivel Actual y Comodín Universal</h3>
+          <p>• <strong>Carta de Nivel</strong>: Si se juega el 5, todos los 5s suben por encima del As.<br>
+          • <strong>Comodín de Corazones</strong>: Las dos cartas de Corazones del nivel actual son comodines universales.<br>
+          • <strong>Jerarquía</strong>: Joker Rojo > Joker Negro > Comodín de Nivel > Cartas de Nivel > A > K > Q > J > 10 > ... > 2.</p>
+        </div>
+        <div class="rule-section">
+          <h3>💣 3. Combinaciones y Bombas</h3>
+          <p><strong>Jerarquía de Bombas:</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">Bomba de 4</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">Bomba de 5</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">Escalera de Color (5)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">Bomba de 6+</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip gold">👑 Bomba Suprema (4 Jokers)</span>
+          </div>
+        </div>
+        <div class="rule-section">
+          <h3>💡 4. Estrategia y Consejos para Principiantes</h3>
+          <div class="strategy-box">
+            <p><strong>1. Usa los comodines para Bombas</strong>: Nunca gastes un comodín en parejas simples. Úsalos siempre para crear Escaleras de Color o bombas de 5-6 cartas.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>2. Trabajo en Pareja</strong>: Observa lo que juega tu compañero. Si tiene buena mano, tu deber es bloquear a los rivales y cederle el turno.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>3. Memoria Básica</strong>: No memorices todo, solo vigila los Jokers y las cartas de nivel que van saliendo.</p>
+          </div>
         </div>
       `;
     } else if (currentLang === 'zh-TW') {
       container.innerHTML = `
         <div class="rule-section">
           <h3>🏆 1. 遊戲綜述與勝負目標</h3>
-          <p><strong>掼蛋</strong>採用兩副牌（共 108 張），4人參與，對家配合。核心目標為配合隊友儘早出完手牌。</p>
+          <p><strong>掼蛋</strong>源自江蘇淮安，採用<strong>兩副牌（共 108 張）</strong>，4人參與，對家兩人為一組配合。遊戲核心目標是在隊友的戰術掩護下，儘早將手中的 27 張牌全部出完（第一名出完者稱為「頭遊」）。</p>
         </div>
         <div class="rule-section">
-          <h3>⭐ 2. 級牌體系與「逢人配」</h3>
-          <p>• 兩張<strong>紅心級牌</strong>為萬能百搭牌，大小順序：大王 ＞ 小王 ＞ 紅心逢人配 ＞ 其他級牌 ＞ A ＞ K ＞ ... ＞ 2。</p>
+          <h3>⭐ 2. 級牌體系與「逢人配」萬能牌</h3>
+          <p>• <strong>級牌（本局打幾）</strong>：從打 2 開始升至打 A。若當前打 5，則所有的 5 點數權重被拔高，大於 A 且僅次於小王。<br>
+          • <strong>逢人配（紅心級牌）</strong>：兩張<strong>紅心級牌</strong>為萬能百搭牌（除大小王外），可替代任意點數和花色湊成同花順、順子、炸彈等。<br>
+          • <strong>大小順序</strong>：大王 ＞ 小王 ＞ 紅心逢人配 ＞ 其他花色級牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
         </div>
         <div class="rule-section">
-          <h3>💣 3. 炸彈威力天梯</h3>
-          <p>四炸 ＜ 五炸 ＜ 同花順(5張) ＜ 六炸 ＜ 七炸 ＜ 八炸 ＜ 👑 四大天王(天王炸)。</p>
+          <h3>💣 3. 牌型圖譜與炸彈威力天梯</h3>
+          <p><strong>【常規牌型】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">單張</span> <span class="mini-chip">對子</span> <span class="mini-chip">三張</span> <span class="mini-chip">三帶二</span>
+            <span class="mini-chip">單順 (5張連牌)</span> <span class="mini-chip">三連對 (木板)</span> <span class="mini-chip">雙飛 (鋼板)</span>
+          </div>
+          <p><strong>【炸彈威力比拼】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">四張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">五張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">同花順 (5張)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">六張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">七張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">八張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip gold">👑 四大天王 (四王天王炸)</span>
+          </div>
+        </div>
+        <div class="rule-section">
+          <h3>💡 4. 實戰進階：掼蛋核心戰術思路與控局哲學</h3>
+          <div class="strategy-box">
+            <p><strong>一、配火第一，絕不湊零（逢人配的黃金法則）</strong><br>
+            逢人配萬萬不可隨便拿去湊三帶二或單順。它的<strong>最優價值永遠是「配炸」或「配同花順」</strong>。多一個炸彈，整手牌的防守與進攻能力將迎來質的飛躍。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>二、隊友同心，角色分工（一主一副打法）</strong><br>
+            掼蛋是雙人默契運動：摸完牌後要迅速評估自己的牌力。若牌力強、炸彈多，主動當<strong>「主攻手」</strong>衝刺頭遊；若手牌零散、小牌多，要甘願當<strong>「掩護手」</strong>，負責頂對手大牌、拆炸彈卡位，把出牌路數留給隊友。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>三、基礎算牌基線（知己知彼）</strong><br>
+            不需要背下全部 108 張牌，新手只要記住三條線：① 四張王牌出了幾張？② 當前級牌有沒有出完？③ 對手手牌小於 6 張時，隨時防範其一擊走脫！</p>
+          </div>
         </div>
       `;
     } else {
       container.innerHTML = `
         <div class="rule-section">
           <h3>🏆 1. 游戏综述与胜负目标</h3>
-          <p><strong>掼蛋</strong>采用两副牌（共 108 张），4人参与，对家两人为一组配合。核心目标是在队友战术掩护下，尽早将手中 27 张牌全部出完。</p>
+          <p><strong>掼蛋</strong>源自江苏淮安，采用<strong>两副牌（共 108 张）</strong>，4人参与，对家两人为一组配合。游戏核心目标是在队友的战术掩护下，尽早将手中的 27 张牌全部出完（第一名出完者称为“头游”）。</p>
         </div>
         <div class="rule-section">
           <h3>⭐ 2. 级牌体系与“逢人配”万能牌</h3>
-          <p>• <strong>逢人配（红心级牌）</strong>：两张红心级牌为百搭牌。<br>
+          <p>• <strong>级牌（本局打几）</strong>：从打 2 开始升至打 A。若当前打 5，则所有的 5 点数权重被拔高，大于 A 且仅次于小王。<br>
+          • <strong>逢人配（红心级牌）</strong>：两张<strong>红心级牌</strong>为万能百搭牌（除大小王外），可替代任意点数和花色凑成同花顺、顺子、炸弹等。<br>
           • <strong>大小顺序</strong>：大王 ＞ 小王 ＞ 红心逢人配 ＞ 其他花色级牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
         </div>
         <div class="rule-section">
-          <h3>💣 3. 炸弹威力天梯</h3>
-          <p>四张炸弹 ＜ 五张炸弹 ＜ 同花顺(5张) ＜ 六张炸弹 ＜ 七张炸弹 ＜ 八张炸弹 ＜ 👑 四大天王(天王炸)。</p>
+          <h3>💣 3. 牌型图谱与炸弹威力天梯</h3>
+          <p><strong>【常规牌型】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">单张</span> <span class="mini-chip">对子</span> <span class="mini-chip">三张</span> <span class="mini-chip">三带二</span>
+            <span class="mini-chip">单顺 (5张连牌)</span> <span class="mini-chip">三连对 (木板)</span> <span class="mini-chip">双飞 (钢板)</span>
+          </div>
+          <p><strong>【炸弹威力比拼】</strong></p>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">四张炸弹</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">五张炸弹</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">同花顺 (5张同花连续)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">六张炸弹</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">七张炸弹</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">八张炸弹</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip gold">👑 四大天王 (四张大小王天王炸)</span>
+          </div>
+          <p style="font-size:var(--font-modal-small); color:#94a3b8;">* 关键特权：同花顺威力大于五张炸弹，但小于六张炸弹！天王炸为全场最大神牌。</p>
+        </div>
+        <div class="rule-section">
+          <h3>💡 4. 实战进阶：掼蛋核心战术思路与控局哲学</h3>
+          <div class="strategy-box">
+            <p><strong>一、配火第一，绝不凑零（逢人配的黄金法则）</strong><br>
+            逢人配万万不可随便拿去凑三带二或单顺。它的<strong>最优价值永远是“配炸”或“配同花顺”</strong>。多一个炸弹，整手牌的防守与进攻能力将迎来质的飞跃。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>二、队友同心，角色分工（一主一副打法）</strong><br>
+            掼蛋是双人默契运动：摸完牌后要迅速评估自己的牌力。若牌力强、炸弹多，主动当<strong>“主攻手”</strong>冲刺头游；若手牌零散、小牌多，要甘愿当<strong>“掩护手”</strong>，负责顶对手大牌、拆炸弹卡位，把出牌路数留给队友。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>三、基础算牌基线（知己知彼）</strong><br>
+            不需要背下全部 108 张牌，新手只要记住三条线：① 四张王牌出了几张？② 当前级牌有没有出完？③ 对手手牌小于 6 张时，随时防范其一击走脱！</p>
+          </div>
         </div>
       `;
     }
@@ -1784,12 +1932,11 @@
     });
   }
 
-  // 严格快照压栈：深度复制完整状态
   function pushState() {
     const cur = getCurrentScheme();
     if (!cur) return;
     if (!cur.historyStack) cur.historyStack = [];
-    const snapshot = JSON.stringify(cur.rows.filter(r => r.length > 0));
+    const snapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
     cur.historyStack.push(snapshot);
     cur.redoStack = [];
     updateButtonStates();
@@ -1806,7 +1953,7 @@
 
   function updateTotalCount() {
     const cur = getCurrentScheme();
-    const total = cur ? cur.rows.reduce((acc, r) => acc + r.length, 0) : 0;
+    const total = cur ? cur.rows.reduce((acc, r) => acc + (r ? r.length : 0), 0) : 0;
     document.getElementById('totalCountInfo').textContent = t('cardsCount', { count: total });
   }
 
@@ -1835,1541 +1982,13 @@
     return `思路 ${num}`;
   }
 
-  // ---------------- 启发式理牌核心引擎 ----------------
-  function generateAIRecommendedRows(cardsPool, level) {
-    let pool = sortCards([...cardsPool], level);
-    const rows = [];
-
-    function takeCardsByIds(ids) {
-      const set = new Set(ids);
-      const taken = pool.filter(c => set.has(c.id));
-      pool = pool.filter(c => !set.has(c.id));
-      return sortCards(taken, level);
-    }
-
-    // 1. 天王炸 (四大天王)
-    const jokers = pool.filter(c => c.isJoker);
-    if (jokers.length === 4) {
-      rows.push(takeCardsByIds(jokers.map(c => c.id)));
-    }
-
-    // 2. 8炸、7炸、6炸
-    const rankBuckets = {};
-    pool.forEach(c => {
-      if (!c.isJoker) {
-        rankBuckets[c.rank] = rankBuckets[c.rank] || [];
-        rankBuckets[c.rank].push(c);
-      }
-    });
-
-    [8, 7, 6].forEach(count => {
-      Object.keys(rankBuckets).forEach(r => {
-        if (rankBuckets[r] && rankBuckets[r].length === count) {
-          rows.push(takeCardsByIds(rankBuckets[r].map(c => c.id)));
-          delete rankBuckets[r];
-        }
-      });
-    });
-
-    // 3. 同花顺组合 (5 cards Straight Flush)
-    const wildCards = pool.filter(c => c.rank === level && c.isHeart);
-    const standardOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
-    const suits = ['♥', '♦', '♠', '♣'];
-
-    for (let s of suits) {
-      const suitCards = pool.filter(c => c.suit === s && !(c.rank === level && c.isHeart) && !c.isJoker);
-
-      for (let i = 0; i <= standardOrder.length - 5; i++) {
-        const windowRanks = standardOrder.slice(i, i + 5);
-        let missing = [];
-        let matched = [];
-
-        windowRanks.forEach(wr => {
-          const matchCard = suitCards.find(c => c.rank === wr && !matched.some(m => m.id === c.id));
-          if (matchCard) matched.push(matchCard);
-          else missing.push(wr);
-        });
-
-        if (missing.length > 0 && missing.length <= wildCards.length && (matched.length + missing.length === 5)) {
-          const usedWilds = wildCards.splice(0, missing.length);
-          const comboIds = [...matched.map(c => c.id), ...usedWilds.map(c => c.id)];
-          rows.push(takeCardsByIds(comboIds));
-          break;
-        }
-      }
-    }
-
-    // 4. 五炸
-    Object.keys(rankBuckets).forEach(r => {
-      if (rankBuckets[r] && rankBuckets[r].length === 5) {
-        rows.push(takeCardsByIds(rankBuckets[r].map(c => c.id)));
-        delete rankBuckets[r];
-      }
-    });
-    if (wildCards.length > 0) {
-      const curBuckets = {};
-      pool.forEach(c => {
-        if (!c.isJoker && !(c.rank === level && c.isHeart)) {
-          curBuckets[c.rank] = curBuckets[c.rank] || [];
-          curBuckets[c.rank].push(c);
-        }
-      });
-      for (let [r, group] of Object.entries(curBuckets)) {
-        if (group.length === 4 && wildCards.length > 0) {
-          const wildToUse = wildCards.pop();
-          rows.push(takeCardsByIds([...group.map(c => c.id), wildToUse.id]));
-        }
-      }
-    }
-
-    // 5. 四炸
-    const curBuckets4 = {};
-    pool.forEach(c => {
-      if (!c.isJoker && !(c.rank === level && c.isHeart)) {
-        curBuckets4[c.rank] = curBuckets4[c.rank] || [];
-        curBuckets4[c.rank].push(c);
-      }
-    });
-    Object.keys(curBuckets4).forEach(r => {
-      if (curBuckets4[r].length === 4) {
-        rows.push(takeCardsByIds(curBuckets4[r].map(c => c.id)));
-      }
-    });
-    if (wildCards.length > 0) {
-      const curBuckets3 = {};
-      pool.forEach(c => {
-        if (!c.isJoker && !(c.rank === level && c.isHeart)) {
-          curBuckets3[c.rank] = curBuckets3[c.rank] || [];
-          curBuckets3[c.rank].push(c);
-        }
-      });
-      for (let [r, group] of Object.entries(curBuckets3)) {
-        if (group.length === 3 && wildCards.length > 0) {
-          const wildToUse = wildCards.pop();
-          rows.push(takeCardsByIds([...group.map(c => c.id), wildToUse.id]));
-        }
-      }
-    }
-
-    // 6. 5 连常规单顺
-    const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
-    for (let i = 0; i <= normOrder.length - 5; i++) {
-      const windowRanks = normOrder.slice(i, i + 5);
-      const candidateCombo = [];
-      let canForm = true;
-
-      for (let wr of windowRanks) {
-        const found = pool.find(c => c.rank === wr && !c.isJoker && !candidateCombo.some(item => item.id === c.id));
-        if (found) {
-          candidateCombo.push(found);
-        } else {
-          canForm = false;
-          break;
-        }
-      }
-
-      if (canForm && candidateCombo.length === 5) {
-        rows.push(takeCardsByIds(candidateCombo.map(c => c.id)));
-      }
-    }
-
-    // 7. 三带二 (三张配对子)
-    const countsMap = {};
-    pool.forEach(c => {
-      if (!c.isJoker) {
-        countsMap[c.rank] = countsMap[c.rank] || [];
-        countsMap[c.rank].push(c);
-      }
-    });
-
-    const trips = [];
-    const pairs = [];
-    Object.keys(countsMap).forEach(r => {
-      const g = countsMap[r];
-      if (g.length === 3) trips.push(g);
-      else if (g.length === 2) pairs.push(g);
-    });
-
-    while (trips.length > 0 && pairs.length > 0) {
-      const tGroup = trips.pop();
-      const pGroup = pairs.pop();
-      rows.push(takeCardsByIds([...tGroup.map(c => c.id), ...pGroup.map(c => c.id)]));
-    }
-
-    // 8. 剩余成对
-    const remainBuckets = {};
-    pool.forEach(c => {
-      remainBuckets[c.rank] = remainBuckets[c.rank] || [];
-      remainBuckets[c.rank].push(c);
-    });
-
-    Object.keys(remainBuckets).forEach(r => {
-      if (remainBuckets[r].length >= 2) {
-        rows.push(takeCardsByIds(remainBuckets[r].map(c => c.id)));
-      }
-    });
-
-    // 9. 剩余杂单
-    if (pool.length > 0) {
-      rows.push(takeCardsByIds(pool.map(c => c.id)));
-    }
-
-    return rows.filter(r => r.length > 0);
-  }
-
-  // 纯正同类同构牌型紧凑归并算法
-  function buildCompactRows(rowsList, level) {
-    const compactMap = {
-      kingBomb: { label: '👑 天王炸', cards: [] },
-      bomb8: { label: '💣 八张炸弹', cards: [] },
-      bomb7: { label: '💣 七张炸弹', cards: [] },
-      bomb6: { label: '💣 六张炸弹', cards: [] },
-      straightFlush: { label: '🔥 同花顺', cards: [] },
-      bomb5: { label: '💣 五张炸弹', cards: [] },
-      bomb4: { label: '💣 四张炸弹', cards: [] },
-      tubesPlates: { label: '🧱 连牌(木板/钢板)', cards: [] },
-      straights: { label: '🌈 顺子', cards: [] },
-      fullHouses: { label: '👥 三带二', cards: [] },
-      pairs: { label: '🥢 对子', cards: [] },
-      singles: { label: '🃏 散牌余数', cards: [] }
-    };
-
-    rowsList.forEach(row => {
-      if (row.length === 4 && row.every(c => c.isJoker)) {
-        compactMap.kingBomb.cards.push(...row);
-      }
-      else if (row.length === 5 && isStraightFlushRow(row, level)) {
-        compactMap.straightFlush.cards.push(...row);
-      }
-      else if (row.length >= 4 && isBombRow(row, level)) {
-        if (row.length >= 8) compactMap.bomb8.cards.push(...row);
-        else if (row.length === 7) compactMap.bomb7.cards.push(...row);
-        else if (row.length === 6) compactMap.bomb6.cards.push(...row);
-        else if (row.length === 5) compactMap.bomb5.cards.push(...row);
-        else if (row.length === 4) compactMap.bomb4.cards.push(...row);
-      }
-      else if (row.length === 6 && (isTubesRow(row, level) || isPlatesRow(row, level))) {
-        compactMap.tubesPlates.cards.push(...row);
-      }
-      else if (row.length === 5 && isStraightRow(row, level)) {
-        compactMap.straights.cards.push(...row);
-      }
-      else if (row.length === 5 && isFullHouseRow(row, level)) {
-        compactMap.fullHouses.cards.push(...row);
-      }
-      else if (row.length === 2 && isPairRow(row, level)) {
-        compactMap.pairs.cards.push(...row);
-      }
-      else {
-        compactMap.singles.cards.push(...row);
-      }
-    });
-
-    const result = [];
-    const orderKeys = ['kingBomb', 'bomb8', 'bomb7', 'bomb6', 'straightFlush', 'bomb5', 'bomb4', 'tubesPlates', 'straights', 'fullHouses', 'pairs', 'singles'];
-    orderKeys.forEach(k => {
-      if (compactMap[k].cards.length > 0) {
-        result.push({
-          label: compactMap[k].label,
-          cards: sortCards(compactMap[k].cards, level)
-        });
-      }
-    });
-
-    return result;
-  }
-
-  function isBombRow(cards, level) {
-    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
-    if (nonWild.length === 0) return true;
-    const base = nonWild[0].rank;
-    return nonWild.every(c => c.rank === base);
-  }
-
-  function isStraightFlushRow(cards, level) {
-    if (cards.length !== 5) return false;
-    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
-    if (nonWild.length === 0) return true;
-    const baseSuit = nonWild[0].suit;
-    if (!nonWild.every(c => c.suit === baseSuit)) return false;
-    return isStraightRow(cards, level);
-  }
-
-  function isStraightRow(cards, level) {
-    if (cards.length !== 5) return false;
-    const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
-    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
-    const ranks = nonWild.map(c => c.rank);
-    for (let i = 0; i <= normOrder.length - 5; i++) {
-      const slice = normOrder.slice(i, i + 5);
-      if (ranks.every(r => slice.includes(r))) return true;
-    }
-    return false;
-  }
-
-  function isFullHouseRow(cards, level) {
-    if (cards.length !== 5) return false;
-    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
-    const counts = {};
-    nonWild.forEach(c => counts[c.rank] = (counts[c.rank] || 0) + 1);
-    const vals = Object.values(counts);
-    return vals.includes(3) || vals.length === 2;
-  }
-
-  function isPairRow(cards, level) {
-    if (cards.length !== 2) return false;
-    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
-    if (nonWild.length <= 1) return true;
-    return nonWild[0].rank === nonWild[1].rank;
-  }
-
-  function isTubesRow(cards, level) {
-    return cards.length === 6;
-  }
-
-  function isPlatesRow(cards, level) {
-    return cards.length === 6;
-  }
-
-  function handleGenerateAIRecommend() {
-    const allCards = getFlattenedCards();
-    if (!allCards || allCards.length === 0) return;
-
-    const recRows = generateAIRecommendedRows(allCards, currentLevel);
-    const recSchemeName = currentLang === 'en' ? 'Recommend Idea' : (currentLang === 'es' ? 'Idea Recomendada' : '推荐思路');
-
-    schemes.push({
-      name: recSchemeName,
-      customName: recSchemeName,
-      isRecommended: true,
-      rows: recRows,
-      historyStack: [],
-      redoStack: []
-    });
-
-    mainDeskCompactMode = false;
-    switchScheme(schemes.length - 1);
-  }
-
-  document.getElementById('aiRecommendBtn').addEventListener('click', handleGenerateAIRecommend);
-
-  document.getElementById('mainViewFullBtn').addEventListener('click', () => {
-    mainDeskCompactMode = false;
-    updateMainTogglePillState();
-    renderBoard();
-  });
-  document.getElementById('mainViewCompactBtn').addEventListener('click', () => {
-    mainDeskCompactMode = true;
-    updateMainTogglePillState();
-    renderBoard();
-  });
-
-  function updateMainTogglePillState() {
-    const cur = getCurrentScheme();
-    const pill = document.getElementById('mainViewTogglePill');
-    if (!pill) return;
-    const isRec = cur && (cur.isRecommended || (cur.name && cur.name.includes('推荐')));
-    pill.classList.toggle('visible', !!isRec);
-    document.getElementById('mainViewFullBtn').classList.toggle('active', !mainDeskCompactMode);
-    document.getElementById('mainViewCompactBtn').classList.toggle('active', mainDeskCompactMode);
-  }
-
-  function renderSchemesNav() {
-    const nav = document.getElementById('schemesNav');
-    if (!nav) return;
-    nav.innerHTML = '';
-
-    schemes.forEach((s, idx) => {
-      const tab = document.createElement('div');
-      tab.className = 'scheme-tab' + (idx === currentSchemeIndex ? ' active' : '');
-      tab.dataset.schemeIdx = idx;
-
-      const isRec = s.isRecommended || (s.name && (s.name.includes('推荐') || s.name.includes('Recommend'))) || 
-                    (s.customName && (s.customName.includes('推荐') || s.customName.includes('Recommend')));
-      const prefixEmoji = isRec ? '💡' : '📌';
-      const displayName = s.customName || s.name || getDefaultSchemeName(idx);
-
-      tab.innerHTML = `
-        <span class="tab-icon-prefix" title="点击重命名">${prefixEmoji}</span>
-        <span class="tab-title-text" title="双击重命名">${displayName}</span>
-        ${schemes.length > 1 ? `<span class="tab-del" title="删除该思路">✕</span>` : ''}
-      `;
-
-      tab.addEventListener('pointerdown', (e) => {
-        if (e.target.classList.contains('tab-del') || e.target.classList.contains('tab-icon-prefix')) return;
-        draggedSchemeIndex = idx;
-        isTabDraggingPointer = false;
-        tabDragStartX = e.clientX;
-        try { tab.setPointerCapture(e.pointerId); } catch(err) {}
-      });
-
-      tab.addEventListener('pointermove', (e) => {
-        if (draggedSchemeIndex === null) return;
-        if (Math.abs(e.clientX - tabDragStartX) > 8) {
-          isTabDraggingPointer = true;
-          tab.classList.add('is-tab-dragging');
-        }
-        if (isTabDraggingPointer) {
-          const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
-          const targetTab = elemBelow ? elemBelow.closest('.scheme-tab') : null;
-          document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
-          if (targetTab && targetTab !== tab) {
-            targetTab.classList.add('drag-over');
-          }
-        }
-      });
-
-      tab.addEventListener('pointerup', (e) => {
-        if (draggedSchemeIndex === null) return;
-        tab.classList.remove('is-tab-dragging');
-        document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
-
-        if (isTabDraggingPointer) {
-          const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
-          const targetTab = elemBelow ? elemBelow.closest('.scheme-tab') : null;
-          if (targetTab && targetTab !== tab) {
-            const toIdx = parseInt(targetTab.dataset.schemeIdx);
-            reorderSchemes(draggedSchemeIndex, toIdx);
-          }
-        } else {
-          switchScheme(idx);
-        }
-        draggedSchemeIndex = null;
-        isTabDraggingPointer = false;
-      });
-
-      tab.addEventListener('pointercancel', () => {
-        tab.classList.remove('is-tab-dragging');
-        document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
-        draggedSchemeIndex = null;
-        isTabDraggingPointer = false;
-      });
-
-      tab.addEventListener('click', (e) => {
-        if (e.target.classList.contains('tab-del')) {
-          e.stopPropagation();
-          deleteScheme(idx);
-          return;
-        }
-        if (e.target.classList.contains('tab-icon-prefix')) {
-          e.stopPropagation();
-          promptRenameScheme(idx);
-        }
-      });
-
-      tab.addEventListener('dblclick', (e) => {
-        e.stopPropagation();
-        promptRenameScheme(idx);
-      });
-
-      nav.appendChild(tab);
-    });
-
-    const addBtn = document.createElement('button');
-    addBtn.style.padding = '6px 12px';
-    addBtn.innerHTML = t('newSchemeBtn');
-    addBtn.addEventListener('click', addNewScheme);
-    nav.appendChild(addBtn);
-
-    updateMainTogglePillState();
-  }
-
-  function reorderSchemes(fromIdx, toIdx) {
-    const activeSchemeObj = schemes[currentSchemeIndex];
-    const [moved] = schemes.splice(fromIdx, 1);
-    schemes.splice(toIdx, 0, moved);
-    currentSchemeIndex = schemes.indexOf(activeSchemeObj);
-    renderSchemesNav();
-    renderBoard();
-  }
-
-  function promptRenameScheme(idx) {
-    const currentName = schemes[idx].customName || schemes[idx].name || getDefaultSchemeName(idx);
-    const newName = prompt(t('renamePrompt'), currentName);
-    if (newName && newName.trim() !== '') {
-      schemes[idx].customName = newName.trim();
-      schemes[idx].name = newName.trim();
-      renderSchemesNav();
-    }
-  }
-
-  function switchScheme(idx) {
-    currentSchemeIndex = idx;
-    selectedIds.clear();
-    lastAnchorCardId = null;
-    mainDeskCompactMode = false;
-    renderSchemesNav();
-    renderBoard();
-  }
-
-  function addNewScheme() {
-    const newIndex = schemes.length;
-    const defaultName = getDefaultSchemeName(newIndex);
-    const clonedCards = getFlattenedCards();
-    schemes.push({
-      name: defaultName,
-      customName: defaultName,
-      isRecommended: false,
-      rows: [sortCards(clonedCards, currentLevel)],
-      historyStack: [],
-      redoStack: []
-    });
-    switchScheme(schemes.length - 1);
-  }
-
-  function deleteScheme(idx) {
-    if (schemes.length <= 1) return;
-    schemes.splice(idx, 1);
-    if (currentSchemeIndex >= schemes.length) currentSchemeIndex = schemes.length - 1;
-    switchScheme(currentSchemeIndex);
-  }
-
-  function renderBoard() {
-    const board = document.getElementById('board');
-    if (!board) return;
-    board.innerHTML = '';
-
-    const cur = getCurrentScheme();
-    if (!cur) return;
-
-    cur.rows = cur.rows.filter(r => r && r.length > 0);
-
-    if (mainDeskCompactMode && (cur.isRecommended || (cur.name && cur.name.includes('推荐')))) {
-      const compactGroups = buildCompactRows(cur.rows, currentLevel);
-      compactGroups.forEach((grp) => {
-        const rowEl = document.createElement('div');
-        rowEl.className = 'card-row';
-
-        const handle = document.createElement('div');
-        handle.className = 'row-handle';
-        handle.style.cursor = 'default';
-        handle.innerHTML = `
-          <div class="handle-icon" style="font-size:12px;">★</div>
-          <div class="handle-label" style="font-size:10px;">${grp.label}</div>
-          <div class="handle-count">${grp.cards.length} ${t('cardUnit')}</div>
-        `;
-        rowEl.appendChild(handle);
-
-        const cardsWrapper = document.createElement('div');
-        cardsWrapper.className = 'cards-wrapper';
-
-        grp.cards.forEach((card, cIndex) => {
-          const cardEl = document.createElement('div');
-          const isSelected = selectedIds.has(card.id);
-          cardEl.className = `card ${card.color}` + (isSelected ? ' selected' : '');
-          cardEl.dataset.id = card.id;
-          cardEl.style.zIndex = (cIndex + 10);
-          cardEl.innerHTML = buildCardHTML(card);
-          cardsWrapper.appendChild(cardEl);
-        });
-
-        rowEl.appendChild(cardsWrapper);
-        board.appendChild(rowEl);
-      });
-      updateTotalCount();
-      updateButtonStates();
-      return;
-    }
-
-    cur.rows.push([]);
-
-    cur.rows.forEach((rowCards, rIndex) => {
-      const rowEl = document.createElement('div');
-      const isEmpty = rowCards.length === 0;
-      rowEl.className = 'card-row' + (isEmpty ? ' empty-row' : '');
-      rowEl.dataset.rowIndex = rIndex;
-      rowEl.setAttribute('data-placeholder', t('rowPlaceholder'));
-
-      if (!isEmpty) {
-        const handle = document.createElement('div');
-        handle.className = 'row-handle';
-        handle.dataset.rowIndex = rIndex;
-        handle.innerHTML = `
-          <div class="handle-icon">≡</div>
-          <div class="handle-label">${t('rowLayer', { idx: rIndex + 1 })}</div>
-          <div class="handle-count">${rowCards.length} ${t('cardUnit')}</div>
-        `;
-        rowEl.appendChild(handle);
-      }
-
-      const cardsWrapper = document.createElement('div');
-      cardsWrapper.className = 'cards-wrapper';
-
-      rowCards.forEach((card, cIndex) => {
-        const cardEl = document.createElement('div');
-        const isSelected = selectedIds.has(card.id);
-        cardEl.className = `card ${card.color}` + (isSelected ? ' selected' : '');
-        cardEl.dataset.id = card.id;
-        cardEl.dataset.rowIndex = rIndex;
-        cardEl.dataset.cardIndex = cIndex;
-        cardEl.style.zIndex = (cIndex + 10);
-        cardEl.innerHTML = buildCardHTML(card);
-
-        cardsWrapper.appendChild(cardEl);
-      });
-
-      rowEl.appendChild(cardsWrapper);
-      board.appendChild(rowEl);
-    });
-
-    updateTotalCount();
-    updateButtonStates();
-  }
-
-  function getFlattenedCards() {
-    const cur = getCurrentScheme();
-    if (!cur || !cur.rows) return [];
-    const list = [];
-    cur.rows.forEach(r => {
-      if (r && Array.isArray(r)) {
-        r.forEach(c => list.push(c));
-      }
-    });
-    return list;
-  }
-
-  function checkEdgeAutoScroll(clientX, clientY) {
-    const vpW = window.innerWidth;
-    const vpH = window.innerHeight;
-    const edgeX = 90;
-    const edgeY = 80;
-    const maxSpd = 16;
-
-    if (clientY > vpH - edgeY) {
-      const ratio = (clientY - (vpH - edgeY)) / edgeY;
-      autoScrollSpeedY = Math.min(maxSpd, Math.max(3, ratio * maxSpd));
-    } else if (clientY < edgeY) {
-      const ratio = (edgeY - clientY) / edgeY;
-      autoScrollSpeedY = -Math.min(maxSpd, Math.max(3, ratio * maxSpd));
-    } else {
-      autoScrollSpeedY = 0;
-    }
-
-    if (clientX > vpW - edgeX) {
-      const ratio = (clientX - (vpW - edgeX)) / edgeX;
-      autoScrollSpeedX = Math.min(maxSpd, Math.max(4, ratio * maxSpd));
-    } else if (clientX < edgeX) {
-      const ratio = (edgeX - clientX) / edgeX;
-      autoScrollSpeedX = -Math.min(maxSpd, Math.max(4, ratio * maxSpd));
-    } else {
-      autoScrollSpeedX = 0;
-    }
-
-    if (autoScrollSpeedX !== 0 || autoScrollSpeedY !== 0) {
-      startAutoScrollLoop();
-    } else {
-      stopAutoScrollLoop();
-    }
-  }
-
-  function startAutoScrollLoop() {
-    if (autoScrollAnimationId) return;
-    function loop() {
-      if ((autoScrollSpeedX !== 0 || autoScrollSpeedY !== 0) && (interactionMode === 'dragging' || interactionMode === 'row-reorder')) {
-        window.scrollBy(autoScrollSpeedX, autoScrollSpeedY);
-        document.documentElement.scrollLeft += autoScrollSpeedX;
-        document.body.scrollLeft += autoScrollSpeedX;
-
-        if (interactionMode === 'dragging') {
-          updateDropCaret(currentClientX, currentClientY);
-        } else if (interactionMode === 'row-reorder') {
-          updateRowReorderIndicator(currentClientX, currentClientY);
-        }
-
-        autoScrollAnimationId = requestAnimationFrame(loop);
-      } else {
-        stopAutoScrollLoop();
-      }
-    }
-    autoScrollAnimationId = requestAnimationFrame(loop);
-  }
-
-  function stopAutoScrollLoop() {
-    if (autoScrollAnimationId) {
-      cancelAnimationFrame(autoScrollAnimationId);
-      autoScrollAnimationId = null;
-    }
-    autoScrollSpeedX = 0;
-    autoScrollSpeedY = 0;
-  }
-
-  document.addEventListener('pointerdown', (e) => {
-    if (e.button && e.button !== 0) return;
-    startX = e.clientX;
-    startY = e.clientY;
-    currentClientX = e.clientX;
-    currentClientY = e.clientY;
-    hasMovedEnough = false;
-
-    const isShift = e.shiftKey || touchMultiSelectActive;
-    const isCmdOrCtrl = e.metaKey || e.ctrlKey || touchMultiSelectActive;
-    mousePressedWithShiftOrCmd = (isShift || isCmdOrCtrl);
-
-    const handleEl = e.target.closest('.row-handle');
-    if (handleEl) {
-      draggedRowIndex = parseInt(handleEl.dataset.rowIndex);
-      interactionMode = 'row-reorder';
-      return;
-    }
-
-    const cardEl = e.target.closest('.card');
-    if (!cardEl) {
-      if (!e.target.closest('.header-container') && !e.target.closest('.modal-content') && !e.target.closest('.schemes-nav-wrap') && !e.target.closest('.help-drawer')) {
-        if (selectedIds.size > 0) {
-          selectedIds.clear();
-          lastAnchorCardId = null;
-          document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
-          updateButtonStates();
-        }
-      }
-      interactionMode = null;
-      return;
-    }
-
-    const cardId = parseInt(cardEl.dataset.id);
-    clickedCardId = cardId;
-    clickedCardInitialSelected = selectedIds.has(cardId);
-
-    if (!clickedCardInitialSelected && isShift && lastAnchorCardId !== null) {
-      const flat = getFlattenedCards();
-      const idx1 = flat.findIndex(c => c.id === lastAnchorCardId);
-      const idx2 = flat.findIndex(c => c.id === cardId);
-
-      if (idx1 !== -1 && idx2 !== -1) {
-        const minIdx = Math.min(idx1, idx2);
-        const maxIdx = Math.max(idx1, idx2);
-        for (let i = minIdx; i <= maxIdx; i++) {
-          selectedIds.add(flat[i].id);
-          const el = document.querySelector(`.card[data-id="${flat[i].id}"]`);
-          if (el) el.classList.add('selected');
-        }
-      }
-      interactionMode = 'dragging';
-      updateButtonStates();
-      return;
-    }
-
-    if (clickedCardInitialSelected) {
-      interactionMode = 'dragging';
-    } else {
-      selectedIds.add(cardId);
-      lastAnchorCardId = cardId;
-      cardEl.classList.add('selected');
-      interactionMode = 'swiping';
-      updateButtonStates();
-    }
-  });
-
-  document.addEventListener('pointermove', (e) => {
-    if (!interactionMode) return;
-    const cur = getCurrentScheme();
-    if (!cur) return;
-
-    currentClientX = e.clientX;
-    currentClientY = e.clientY;
-
-    const dx = Math.abs(e.clientX - startX);
-    const dy = Math.abs(e.clientY - startY);
-    if (dx > 6 || dy > 6) hasMovedEnough = true;
-
-    if (interactionMode === 'dragging' || interactionMode === 'row-reorder') {
-      if (hasMovedEnough) checkEdgeAutoScroll(e.clientX, e.clientY);
-    }
-
-    if (interactionMode === 'row-reorder') {
-      if (!hasMovedEnough) return;
-      document.body.classList.add('is-dragging');
-
-      const badge = document.getElementById('rowDragBadge');
-      badge.style.display = 'block';
-      badge.textContent = `${t('rowLayer', { idx: draggedRowIndex + 1 })} (${cur.rows[draggedRowIndex].length})`;
-      badge.style.left = `${e.clientX}px`;
-      badge.style.top = `${e.clientY}px`;
-
-      updateRowReorderIndicator(e.clientX, e.clientY);
-      return;
-    }
-
-    if (interactionMode === 'swiping') {
-      const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
-      const targetCard = elemBelow ? elemBelow.closest('.card') : null;
-      if (targetCard) {
-        const id = parseInt(targetCard.dataset.id);
-        if (!selectedIds.has(id)) {
-          selectedIds.add(id);
-          lastAnchorCardId = id;
-          targetCard.classList.add('selected');
-          updateButtonStates();
-        }
-      }
-    }
-
-    if (interactionMode === 'dragging') {
-      if (!hasMovedEnough) return;
-      document.body.classList.add('is-dragging');
-
-      const proxy = document.getElementById('dragProxy');
-      if (proxy.style.display !== 'flex') {
-        proxy.style.display = 'flex';
-        proxy.innerHTML = '';
-
-        const sortedSelectedCards = [];
-        cur.rows.forEach(r => {
-          if (r && Array.isArray(r)) {
-            r.forEach(c => {
-              if (selectedIds.has(c.id)) sortedSelectedCards.push(c);
-            });
-          }
-        });
-
-        sortedSelectedCards.forEach(c => {
-          const ghostCard = document.createElement('div');
-          ghostCard.className = `card ${c.color}`;
-          ghostCard.innerHTML = buildCardHTML(c);
-          proxy.appendChild(ghostCard);
-        });
-
-        document.querySelectorAll('.card').forEach(el => {
-          if (selectedIds.has(parseInt(el.dataset.id))) el.classList.add('ghost');
-        });
-      }
-
-      proxy.style.left = `${e.clientX}px`;
-      proxy.style.top = `${e.clientY}px`;
-      updateDropCaret(e.clientX, e.clientY);
-    }
-  });
-
-  document.addEventListener('pointerup', (e) => {
-    stopAutoScrollLoop();
-    if (!interactionMode) return;
-
-    if (interactionMode === 'row-reorder') {
-      if (hasMovedEnough && rowTargetDrop) {
-        executeRowReorder();
-      }
-      document.getElementById('rowDragBadge').style.display = 'none';
-      clearRowIndicators();
-      draggedRowIndex = null;
-      rowTargetDrop = null;
-    }
-
-    if (interactionMode === 'dragging' && !hasMovedEnough && clickedCardId !== null) {
-      if (clickedCardInitialSelected) {
-        const isShift = e.shiftKey || mousePressedWithShiftOrCmd;
-        const isCmdOrCtrl = e.metaKey || e.ctrlKey || mousePressedWithShiftOrCmd;
-
-        if (isShift || isCmdOrCtrl) {
-          selectedIds.clear();
-          lastAnchorCardId = null;
-          document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
-          updateButtonStates();
-        } else {
-          selectedIds.delete(clickedCardId);
-          const el = document.querySelector(`.card[data-id="${clickedCardId}"]`);
-          if (el) el.classList.remove('selected');
-          if (lastAnchorCardId === clickedCardId) lastAnchorCardId = null;
-          updateButtonStates();
-        }
-      }
-    }
-
-    if (interactionMode === 'dragging' && hasMovedEnough) {
-      executeBatchPlacement();
-    }
-
-    interactionMode = null;
-    clickedCardId = null;
-    mousePressedWithShiftOrCmd = false;
-    document.body.classList.remove('is-dragging');
-    const proxy = document.getElementById('dragProxy');
-    proxy.style.display = 'none';
-    proxy.innerHTML = '';
-    hideDropCaret();
-  });
-
-  document.addEventListener('pointercancel', () => {
-    stopAutoScrollLoop();
-    interactionMode = null;
-    document.body.classList.remove('is-dragging');
-    const proxy = document.getElementById('dragProxy');
-    if (proxy) proxy.style.display = 'none';
-    hideDropCaret();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    const isModalOpen = document.getElementById('customModal').style.display.includes('flex') ||
-                        document.getElementById('compareModal').style.display.includes('flex') ||
-                        document.getElementById('rulesModal').style.display.includes('flex') ||
-                        document.getElementById('archiveModal').style.display.includes('flex');
-    if (isModalOpen) return;
-
-    const isCmdOrCtrl = e.metaKey || e.ctrlKey;
-
-    if (isCmdOrCtrl && !e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
-      e.preventDefault();
-      undo();
-      return;
-    }
-
-    if ((isCmdOrCtrl && e.shiftKey && (e.key === 'z' || e.key === 'Z')) || (isCmdOrCtrl && (e.key === 'y' || e.key === 'Y'))) {
-      e.preventDefault();
-      redo();
-      return;
-    }
-
-    if (isCmdOrCtrl && (e.key === 's' || e.key === 'S')) {
-      e.preventDefault();
-      document.getElementById('saveArchiveBtn').click();
-      return;
-    }
-
-    if (!isCmdOrCtrl && (e.key === 'r' || e.key === 'R')) {
-      e.preventDefault();
-      resetSort();
-      return;
-    }
-
-    if (!isCmdOrCtrl && (e.code === 'Space' || e.key === 'n' || e.key === 'N')) {
-      e.preventDefault();
-      startNewGame();
-      return;
-    }
-
-    if (e.key === 'Delete' || e.key === 'Backspace') {
-      deleteSelectedCards();
-    }
-  });
-
-  function updateRowReorderIndicator(x, y) {
-    clearRowIndicators();
-    rowTargetDrop = null;
-
-    const badge = document.getElementById('rowDragBadge');
-    badge.style.display = 'none';
-    const elemBelow = document.elementFromPoint(x, y);
-    badge.style.display = 'block';
-
-    if (!elemBelow) return;
-    const targetRowEl = elemBelow.closest('.card-row');
-    if (!targetRowEl) return;
-
-    const targetRowIndex = parseInt(targetRowEl.dataset.rowIndex);
-    const rect = targetRowEl.getBoundingClientRect();
-    const isTop = (y - rect.top) < (rect.height / 2);
-
-    targetRowEl.classList.toggle('row-indicator-top', isTop);
-    targetRowEl.classList.toggle('row-indicator-bottom', !isTop);
-
-    rowTargetDrop = { targetRowIndex, isTop };
-  }
-
-  function clearRowIndicators() {
-    document.querySelectorAll('.card-row').forEach(r => {
-      r.classList.remove('row-indicator-top', 'row-indicator-bottom');
-    });
-  }
-
-  function executeRowReorder() {
-    if (!rowTargetDrop || draggedRowIndex === null) return;
-    const cur = getCurrentScheme();
-    const { targetRowIndex, isTop } = rowTargetDrop;
-
-    let destinationIndex = isTop ? targetRowIndex : targetRowIndex + 1;
-    if (draggedRowIndex === targetRowIndex) return;
-
-    pushState();
-
-    const [movedRow] = cur.rows.splice(draggedRowIndex, 1);
-    if (draggedRowIndex < destinationIndex) destinationIndex--;
-
-    cur.rows.splice(destinationIndex, 0, movedRow);
-    renderBoard();
-  }
-
-  function updateDropCaret(x, y) {
-    const caret = document.getElementById('dropCaret');
-    const proxy = document.getElementById('dragProxy');
-    const cur = getCurrentScheme();
-
-    proxy.style.display = 'none';
-    const elemBelow = document.elementFromPoint(x, y);
-    proxy.style.display = 'flex';
-
-    if (!elemBelow) { hideDropCaret(); return; }
-    const rowEl = elemBelow.closest('.card-row');
-    if (!rowEl) { hideDropCaret(); return; }
-
-    const targetRowIndex = parseInt(rowEl.dataset.rowIndex);
-    const validCards = Array.from(rowEl.querySelectorAll('.card:not(.ghost)'));
-
-    if (validCards.length === 0) {
-      const rowRect = rowEl.getBoundingClientRect();
-      caret.style.display = 'block';
-      caret.style.left = `${rowRect.left + 30 + window.scrollX}px`;
-      caret.style.top = `${rowRect.top + 48 + window.scrollY}px`;
-      rowEl.classList.add('drop-highlight');
-      dropTarget = { rowIndex: targetRowIndex, insertIndex: 0 };
-      return;
-    }
-
-    const lastCard = validCards[validCards.length - 1];
-    const lastRect = lastCard.getBoundingClientRect();
-
-    if (x >= lastRect.right - 10) {
-      caret.style.display = 'block';
-      caret.style.left = `${lastRect.right + 6 + window.scrollX}px`;
-      caret.style.top = `${lastRect.top + window.scrollY}px`;
-      rowEl.classList.add('drop-highlight');
-      dropTarget = { rowIndex: targetRowIndex, insertIndex: cur.rows[targetRowIndex].length };
-      return;
-    }
-
-    let chosenIndex = 0;
-    let caretX = 0;
-    let caretY = 0;
-
-    const firstRect = validCards[0].getBoundingClientRect();
-    if (x < firstRect.left + firstRect.width * 0.4) {
-      chosenIndex = 0;
-      caretX = firstRect.left - 4;
-      caretY = firstRect.top;
-    } else {
-      let matched = false;
-      for (let i = 0; i < validCards.length; i++) {
-        const rect = validCards[i].getBoundingClientRect();
-        const nextRect = validCards[i + 1] ? validCards[i + 1].getBoundingClientRect() : null;
-
-        if (nextRect) {
-          const midX = (rect.right + nextRect.left) / 2;
-          if (x >= rect.left && x < midX + 16) {
-            chosenIndex = i + 1;
-            caretX = nextRect.left - 4;
-            caretY = nextRect.top;
-            matched = true;
-            break;
-          }
-        } else {
-          if (x >= rect.left + rect.width * 0.4) {
-            chosenIndex = validCards.length;
-            caretX = rect.right + 6;
-            caretY = rect.top;
-            matched = true;
-            break;
-          }
-        }
-      }
-      if (!matched) {
-        chosenIndex = validCards.length;
-        caretX = lastRect.right + 6;
-        caretY = lastRect.top;
-      }
-    }
-
-    let realInsertIndex = 0;
-    if (chosenIndex < validCards.length) {
-      const targetCardId = parseInt(validCards[chosenIndex].dataset.id);
-      realInsertIndex = cur.rows[targetRowIndex].findIndex(c => c.id === targetCardId);
-    } else {
-      realInsertIndex = cur.rows[targetRowIndex].length;
-    }
-
-    caret.style.display = 'block';
-    caret.style.left = `${caretX + window.scrollX}px`;
-    caret.style.top = `${caretY + window.scrollY}px`;
-    rowEl.classList.add('drop-highlight');
-
-    dropTarget = { rowIndex: targetRowIndex, insertIndex: realInsertIndex };
-  }
-
-  function hideDropCaret() {
-    document.getElementById('dropCaret').style.display = 'none';
-    document.querySelectorAll('.card-row').forEach(r => r.classList.remove('drop-highlight'));
-    document.querySelectorAll('.card').forEach(c => c.classList.remove('ghost'));
-    dropTarget = null;
-  }
-
-  function executeBatchPlacement() {
-    if (!dropTarget || selectedIds.size === 0) return;
-    const cur = getCurrentScheme();
-
-    pushState();
-
-    const movingCards = [];
-    cur.rows.forEach(r => {
-      if (r && Array.isArray(r)) {
-        r.forEach(c => {
-          if (selectedIds.has(c.id)) movingCards.push(c);
-        });
-      }
-    });
-
-    cur.rows = cur.rows.map(r => r.filter(c => !selectedIds.has(c.id)));
-
-    const targetRow = cur.rows[dropTarget.rowIndex] || [];
-    let ins = Math.min(dropTarget.insertIndex, targetRow.length);
-    targetRow.splice(ins, 0, ...movingCards);
-
-    selectedIds.clear();
-    lastAnchorCardId = null;
-    renderBoard();
-  }
-
-  function deleteSelectedCards() {
-    if (selectedIds.size === 0) return;
-    const cur = getCurrentScheme();
-    pushState();
-    cur.rows = cur.rows.map(r => r.filter(c => !selectedIds.has(c.id)));
-    selectedIds.clear();
-    lastAnchorCardId = null;
-    renderBoard();
-  }
-
-  document.getElementById('deleteBtn').addEventListener('click', deleteSelectedCards);
-
-  const multiToggleBtn = document.getElementById('multiSelectToggleBtn');
-  multiToggleBtn.addEventListener('click', () => {
-    touchMultiSelectActive = !touchMultiSelectActive;
-    multiToggleBtn.classList.toggle('toggle-active', touchMultiSelectActive);
-  });
-
-  const rulesModal = document.getElementById('rulesModal');
-  document.getElementById('rulesBtn').addEventListener('click', () => {
-    renderRulesModalContent();
-    rulesModal.style.display = 'flex';
-  });
-  document.getElementById('closeRulesBtn').addEventListener('click', () => {
-    rulesModal.style.display = 'none';
-  });
-
-  const compareModal = document.getElementById('compareModal');
-  const compareContainer = document.getElementById('compareContainer');
-
-  document.getElementById('viewFullBtn').addEventListener('click', () => {
-    compareViewMode = 'full';
-    document.getElementById('viewFullBtn').classList.add('active');
-    document.getElementById('viewCompactBtn').classList.remove('active');
-    renderCompareContent();
-  });
-
-  document.getElementById('viewCompactBtn').addEventListener('click', () => {
-    compareViewMode = 'compact';
-    document.getElementById('viewCompactBtn').classList.add('active');
-    document.getElementById('viewFullBtn').classList.remove('active');
-    renderCompareContent();
-  });
-
-  function renderCompareContent() {
-    compareContainer.innerHTML = '';
-
-    const allCards = getFlattenedCards();
-    const benchmarkRecRows = generateAIRecommendedRows(allCards, currentLevel);
-    
-    const recRowSignatures = new Set(
-      benchmarkRecRows.map(r => r.map(c => c.id).sort((a,b)=>a-b).join(','))
-    );
-    const recFullFingerprint = benchmarkRecRows.map(r => r.map(c => c.id).sort((a,b)=>a-b).join(',')).sort().join('|');
-
-    schemes.forEach((s, idx) => {
-      const col = document.createElement('div');
-      col.className = 'scheme-column';
-
-      const validRows = (s.rows || []).filter(r => r && r.length > 0);
-      const totalCount = validRows.reduce((acc, r) => acc + r.length, 0);
-
-      const isRec = s.isRecommended || (s.name && (s.name.includes('推荐') || s.name.includes('Recommend'))) || 
-                    (s.customName && (s.customName.includes('推荐') || s.customName.includes('Recommend')));
-      const prefixEmoji = isRec ? '💡' : '📌';
-      const displayName = `${prefixEmoji} ${s.customName || s.name || getDefaultSchemeName(idx)}`;
-
-      const sFingerprint = validRows.map(r => r.map(c => c.id).sort((a,b)=>a-b).join(',')).sort().join('|');
-      const isExactMatch = (sFingerprint === recFullFingerprint);
-
-      if (isExactMatch && !isRec) {
-        col.classList.add('is-exact-match');
-      }
-
-      const summaryText = t('compareSummary', { tiers: validRows.length, cards: totalCount });
-
-      col.innerHTML = `
-        <div class="scheme-col-header">
-          <div>
-            <div class="scheme-col-title">${displayName}</div>
-            <div style="font-size: var(--font-modal-small); color: #94a3b8; margin-top: 2px;">
-              ${summaryText}
-            </div>
-            ${isExactMatch && !isRec ? `<div class="match-badge">🎯 与推荐思路完全一致</div>` : ''}
-            ${isRec ? `<div style="font-size:11px; color:#c084fc; font-weight:bold; margin-top:2px;">★ 标准答案基线</div>` : ''}
-          </div>
-          ${idx !== currentSchemeIndex ? `<button class="action-lead-btn" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #4ade80; font-weight: bold;">${t('usingCurrent')}</span>`}
-        </div>
-      `;
-
-      if (compareViewMode === 'compact' && isRec) {
-        const compactGroups = buildCompactRows(validRows, currentLevel);
-        compactGroups.forEach(grp => {
-          const miniRow = document.createElement('div');
-          miniRow.className = 'scheme-mini-row';
-
-          const rowBadge = document.createElement('div');
-          rowBadge.className = 'scheme-mini-row-badge';
-          rowBadge.style.minWidth = '75px';
-          rowBadge.textContent = `${grp.label} (${grp.cards.length}):`;
-          miniRow.appendChild(rowBadge);
-
-          const cardsWrap = document.createElement('div');
-          cardsWrap.className = 'scheme-mini-cards-wrap';
-
-          grp.cards.forEach((c, cIdx) => {
-            const miniCard = document.createElement('div');
-            miniCard.className = `card ${c.color}`;
-            miniCard.style.zIndex = cIdx + 5;
-            miniCard.innerHTML = buildCardHTML(c);
-            cardsWrap.appendChild(miniCard);
-          });
-
-          miniRow.appendChild(cardsWrap);
-          col.appendChild(miniRow);
-        });
-      } else {
-        validRows.forEach((r, rIdx) => {
-          const rowSig = r.map(c => c.id).sort((a,b)=>a-b).join(',');
-          const isRowMatch = recRowSignatures.has(rowSig);
-
-          const miniRow = document.createElement('div');
-          miniRow.className = 'scheme-mini-row';
-
-          if (!isRec && !isRowMatch) {
-            miniRow.classList.add('is-diff-row');
-          }
-
-          const rowBadge = document.createElement('div');
-          rowBadge.className = 'scheme-mini-row-badge';
-          rowBadge.innerHTML = `${t('rowLayer', { idx: rIdx + 1 })} (${r.length}):${(!isRec && !isRowMatch) ? '<span class="diff-indicator-tag">⚡差异</span>' : ''}`;
-          miniRow.appendChild(rowBadge);
-
-          const cardsWrap = document.createElement('div');
-          cardsWrap.className = 'scheme-mini-cards-wrap';
-
-          r.forEach((c, cIdx) => {
-            const miniCard = document.createElement('div');
-            miniCard.className = `card ${c.color}`;
-            miniCard.style.zIndex = cIdx + 5;
-            miniCard.innerHTML = buildCardHTML(c);
-            cardsWrap.appendChild(miniCard);
-          });
-
-          miniRow.appendChild(cardsWrap);
-          col.appendChild(miniRow);
-        });
-      }
-
-      compareContainer.appendChild(col);
-    });
-  }
-
-  function openCompareModal() {
-    renderCompareContent();
-    compareModal.style.display = 'flex';
-  }
-
-  function varToCss(varName) {
-    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-  }
-
-  window.switchSchemeAndClose = function(idx) {
-    switchScheme(idx);
-    compareModal.style.display = 'none';
-  };
-
-  document.getElementById('compareSchemesBtn').addEventListener('click', openCompareModal);
-  document.getElementById('closeCompareBtn').addEventListener('click', () => {
-    compareModal.style.display = 'none';
-  });
-
-  const STORAGE_KEY = 'GUANDAN_SAVED_ARCHIVES';
-  const archiveModal = document.getElementById('archiveModal');
-  const archiveListContainer = document.getElementById('archiveListContainer');
-
-  function getSavedArchives() {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function setSavedArchives(list) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-  }
-
-  document.getElementById('saveArchiveBtn').addEventListener('click', () => {
-    const defaultName = `${t('saveDefault', { level: currentLevel })} (${new Date().toLocaleDateString()})`;
-    const customName = prompt(t('savePrompt'), defaultName);
-    if (!customName) return;
-
-    const archives = getSavedArchives();
-    const newRecord = {
-      id: 'save_' + Date.now(),
-      name: customName.trim(),
-      date: new Date().toLocaleString(),
-      currentLevel: currentLevel,
-      initialCards: initialCards,
-      schemes: schemes,
-      currentSchemeIndex: currentSchemeIndex
-    };
-
-    archives.unshift(newRecord);
-    setSavedArchives(archives);
-    alert(t('saveSuccess'));
-  });
-
-  document.getElementById('openArchiveBtn').addEventListener('click', () => {
-    renderArchiveList();
-    archiveModal.style.display = 'flex';
-  });
-
-  document.getElementById('closeArchiveBtn').addEventListener('click', () => {
-    archiveModal.style.display = 'none';
-  });
-
-  function renderArchiveList() {
-    archiveListContainer.innerHTML = '';
-    const archives = getSavedArchives();
-
-    if (archives.length === 0) {
-      archiveListContainer.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 24px 0;">${t('noArchives')}</div>`;
-      return;
-    }
-
-    archives.forEach((item) => {
-      const cardEl = document.createElement('div');
-      cardEl.className = 'save-card-item';
-
-      const totalCards = item.initialCards ? item.initialCards.length : (item.schemes[0]?.rows.reduce((acc, r) => acc + r.length, 0) || 0);
-
-      cardEl.innerHTML = `
-        <div style="flex-grow: 1;">
-          <div class="save-info-title">${item.name}</div>
-          <div class="save-info-meta">
-            ${t('levelPrefix', { level: item.currentLevel })} · ${totalCards} ${t('cardUnit')} · ${item.schemes.length} 个思路 · ${item.date}
-          </div>
-        </div>
-        <div style="display: flex; gap: 8px;">
-          <button class="action-lead-btn" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
-          <button class="btn-danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">${t('delete')}</button>
-        </div>
-      `;
-      archiveListContainer.appendChild(cardEl);
-    });
-  }
-
-  window.loadArchive = function(id) {
-    const archives = getSavedArchives();
-    const target = archives.find(a => a.id === id);
-    if (!target) return;
-
-    currentLevel = target.currentLevel;
-    document.getElementById('levelInfo').textContent = t('levelPrefix', { level: currentLevel });
-
-    initialCards = JSON.parse(JSON.stringify(target.initialCards || []));
-    schemes = JSON.parse(JSON.stringify(target.schemes || []));
-    currentSchemeIndex = target.currentSchemeIndex || 0;
-
-    selectedIds.clear();
-    lastAnchorCardId = null;
-
-    archiveModal.style.display = 'none';
-    renderSchemesNav();
-    renderBoard();
-  };
-
-  window.deleteArchive = function(id) {
-    if (!confirm(t('confirmDelArchive'))) return;
-    let archives = getSavedArchives();
-    archives = archives.filter(a => a.id !== id);
-    setSavedArchives(archives);
-    renderArchiveList();
-  };
-
-  document.getElementById('toggleHelpBtn').addEventListener('click', () => {
-    const drawer = document.getElementById('helpDrawer');
-    const isShown = drawer.style.display === 'block';
-    drawer.style.display = isShown ? 'none' : 'block';
-  });
-
-  const modalBackdrop = document.getElementById('customModal');
-  const modalCardsList = document.getElementById('modalCardsList');
-  const modalLevelSelect = document.getElementById('modalLevelSelect');
-  const modalSelectedCount = document.getElementById('modalSelectedCount');
-
-  function renderLevelSelectOptions() {
-    modalLevelSelect.innerHTML = '';
-    RANKS.forEach(r => {
-      const opt = document.createElement('option');
-      opt.value = r;
-      opt.textContent = `${t('levelPrefix', { level: r })}`;
-      modalLevelSelect.appendChild(opt);
-    });
-  }
-
-  function openCustomModal() {
-    modalSelectionMap = {};
-    renderLevelSelectOptions();
-    modalLevelSelect.value = currentLevel;
-
-    const flat = getFlattenedCards();
-    flat.forEach(c => {
-      const key = `${c.rank}_${c.suit}`;
-      modalSelectionMap[key] = (modalSelectionMap[key] || 0) + 1;
-    });
-
-    renderModalCards();
-    modalBackdrop.style.display = 'flex';
-  }
-
-  function closeCustomModal() {
-    modalBackdrop.style.display = 'none';
-  }
-
-  function renderModalCards() {
-    modalCardsList.innerHTML = '';
-    let totalSelected = 0;
-
-    const jokerRow = document.createElement('div');
-    jokerRow.className = 'picker-row';
-    jokerRow.innerHTML = `<div class="picker-label">${t('suits')['joker']}</div><div class="picker-cards-grid"></div>`;
-    const jokerGrid = jokerRow.querySelector('.picker-cards-grid');
-
-    [
-      { rank: '大王', suit: '★', color: 'red' },
-      { rank: '小王', suit: '★', color: 'black' }
-    ].forEach(j => {
-      const key = `${j.rank}_${j.suit}`;
-      const count = modalSelectionMap[key] || 0;
-      totalSelected += count;
-      jokerGrid.appendChild(createPickerCardEl(j, count, key));
-    });
-    modalCardsList.appendChild(jokerRow);
-
-    SUITS.forEach(s => {
-      const row = document.createElement('div');
-      row.className = 'picker-row';
-      const suitLabel = t('suits')[s.name] || s.name;
-      row.innerHTML = `<div class="picker-label ${s.color}">${suitLabel}</div><div class="picker-cards-grid"></div>`;
-      const grid = row.querySelector('.picker-cards-grid');
-
-      [...RANKS].reverse().forEach(r => {
-        const key = `${r}_${s.name}`;
-        const count = modalSelectionMap[key] || 0;
-        totalSelected += count;
-        grid.appendChild(createPickerCardEl({ rank: r, suit: s.name, color: s.color }, count, key));
-      });
-      modalCardsList.appendChild(row);
-    });
-
-    modalSelectedCount.textContent = totalSelected;
-  }
-
-  function createPickerCardEl(item, count, key) {
-    const el = document.createElement('div');
-    el.className = `picker-card-btn ${item.color}` + (count > 0 ? ' has-selected' : '');
-    const displayRank = (item.rank === '大王' ? t('bigJoker') : (item.rank === '小王' ? t('smallJoker') : item.rank));
-    el.innerHTML = `
-      <div class="card-val">${displayRank}</div>
-      <div class="card-suit">${item.suit}</div>
-      <div class="picker-count-badge">${count}</div>
-    `;
-
-    el.addEventListener('click', () => {
-      const current = modalSelectionMap[key] || 0;
-      modalSelectionMap[key] = current >= 2 ? 0 : current + 1;
-      renderModalCards();
-    });
-
-    el.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      const current = modalSelectionMap[key] || 0;
-      if (current > 0) {
-        modalSelectionMap[key] = current - 1;
-        renderModalCards();
-      }
-    });
-
-    return el;
-  }
-
-  document.getElementById('customHandBtn').addEventListener('click', openCustomModal);
-  document.getElementById('cancelModalBtn').addEventListener('click', closeCustomModal);
-  document.getElementById('clearAllModalBtn').addEventListener('click', () => {
-    modalSelectionMap = {};
-    renderModalCards();
-  });
-
-  document.getElementById('confirmModalBtn').addEventListener('click', () => {
-    currentLevel = modalLevelSelect.value;
-    document.getElementById('levelInfo').textContent = t('levelPrefix', { level: currentLevel });
-
-    const newCards = [];
-    let idGen = 1000;
-
-    for (const [key, count] of Object.entries(modalSelectionMap)) {
-      if (count <= 0) continue;
-      const [rank, suit] = key.split('_');
-      const isJoker = (rank === '大王' || rank === '小王');
-      const isHeart = (suit === '♥');
-      const color = (suit === '♥' || suit === '♦' || rank === '大王') ? 'red' : 'black';
-
-      for (let i = 0; i < count; i++) {
-        newCards.push({
-          id: idGen++,
-          rank,
-          suit,
-          color,
-          isHeart,
-          isJoker,
-          jokerType: rank === '大王' ? 'big' : (rank === '小王' ? 'small' : null)
-        });
-      }
-    }
-
-    initialCards = [...newCards];
-
-    schemes = [
-      {
-        name: getDefaultSchemeName(0),
-        customName: getDefaultSchemeName(0),
-        isRecommended: false,
-        rows: [sortCards(newCards, currentLevel)],
-        historyStack: [],
-        redoStack: []
-      }
-    ];
-    currentSchemeIndex = 0;
-
-    selectedIds.clear();
-    lastAnchorCardId = null;
-
-    closeCustomModal();
-    renderSchemesNav();
-    renderBoard();
-  });
-
-  const langSelect = document.getElementById('langSelect');
-  langSelect.addEventListener('change', (e) => {
-    currentLang = e.target.value;
-    applyLanguage();
-  });
-
-  // ---------------- 撤销与重做安全回滚 ----------------
-
   function undo() {
     const cur = getCurrentScheme();
     if (!cur || !cur.historyStack || cur.historyStack.length === 0) return;
     
     try {
       const currentSnapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
+      if (!cur.redoStack) cur.redoStack = [];
       cur.redoStack.push(currentSnapshot);
 
       const prevSnapshot = cur.historyStack.pop();
@@ -3389,6 +2008,7 @@
 
     try {
       const currentSnapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
+      if (!cur.historyStack) cur.historyStack = [];
       cur.historyStack.push(currentSnapshot);
 
       const nextSnapshot = cur.redoStack.pop();
