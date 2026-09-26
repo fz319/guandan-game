@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<!-- 彻底解决 iOS 状态栏发白：匹配桌面墨绿色并关闭半透明白雾 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="掼蛋理牌">
-<meta name="theme-color" content="#0d1e17">
-<meta name="msapplication-navbutton-color" content="#0d1e17">
+<meta name="theme-color" content="#07120e">
+<meta name="msapplication-navbutton-color" content="#07120e">
 <title>掼蛋理牌模拟器 / Guandan Cards Simulator</title>
 <style>
   :root {
@@ -18,18 +17,18 @@
     --card-font-val: 17px;
     --card-font-suit: 15px;
 
-    /* 顶级深林天鹅绒沉浸暗色体系 */
-    --bg-base: #0a1712;
-    --bg-gradient: radial-gradient(circle at 50% 25%, #19382b 0%, #0d1e17 65%, #07120e 100%);
-    --island-bg: rgba(18, 36, 28, 0.75);
-    --island-border: rgba(255, 255, 255, 0.1);
+    /* 顶级深林暗调天鹅绒配色体系 */
+    --bg-base: #07120e;
+    --bg-gradient: radial-gradient(circle at 50% 20%, #163628 0%, #0d1e17 55%, #050d0a 100%);
+    --island-bg: rgba(18, 36, 28, 0.85);
+    --island-border: rgba(255, 255, 255, 0.12);
     --gold: #f6c559;
     --gold-glow: rgba(246, 197, 89, 0.35);
     --blue: #38bdf8;
     --red-lead: #e11d48;
     --red-lead-glow: rgba(225, 29, 72, 0.45);
     --btn-glass: rgba(255, 255, 255, 0.07);
-    --btn-glass-hover: rgba(255, 255, 255, 0.15);
+    --btn-glass-hover: rgba(255, 255, 255, 0.16);
   }
 
   @media (max-width: 640px) {
@@ -42,7 +41,6 @@
     }
   }
 
-  /* 彻底禁用上下拉橡皮筋露白 */
   html {
     background-color: var(--bg-base);
     overscroll-behavior: none;
@@ -68,9 +66,9 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
-    /* 严格安全区防护：保证在 iPhone 桌面 App 模式下灵动岛下方有充足留白，不遮挡按钮 */
-    padding-top: max(22px, calc(env(safe-area-inset-top) + 10px));
-    padding-bottom: max(34px, calc(env(safe-area-inset-bottom) + 14px));
+    /* 严格安全边距，大幅垫高顶部，彻底避开 iPhone 刘海、灵动岛与状态栏白影 */
+    padding-top: max(28px, calc(env(safe-area-inset-top) + 16px));
+    padding-bottom: max(34px, calc(env(safe-area-inset-bottom) + 16px));
     padding-left: max(16px, env(safe-area-inset-left));
     padding-right: max(16px, env(safe-area-inset-right));
     display: flex;
@@ -82,6 +80,7 @@
     box-sizing: border-box;
   }
 
+  /* 顶部全局主控制台架构 */
   .header-container {
     display: flex;
     flex-direction: column;
@@ -89,45 +88,46 @@
     width: 100%;
     min-width: min-content;
     max-width: 1380px;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     z-index: 500;
     box-sizing: border-box;
   }
 
+  /* 上部主行：支持自由折行与自适应间距 */
   .header-main-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
   }
 
-  /* 独立微岛胶囊 */
+  /* 各功能微岛（Micro-Island）模块 */
   .control-island {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     background: var(--island-bg);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--island-border);
-    border-radius: 10px;
-    padding: 6px 9px;
+    border-radius: 9px;
+    padding: 5px 7px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    flex-wrap: wrap;
+    flex-shrink: 0;
   }
 
-  .status-cluster {
+  /* 状态徽章微岛 */
+  .badge-cluster {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding-right: 2px;
   }
   .badge-tag {
     font-size: 13px;
     font-weight: 800;
-    padding: 4px 10px;
+    padding: 4px 9px;
     border-radius: 6px;
     display: inline-flex;
     align-items: center;
@@ -145,11 +145,12 @@
     border: 1px solid rgba(56, 189, 248, 0.25);
   }
 
+  /* 通用微质感按键 */
   button {
     background-color: var(--btn-glass);
     color: #e2e8f0;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    padding: 6px 12px;
+    padding: 6px 11px;
     font-size: 13px;
     font-weight: 600;
     border-radius: 6px;
@@ -158,7 +159,7 @@
     transition: all 0.12s ease;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     white-space: nowrap;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
@@ -173,14 +174,18 @@
   button:active:not(:disabled) { transform: translateY(1px); }
   button:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  button.action-primary {
+  /* 独立醒目发牌主按键 */
+  button.action-lead-btn {
     background: linear-gradient(135deg, #f43f5e 0%, var(--red-lead) 100%);
-    border: 1px solid rgba(255, 148, 170, 0.35);
+    border: 1px solid rgba(255, 148, 170, 0.4);
     color: #ffffff;
     font-weight: 700;
     box-shadow: 0 2px 10px var(--red-lead-glow);
+    padding: 7px 14px;
+    border-radius: 8px;
+    flex-shrink: 0;
   }
-  button.action-primary:hover:not(:disabled) {
+  button.action-lead-btn:hover:not(:disabled) {
     background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
     box-shadow: 0 4px 14px var(--red-lead-glow);
   }
@@ -212,24 +217,22 @@
     box-shadow: 0 0 10px var(--gold-glow);
   }
 
+  /* 国际化语言下拉框 */
   .lang-select-wrapper {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 6px;
-    padding: 0 6px 0 8px;
+    padding: 0 4px 0 6px;
   }
-  .lang-icon {
-    font-size: 13px;
-    color: #94a3b8;
-  }
+  .lang-icon { font-size: 13px; color: #94a3b8; }
   .lang-select-box {
     background: transparent;
     color: #cbd5e1;
     border: none;
-    padding: 6px 2px;
+    padding: 5px 2px;
     font-size: 12px;
     font-weight: 600;
     outline: none;
@@ -285,15 +288,18 @@
     background: rgba(255, 255, 255, 0.1);
   }
 
+  /* 核心修复：给 board 充足的最小高度与底部留白，消除单层时的上下颠簸跳跃卡顿 */
   #board {
     display: flex;
     flex-direction: column;
     gap: 16px;
     width: max-content;
     min-width: 100%;
-    padding-bottom: 220px;
+    min-height: calc(100vh - 120px);
+    padding-bottom: 240px;
     position: relative;
     align-items: stretch;
+    box-sizing: border-box;
   }
 
   .card-row {
@@ -795,29 +801,43 @@
 
 <header class="header-container">
   <div class="header-main-row">
-    <!-- 模块一：核心牌局状态与主要操作 -->
+    <!-- 微岛 1：局况状态岛 -->
     <div class="control-island">
-      <div class="status-cluster">
+      <div class="badge-cluster">
         <div class="badge-tag badge-level" id="levelInfo">打：--</div>
         <div class="badge-tag badge-count" id="totalCountInfo">手牌：0 张</div>
       </div>
-      <button class="action-primary" id="dealBtn">新一局发牌</button>
+    </div>
+
+    <!-- 醒目主行动：新一局发牌（独立外置） -->
+    <button class="action-lead-btn" id="dealBtn">新一局发牌</button>
+
+    <!-- 微岛 2：牌面编辑岛（调牌、方案对比、删除） -->
+    <div class="control-island">
       <button class="action-accent" id="customHandBtn">自定义调牌</button>
       <button class="action-accent" id="compareSchemesBtn">📊 方案对比</button>
       <button class="btn-danger" id="deleteBtn" disabled>删除选中 (0)</button>
     </div>
 
-    <!-- 模块二：理牌操作与历史控制 -->
+    <!-- 微岛 3：历史控制岛（撤销与重做合并） -->
     <div class="control-island">
-      <button id="multiSelectToggleBtn" title="触屏端批量连选">⚡ 批量连选</button>
       <button id="undoBtn" disabled>↩ 撤销</button>
       <button id="redoBtn" disabled>↪ 重做</button>
-      <button id="resetBtn">重置排序</button>
+    </div>
+
+    <!-- 微岛 4：理牌辅助岛（批量连选与重置排序合并） -->
+    <div class="control-island">
+      <button id="multiSelectToggleBtn" title="触屏端批量连选">⚡ 批量连选</button>
+      <button id="resetBtn">🔄 重置排序</button>
+    </div>
+
+    <!-- 微岛 5：档案数据岛（存档与存档箱合并） -->
+    <div class="control-island">
       <button id="saveArchiveBtn">💾 存档</button>
       <button id="openArchiveBtn">📂 存档箱</button>
     </div>
 
-    <!-- 模块三：帮助指南与语言知识中心（更名并聚合） -->
+    <!-- 微岛 6：知识与国际化岛（使用指南、掼蛋规则、语言选择） -->
     <div class="control-island">
       <button id="toggleHelpBtn">💡 使用指南</button>
       <button id="rulesBtn">📖 掼蛋规则</button>
@@ -825,7 +845,7 @@
         <span class="lang-icon">🌐</span>
         <select class="lang-select-box" id="langSelect">
           <option value="zh-CN">🇨🇳 简体中文</option>
-          <option value="zh-TW">🇨🇳 繁體中文</option>
+          <option value="zh-TW">🇹🇼 繁體中文</option>
           <option value="en">🇺🇸 English</option>
           <option value="es">🇪🇸 Español</option>
         </select>
@@ -849,7 +869,7 @@
   <div class="compare-modal-content">
     <div class="modal-header">
       <div class="modal-title" id="compareModalTitle">📊 多方案理牌思路横向对比</div>
-      <button class="action-primary" id="closeCompareBtn" style="padding: 6px 14px;">返回理牌</button>
+      <button class="action-lead-btn" id="closeCompareBtn" style="padding: 6px 14px;">返回理牌</button>
     </div>
     <div class="compare-schemes-scroll" id="compareContainer"></div>
   </div>
@@ -860,7 +880,7 @@
   <div class="rules-modal-content">
     <div class="modal-header">
       <div class="modal-title" id="rulesModalTitle">📖 掼蛋核心游戏规则与知识图谱</div>
-      <button class="action-primary" id="closeRulesBtn" style="padding: 6px 14px;">关闭规则</button>
+      <button class="action-lead-btn" id="closeRulesBtn" style="padding: 6px 14px;">关闭规则</button>
     </div>
     <div class="rules-scroll-body" id="rulesContentBody"></div>
   </div>
@@ -871,7 +891,7 @@
   <div class="modal-content" style="max-width: 680px;">
     <div class="modal-header">
       <div class="modal-title" id="archiveModalTitle">📂 本地手牌存档箱</div>
-      <button class="action-primary" id="closeArchiveBtn" style="padding: 4px 10px;">关闭</button>
+      <button class="action-lead-btn" id="closeArchiveBtn" style="padding: 4px 10px;">关闭</button>
     </div>
     <div class="modal-body" style="padding: 4px 0;">
       <div class="saves-list" id="archiveListContainer"></div>
@@ -897,7 +917,7 @@
       <div style="display: flex; gap: 10px;">
         <button id="clearAllModalBtn">清空重选</button>
         <button id="cancelModalBtn">取消</button>
-        <button class="action-primary" id="confirmModalBtn">确认应用到手牌</button>
+        <button class="action-lead-btn" id="confirmModalBtn">确认应用到手牌</button>
       </div>
     </div>
   </div>
@@ -931,7 +951,7 @@
       multiSelectToggle: '⚡ 批量连选',
       undo: '↩ 撤销',
       redo: '↪ 重做',
-      resetSort: '重置排序',
+      resetSort: '🔄 重置排序',
       toggleHelp: '💡 使用指南',
       newSchemeBtn: '+ 新建方案',
       schemeName: '方案 {name}',
@@ -994,7 +1014,7 @@
       multiSelectToggle: '⚡ 批量連選',
       undo: '↩ 復原',
       redo: '↪ 重做',
-      resetSort: '重置排序',
+      resetSort: '🔄 重置排序',
       toggleHelp: '💡 使用指南',
       newSchemeBtn: '+ 新建方案',
       schemeName: '方案 {name}',
@@ -1057,7 +1077,7 @@
       multiSelectToggle: '⚡ Multi',
       undo: '↩ Undo',
       redo: '↪ Redo',
-      resetSort: 'Reset Sort',
+      resetSort: '🔄 Reset',
       toggleHelp: '💡 User Guide',
       newSchemeBtn: '+ New Scheme',
       schemeName: 'Scheme {name}',
@@ -1120,7 +1140,7 @@
       multiSelectToggle: '⚡ Multiselección',
       undo: '↩ Deshacer',
       redo: '↪ Rehacer',
-      resetSort: 'Reiniciar Orden',
+      resetSort: '🔄 Reiniciar',
       toggleHelp: '💡 Guía de Uso',
       newSchemeBtn: '+ Nuevo Plan',
       schemeName: 'Plan {name}',
@@ -2142,7 +2162,7 @@
             <span class="scheme-col-title">${t('schemeName', { name: schemeLetter })}</span>
             <span style="font-size: 13px; color: #94a3b8; margin-left: 8px;">(${totalCount} ${t('cardUnit')} · ${validRows.length} ${t('rowLayer', { idx: '' })})</span>
           </div>
-          ${idx !== currentSchemeIndex ? `<button class="action-primary" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #4ade80; font-weight: bold;">${t('usingCurrent')}</span>`}
+          ${idx !== currentSchemeIndex ? `<button class="action-lead-btn" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #4ade80; font-weight: bold;">${t('usingCurrent')}</span>`}
         </div>
       `;
 
@@ -2261,7 +2281,7 @@
           </div>
         </div>
         <div style="display: flex; gap: 8px;">
-          <button class="action-primary" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
+          <button class="action-lead-btn" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
           <button class="btn-danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">${t('delete')}</button>
         </div>
       `;
