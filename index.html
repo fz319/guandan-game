@@ -14,6 +14,15 @@
     --card-overlap: -32px;
     --card-font-val: 17px;
     --card-font-suit: 15px;
+
+    /* 现代高品质主题色彩 */
+    --bg-dark: #12241b;
+    --panel-bg: rgba(18, 38, 29, 0.75);
+    --panel-border: rgba(255, 255, 255, 0.12);
+    --gold: #facc15;
+    --blue: #38bdf8;
+    --btn-primary: #dc2626;
+    --btn-primary-hover: #b91c1c;
   }
 
   @media (max-width: 640px) {
@@ -31,7 +40,7 @@
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    background-color: #1b382b;
+    background-color: var(--bg-dark);
     overflow-x: auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -39,10 +48,11 @@
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
-    padding-top: max(16px, env(safe-area-inset-top));
-    padding-bottom: max(30px, env(safe-area-inset-bottom));
+    /* 完美避开灵动岛、刘海与安全边距 */
+    padding-top: max(20px, calc(env(safe-area-inset-top) + 8px));
+    padding-bottom: max(30px, calc(env(safe-area-inset-bottom) + 12px));
     padding-left: max(14px, env(safe-area-inset-left));
     padding-right: max(14px, env(safe-area-inset-right));
     display: flex;
@@ -54,93 +64,167 @@
     box-sizing: border-box;
   }
 
-  .controls-bar {
+  /* 顶部全局主控制面板：毛玻璃现代统一质感 */
+  .header-container {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
     width: 100%;
     min-width: min-content;
     max-width: 1360px;
-    background: rgba(0, 0, 0, 0.55);
-    padding: 10px 16px;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-    gap: 10px;
+    background: var(--panel-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    margin-bottom: 14px;
     z-index: 500;
-    position: relative;
+    box-sizing: border-box;
   }
-  .controls-left, .controls-right {
+
+  /* 模块分区栏 */
+  .header-main-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .nav-group {
     display: flex;
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
   }
-  .stat-pill {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  .level-info { font-size: 16px; font-weight: bold; color: #ffd700; white-space: nowrap; }
-  .count-info { font-size: 14px; font-weight: bold; color: #63b3ed; white-space: nowrap; }
 
-  button {
-    background-color: #4a5568;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    font-size: 13px;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    transition: background 0.15s, transform 0.1s;
+  /* 分隔竖线 */
+  .nav-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 4px;
+  }
+  @media (max-width: 640px) {
+    .nav-divider { display: none; }
+  }
+
+  /* 核心牌况高贵徽章 */
+  .badge-cluster {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(250, 204, 21, 0.25);
+    border-radius: 8px;
+    padding: 4px 6px;
+    gap: 6px;
+  }
+  .badge-tag {
+    font-size: 14px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .badge-level {
+    background: rgba(250, 204, 21, 0.15);
+    color: var(--gold);
+    border: 1px solid rgba(250, 204, 21, 0.35);
+  }
+  .badge-count {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--blue);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+  }
+
+  /* 通用沉稳风格按键 */
+  button {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 7px 13px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 7px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     white-space: nowrap;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
-  button:hover:not(:disabled) { transform: translateY(-1px); background-color: #5a677d; }
+  button:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
   button:active:not(:disabled) { transform: translateY(1px); }
   button:disabled { opacity: 0.35; cursor: not-allowed; }
-  button.primary { background-color: #e53e3e; }
-  button.primary:hover:not(:disabled) { background-color: #c53030; }
-  button.warn { background-color: #d69e2e; }
-  button.warn:hover:not(:disabled) { background-color: #b7791f; }
-  button.accent { background-color: #3182ce; }
-  button.accent:hover:not(:disabled) { background-color: #2b6cb0; }
-  button.danger { background-color: #9b2c2c; }
-  button.danger:hover:not(:disabled) { background-color: #822727; }
-  button.success { background-color: #38a169; }
-  button.success:hover:not(:disabled) { background-color: #2f855a; }
-  button.compare-btn { background: linear-gradient(135deg, #805ad5, #6b46c1); }
-  button.compare-btn:hover:not(:disabled) { background: linear-gradient(135deg, #9f7aea, #805ad5); }
-  button.rules-btn { background: linear-gradient(135deg, #2b6cb0, #2c5282); }
-  button.rules-btn:hover:not(:disabled) { background: linear-gradient(135deg, #3182ce, #2b6cb0); }
+
+  /* 核心行动高亮主按钮（新一局发牌） */
+  button.action-lead {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
+  }
+  button.action-lead:hover:not(:disabled) {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
+  }
+
+  /* 方案对比 / 规则等沉浸特色键 */
+  button.action-sub {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.3);
+    color: var(--blue);
+  }
+  button.action-sub:hover:not(:disabled) {
+    background: rgba(56, 189, 248, 0.22);
+    color: #ffffff;
+  }
+
+  button.btn-danger {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+  }
+  button.btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+    color: #fff;
+  }
 
   button.toggle-active {
-    background-color: #d69e2e !important;
-    color: #fff !important;
-    box-shadow: 0 0 8px #ecc94b;
+    background: rgba(250, 204, 21, 0.2) !important;
+    border-color: var(--gold) !important;
+    color: var(--gold) !important;
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
   }
 
   .lang-select-box {
-    background: #2d3748;
-    color: #ffd700;
-    border: 1px solid #4a5568;
-    padding: 7px 10px;
-    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 6px 10px;
+    border-radius: 7px;
     font-size: 13px;
-    font-weight: bold;
+    font-weight: 600;
     outline: none;
     cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .lang-select-box:focus {
+    border-color: var(--blue);
   }
 
   .schemes-nav {
@@ -159,10 +243,10 @@
     padding: 6px 14px;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
+    border-radius: 7px;
     color: #cbd5e1;
     font-size: 13px;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -172,16 +256,20 @@
   }
   .scheme-tab:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
   .scheme-tab.active {
-    background: #2b6cb0;
-    border-color: #63b3ed;
-    color: #fff;
-    box-shadow: 0 2px 6px rgba(49, 130, 206, 0.4);
+    background: rgba(56, 189, 248, 0.18);
+    border-color: var(--blue);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
   }
   .scheme-tab .tab-del {
-    color: #feb2b2;
+    color: #94a3b8;
     font-size: 12px;
     border-radius: 50%;
-    padding: 0 4px;
+    padding: 0 3px;
+  }
+  .scheme-tab .tab-del:hover {
+    color: #ef4444;
+    background: rgba(255, 255, 255, 0.1);
   }
 
   #board {
@@ -196,9 +284,9 @@
   }
 
   .card-row {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px dashed rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
     min-height: calc(var(--card-h) + 75px);
     display: flex;
     align-items: center;
@@ -215,8 +303,8 @@
   }
 
   .card-row.empty-row {
-    border-color: rgba(255, 255, 255, 0.35);
-    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
     padding-left: 20px;
     min-width: 100%;
   }
@@ -227,27 +315,27 @@
     top: 50%;
     transform: translateY(-50%);
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(255, 255, 255, 0.4);
     pointer-events: none;
     white-space: nowrap;
   }
   .card-row.drop-highlight {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: #ecc94b;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--gold);
   }
-  .card-row.row-indicator-top { border-top: 4px solid #ecc94b !important; }
-  .card-row.row-indicator-bottom { border-bottom: 4px solid #ecc94b !important; }
+  .card-row.row-indicator-top { border-top: 4px solid var(--gold) !important; }
+  .card-row.row-indicator-bottom { border-bottom: 4px solid var(--gold) !important; }
 
   .row-handle {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 52px;
+    width: 50px;
     height: var(--card-h);
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: grab;
     margin-right: 18px;
     flex-shrink: 0;
@@ -256,11 +344,11 @@
     text-align: center;
     touch-action: none;
   }
-  .row-handle:hover { background: rgba(255, 255, 255, 0.15); border-color: #ecc94b; }
+  .row-handle:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--gold); }
   .row-handle:active { cursor: grabbing; }
-  .row-handle .handle-icon { font-size: 15px; color: #e2e8f0; line-height: 1; }
-  .row-handle .handle-label { font-size: 10px; color: #ffd700; font-weight: bold; margin-top: 4px; }
-  .row-handle .handle-count { font-size: 10px; color: #63b3ed; font-weight: bold; margin-top: 2px; }
+  .row-handle .handle-icon { font-size: 15px; color: #cbd5e1; line-height: 1; }
+  .row-handle .handle-label { font-size: 10px; color: var(--gold); font-weight: 700; margin-top: 4px; }
+  .row-handle .handle-count { font-size: 10px; color: var(--blue); font-weight: 700; margin-top: 2px; }
 
   .cards-wrapper {
     display: flex;
@@ -275,8 +363,8 @@
     width: var(--card-w);
     height: var(--card-h);
     background-color: #ffffff;
-    border-radius: 6px;
-    box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.35);
+    border-radius: 7px;
+    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
     padding: 10px 8px 6px;
@@ -292,8 +380,8 @@
 
   .card.selected {
     transform: translateY(-30px) !important;
-    box-shadow: 0 10px 18px rgba(246, 224, 94, 0.5), -2px 4px 8px rgba(0,0,0,0.4);
-    border: 2px solid #ecc94b;
+    box-shadow: 0 12px 20px rgba(250, 204, 21, 0.45), -2px 4px 8px rgba(0,0,0,0.4);
+    border: 2px solid var(--gold);
   }
   .card.selected + .card:not(.selected) { margin-left: calc(var(--card-overlap) + 8px); }
 
@@ -323,16 +411,16 @@
     white-space: nowrap;
     pointer-events: none;
   }
-  .red { color: #e53e3e; }
-  .black { color: #1a202c; }
+  .red { color: #dc2626; }
+  .black { color: #0f172a; }
 
   #dropCaret {
     position: absolute;
     width: 4px;
     height: var(--card-h);
-    background: #ecc94b;
+    background: var(--gold);
     border-radius: 3px;
-    box-shadow: 0 0 10px #ecc94b, 0 0 16px #ecc94b;
+    box-shadow: 0 0 12px var(--gold);
     pointer-events: none;
     display: none;
     z-index: 150;
@@ -344,7 +432,7 @@
     top: -14px;
     left: 50%;
     transform: translateX(-50%);
-    color: #ecc94b;
+    color: var(--gold);
     font-size: 12px;
   }
 
@@ -366,11 +454,11 @@
     position: fixed;
     pointer-events: none;
     z-index: 9999;
-    background: #d69e2e;
-    color: #fff;
-    font-weight: bold;
-    font-size: 14px;
-    padding: 8px 16px;
+    background: var(--gold);
+    color: #0f172a;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 6px 14px;
     border-radius: 20px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.4);
     transform: translate(15px, 15px);
@@ -382,14 +470,14 @@
     width: 100%;
     min-width: min-content;
     max-width: 1360px;
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(15, 23, 42, 0.92);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 16px 20px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     box-sizing: border-box;
     display: none;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
     animation: fadeIn 0.2s ease-out;
   }
   .help-grid {
@@ -397,14 +485,56 @@
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
   }
-  .help-item h4 { margin: 0 0 6px 0; color: #ffd700; font-size: 14px; }
+  .help-item h4 { margin: 0 0 6px 0; color: var(--gold); font-size: 14px; }
   .help-item p { margin: 0; font-size: 12px; color: #cbd5e1; line-height: 1.5; }
 
-  /* 规则与知识图谱弹窗样式 */
+  /* 模态框基础 */
+  .modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-content {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    width: 90%;
+    max-width: 960px;
+    max-height: 90vh;
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+  }
+  .modal-title { font-size: 17px; font-weight: bold; color: var(--gold); }
+  .modal-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-right: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .rules-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
-    border-radius: 12px;
+    border-radius: 14px;
     width: 95%;
     max-width: 1100px;
     height: 88vh;
@@ -420,21 +550,21 @@
     padding: 10px 4px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
     color: #e2e8f0;
     line-height: 1.6;
     font-size: 14px;
   }
   .rule-section {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     padding: 16px;
   }
   .rule-section h3 {
-    margin: 0 0 10px 0;
-    color: #ffd700;
-    font-size: 16px;
+    margin: 0 0 8px 0;
+    color: var(--gold);
+    font-size: 15px;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -448,22 +578,19 @@
   }
   .mini-chip {
     padding: 3px 8px;
-    border-radius: 4px;
-    background: #1e293b;
-    border: 1px solid #475569;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     font-size: 12px;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
+    font-weight: 600;
   }
-  .mini-chip.red { color: #f87171; }
-  .mini-chip.gold { color: #facc15; border-color: #ca8a04; }
+  .mini-chip.red { color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
+  .mini-chip.gold { color: var(--gold); border-color: rgba(250, 204, 21, 0.4); }
 
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
-    border-radius: 12px;
+    border-radius: 14px;
     width: 96%;
     max-width: 1480px;
     height: 88vh;
@@ -503,9 +630,9 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 8px;
   }
-  .scheme-col-title { font-size: 16px; font-weight: bold; color: #ecc94b; }
+  .scheme-col-title { font-size: 15px; font-weight: bold; color: var(--gold); }
   .scheme-mini-row {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 6px;
     padding: 8px 10px;
     display: flex;
@@ -535,8 +662,8 @@
     -webkit-overflow-scrolling: touch;
   }
   .save-card-item {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 12px 16px;
     display: flex;
@@ -545,50 +672,9 @@
     gap: 16px;
     flex-wrap: wrap;
   }
-  .save-info-title { font-size: 15px; font-weight: bold; color: #ffd700; margin-bottom: 4px; }
+  .save-info-title { font-size: 15px; font-weight: bold; color: var(--gold); margin-bottom: 4px; }
   .save-info-meta { font-size: 12px; color: #94a3b8; }
 
-  .modal-backdrop {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(4px);
-    z-index: 3000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-content {
-    background: #1e293b;
-    border: 1px solid #475569;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 960px;
-    max-height: 90vh;
-    padding: 24px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-  }
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #334155;
-    padding-bottom: 12px;
-    margin-bottom: 16px;
-  }
-  .modal-title { font-size: 18px; font-weight: bold; color: #ffd700; }
-  .modal-body {
-    flex-grow: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-right: 6px;
-    -webkit-overflow-scrolling: touch;
-  }
   .picker-row {
     display: flex;
     align-items: center;
@@ -608,23 +694,23 @@
     width: 52px;
     height: 72px;
     background: #ffffff;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     position: relative;
     border: 2px solid transparent;
-    transition: transform 0.1s, border-color 0.1s;
+    transition: transform 0.1s;
     user-select: none;
   }
   .picker-card-btn:active { transform: scale(0.96); }
   .picker-card-btn.has-selected {
-    border-color: #ecc94b;
-    box-shadow: 0 0 8px rgba(236, 201, 75, 0.6);
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
   }
   .picker-count-badge {
     position: absolute;
     top: -6px;
     right: -6px;
-    background: #e53e3e;
+    background: #dc2626;
     color: #fff;
     font-size: 11px;
     font-weight: bold;
@@ -649,12 +735,12 @@
     gap: 12px;
   }
   select {
-    background: #334155;
+    background: rgba(0,0,0,0.4);
     color: #fff;
     border: 1px solid #475569;
     padding: 6px 12px;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
     outline: none;
   }
@@ -667,34 +753,44 @@
 </head>
 <body>
 
-<div class="controls-bar">
-  <div class="controls-left">
-    <div class="stat-pill">
-      <div class="level-info" id="levelInfo">打：--</div>
-      <div class="count-info" id="totalCountInfo">手牌：0 张</div>
+<!-- 重构后的顶部结构：清晰分区、优雅磨砂、完美避开灵动岛 -->
+<header class="header-container">
+  <div class="header-main-row">
+    <!-- 分区一：局况状态徽章 -->
+    <div class="badge-cluster">
+      <div class="badge-tag badge-level" id="levelInfo">打：--</div>
+      <div class="badge-tag badge-count" id="totalCountInfo">手牌：0 张</div>
     </div>
-    <button class="primary" id="dealBtn">新一局发牌</button>
-    <button class="accent" id="customHandBtn">自定义选牌/调牌</button>
-    <button class="compare-btn" id="compareSchemesBtn">📊 方案横向对比</button>
-    <button class="rules-btn" id="rulesBtn">📖 掼蛋完整规则</button>
-    <button class="success" id="saveArchiveBtn">💾 保存当前存档</button>
-    <button class="warn" id="openArchiveBtn">📂 打开存档箱</button>
-    <button class="danger" id="deleteBtn" disabled>删除选中 (0)</button>
+
+    <!-- 分区二：主要牌局操作组 -->
+    <div class="nav-group">
+      <button class="action-lead" id="dealBtn">新一局发牌</button>
+      <button class="action-sub" id="customHandBtn">自定义调牌</button>
+      <button class="action-sub" id="compareSchemesBtn">📊 方案对比</button>
+      <button class="btn-danger" id="deleteBtn" disabled>删除选中 (0)</button>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <!-- 分区三：系统辅助与设置工具 -->
+    <div class="nav-group">
+      <button id="saveArchiveBtn">💾 存档</button>
+      <button id="openArchiveBtn">📂 存档箱</button>
+      <button id="rulesBtn">📖 规则手册</button>
+      <button id="multiSelectToggleBtn" title="触屏端连选模式">⚡ 批量连选</button>
+      <button id="undoBtn" disabled>撤销</button>
+      <button id="redoBtn" disabled>重做</button>
+      <button id="resetBtn">重置排序</button>
+      <button id="toggleHelpBtn">❓ 指南</button>
+      <select class="lang-select-box" id="langSelect">
+        <option value="zh-CN">简体中文</option>
+        <option value="zh-TW">繁體中文</option>
+        <option value="en">English</option>
+        <option value="es">Español</option>
+      </select>
+    </div>
   </div>
-  <div class="controls-right">
-    <select class="lang-select-box" id="langSelect">
-      <option value="zh-CN">简体中文</option>
-      <option value="zh-TW">繁體中文</option>
-      <option value="en">English</option>
-      <option value="es">Español</option>
-    </select>
-    <button id="multiSelectToggleBtn" title="触屏端连选模式">⚡ 批量连选</button>
-    <button id="undoBtn" disabled>上一步 (撤销)</button>
-    <button id="redoBtn" disabled>下一步 (重做)</button>
-    <button class="warn" id="resetBtn">重置初始排序</button>
-    <button id="toggleHelpBtn" style="background-color: #2d3748;">❓ 操作指南</button>
-  </div>
-</div>
+</header>
 
 <div class="help-drawer" id="helpDrawer">
   <div class="help-grid" id="helpGridContent"></div>
@@ -711,7 +807,7 @@
   <div class="compare-modal-content">
     <div class="modal-header">
       <div class="modal-title" id="compareModalTitle">📊 多方案理牌思路横向对比</div>
-      <button class="primary" id="closeCompareBtn" style="padding: 6px 14px;">返回理牌</button>
+      <button class="action-lead" id="closeCompareBtn" style="padding: 6px 14px;">返回理牌</button>
     </div>
     <div class="compare-schemes-scroll" id="compareContainer"></div>
   </div>
@@ -722,7 +818,7 @@
   <div class="rules-modal-content">
     <div class="modal-header">
       <div class="modal-title" id="rulesModalTitle">📖 掼蛋核心游戏规则与知识图谱</div>
-      <button class="primary" id="closeRulesBtn" style="padding: 6px 14px;">关闭规则</button>
+      <button class="action-lead" id="closeRulesBtn" style="padding: 6px 14px;">关闭规则</button>
     </div>
     <div class="rules-scroll-body" id="rulesContentBody"></div>
   </div>
@@ -733,7 +829,7 @@
   <div class="modal-content" style="max-width: 680px;">
     <div class="modal-header">
       <div class="modal-title" id="archiveModalTitle">📂 本地手牌存档箱</div>
-      <button class="primary" id="closeArchiveBtn" style="padding: 4px 10px;">关闭</button>
+      <button class="action-lead" id="closeArchiveBtn" style="padding: 4px 10px;">关闭</button>
     </div>
     <div class="modal-body" style="padding: 4px 0;">
       <div class="saves-list" id="archiveListContainer"></div>
@@ -747,7 +843,7 @@
     <div class="modal-header">
       <div class="modal-title" id="customModalTitle">自定义手牌与残局配置（两副牌·共108张库）</div>
       <div style="font-size: 14px; color: #94a3b8;">
-        <span id="customSelectedLabel">当前选中</span>: <strong id="modalSelectedCount" style="color: #ecc94b; font-size: 17px;">0</strong> <span id="customCardUnit">张</span>
+        <span id="customSelectedLabel">当前选中</span>: <strong id="modalSelectedCount" style="color: var(--gold); font-size: 17px;">0</strong> <span id="customCardUnit">张</span>
       </div>
     </div>
     <div class="modal-body" id="modalCardsList"></div>
@@ -759,7 +855,7 @@
       <div style="display: flex; gap: 10px;">
         <button id="clearAllModalBtn">清空重选</button>
         <button id="cancelModalBtn">取消</button>
-        <button class="primary" id="confirmModalBtn">确认应用到手牌</button>
+        <button class="action-lead" id="confirmModalBtn">确认应用到手牌</button>
       </div>
     </div>
   </div>
@@ -782,18 +878,18 @@
       levelPrefix: '打：【 {level} 】',
       cardsCount: '手牌：{count} 张',
       deal: '新一局发牌',
-      customHand: '自定义选牌/调牌',
-      compare: '📊 方案横向对比',
-      rulesBtn: '📖 掼蛋完整规则',
-      saveArchive: '💾 保存当前存档',
-      openArchive: '📂 打开存档箱',
+      customHand: '自定义调牌',
+      compare: '📊 方案对比',
+      rulesBtn: '📖 规则手册',
+      saveArchive: '💾 存档',
+      openArchive: '📂 存档箱',
       deleteSelected: '删除选中 ({count})',
       multiSelectToggle: '⚡ 批量连选',
-      undo: '上一步 (撤销)',
-      redo: '下一步 (重做)',
-      resetSort: '重置初始排序',
-      toggleHelp: '❓ 操作指南',
-      newSchemeBtn: '+ 新建方案理牌',
+      undo: '撤销',
+      redo: '重做',
+      resetSort: '重置排序',
+      toggleHelp: '❓ 指南',
+      newSchemeBtn: '+ 新建方案',
       schemeName: '方案 {name}',
       rowLayer: '第{idx}层',
       rowPlaceholder: '将牌拖到此处开启新的一层',
@@ -825,26 +921,26 @@
       help: [
         { title: '🃏 1. 选牌与放回', desc: '• 单击牌立即立起；再次单击该牌自身可放平。<br>• <strong>一键全部放回</strong>：按住 Shift 或 Command/Ctrl（触屏开启【⚡ 批量连选】）点击任意已立起的牌，所有立起的牌<strong>全员归位</strong>。<br>• <strong>快速连选</strong>：点选第一张后按住 Shift（或开启【⚡ 批量连选】）点另一张未选牌，区间内所有牌连选立起。<br>• 点击空白处一键收回所有牌。' },
         { title: '🎯 2. 全向穿插与自动回滚', desc: '• <strong>跨层穿插</strong>：在第1层最右侧选中牌后，<strong>按住往屏幕左侧拖动</strong>，视口会自动平滑向左回滚，让你轻松精准插入第2层左侧或中间。<br>• <strong>等宽盲放感应</strong>：即使第二层只有1张牌，它右侧的接收范围也与最长一层等宽，在右侧拉下即可盲放进入该层。<br>• <strong>边缘自动巡航</strong>：拖拽靠近屏幕任意边缘，视口自动平滑滚动。' },
-        { title: '📑 3. 多方案对比与存档', desc: '• 点击标签栏 <strong>“+ 新建方案”</strong> 尝试全新理牌思路。<br>• 点击 <strong>“📊 方案横向对比”</strong> 可横向对比不同版本的打法结构。<br>• 点击 <strong>“💾 保存当前存档”</strong> 可自主命名长久保存，日后随时打开继续理牌。' },
-        { title: '⚙️ 4. 整层调序与残局调牌', desc: '• 按住每层左侧的 <strong>“≡ 手柄”</strong> 可上下调换整层顺序。<br>• “自定义选牌/调牌”可在 108 张全牌库中自定手牌或残局。<br>• 电脑键盘按 <strong>Delete / Backspace</strong> 亦可快速删除立起牌。' }
+        { title: '📑 3. 多方案对比与存档', desc: '• 点击标签栏 <strong>“+ 新建方案”</strong> 尝试全新理牌思路。<br>• 点击 <strong>“📊 方案横向对比”</strong> 可横向对比不同版本的打法结构。<br>• 点击 <strong>“💾 存档”</strong> 可自主命名长久保存，日后随时打开继续理牌。' },
+        { title: '⚙️ 4. 整层调序与残局调牌', desc: '• 按住每层左侧的 <strong>“≡ 手柄”</strong> 可上下调换整层顺序。<br>• “自定义调牌”可在 108 张全牌库中自定手牌或残局。<br>• 电脑键盘按 <strong>Delete / Backspace</strong> 亦可快速删除立起牌。' }
       ]
     },
     'zh-TW': {
       levelPrefix: '打：【 {level} 】',
       cardsCount: '手牌：{count} 張',
       deal: '新一局發牌',
-      customHand: '自訂選牌/調牌',
-      compare: '📊 方案橫向對比',
-      rulesBtn: '📖 掼蛋完整規則',
-      saveArchive: '💾 儲存目前存檔',
-      openArchive: '📂 打開存檔箱',
+      customHand: '自訂調牌',
+      compare: '📊 方案對比',
+      rulesBtn: '📖 規則手冊',
+      saveArchive: '💾 存檔',
+      openArchive: '📂 存檔箱',
       deleteSelected: '刪除選取 ({count})',
       multiSelectToggle: '⚡ 批量連選',
-      undo: '上一步 (復原)',
-      redo: '下一步 (重做)',
-      resetSort: '重置初始排序',
-      toggleHelp: '❓ 操作指南',
-      newSchemeBtn: '+ 新建方案理牌',
+      undo: '復原',
+      redo: '重做',
+      resetSort: '重置排序',
+      toggleHelp: '❓ 指南',
+      newSchemeBtn: '+ 新建方案',
       schemeName: '方案 {name}',
       rowLayer: '第{idx}層',
       rowPlaceholder: '將牌拖到此處開啟新的一層',
@@ -876,21 +972,21 @@
       help: [
         { title: '🃏 1. 選牌與放回', desc: '• 單擊牌立即立起；再次單擊該牌自身可放平。<br>• <strong>一鍵全部放回</strong>：按住 Shift 或 Command/Ctrl（觸控螢幕開啟【⚡ 批量連選】）點擊任意已立起的牌，所有立起的牌<strong>全體歸位</strong>。<br>• <strong>快速連選</strong>：點選第一張後按住 Shift（或開啟【⚡ 批量連選】）點另一張未選牌，區間內所有牌連選立起。<br>• 點擊空白處一鍵收回所有牌。' },
         { title: '🎯 2. 全向穿插與自動回滾', desc: '• <strong>跨層穿插</strong>：在第1層最右側選中牌後，<strong>按住往螢幕左側拖動</strong>，視口會自動平滑向左回滾，讓您輕鬆精準插入第2層左側或中間。<br>• <strong>等寬盲放感應</strong>：即使第二層只有1張牌，它右側的接收範圍也與最長一層等寬，在右側拉下即可盲放進入該層。<br>• <strong>邊緣自動巡航</strong>：拖拽靠近螢幕任意邊緣，視口自動平滑滾動。' },
-        { title: '📑 3. 多方案對比與存檔', desc: '• 點擊標籤欄 <strong>「+ 新建方案」</strong> 嘗試全新理牌思路。<br>• 點擊 <strong>「📊 方案橫向對比」</strong> 可橫向對比不同版本的打法結構。<br>• 點擊 <strong>「💾 儲存目前存檔」</strong> 可自主命名長久保存，日後隨時打開繼續理牌。' },
-        { title: '⚙️ 4. 整層調序與殘局調牌', desc: '• 按住每層左側的 <strong>「≡ 手柄」</strong> 可上下調換整層順序。<br>• 「自訂選牌/調牌」可在 108 張全牌庫中自定手牌或殘局。<br>• 電腦鍵盤按 <strong>Delete / Backspace</strong> 亦可快速刪除立起牌。' }
+        { title: '📑 3. 多方案對比與存檔', desc: '• 點擊標籤欄 <strong>「+ 新建方案」</strong> 嘗試全新理牌思路。<br>• 點擊 <strong>「📊 方案橫向對比」</strong> 可橫向對比不同版本的打法結構。<br>• 點擊 <strong>「💾 存檔」</strong> 可自主命名長久保存，日後隨時打開繼續理牌。' },
+        { title: '⚙️ 4. 整層調序與殘局調牌', desc: '• 按住每層左側的 <strong>「≡ 手柄」</strong> 可上下調換整層順序。<br>• 「自訂調牌」可在 108 張全牌庫中自定手牌或殘局。<br>• 電腦鍵盤按 <strong>Delete / Backspace</strong> 亦可快速刪除立起牌。' }
       ]
     },
     'en': {
       levelPrefix: 'Rank: [ {level} ]',
       cardsCount: 'Hand: {count} cards',
-      deal: 'Deal New Hand',
-      customHand: 'Customize Hand',
-      compare: '📊 Compare Schemes',
-      rulesBtn: '📖 Guandan Rules',
-      saveArchive: '💾 Save Archive',
-      openArchive: '📂 Open Archives',
+      deal: 'Deal Hand',
+      customHand: 'Custom',
+      compare: '📊 Compare',
+      rulesBtn: '📖 Rules',
+      saveArchive: '💾 Save',
+      openArchive: '📂 Vault',
       deleteSelected: 'Delete ({count})',
-      multiSelectToggle: '⚡ Multi-Select',
+      multiSelectToggle: '⚡ Multi',
       undo: 'Undo',
       redo: 'Redo',
       resetSort: 'Reset Sort',
@@ -925,21 +1021,21 @@
       confirmApply: 'Apply to Hand',
       rulesTitle: '📖 Guandan Complete Rules & Master Guide',
       help: [
-        { title: '🃏 1. Selecting Cards', desc: '• Click any card to pop it up; click again to lay down.<br>• <strong>Instant Clear All</strong>: Hold Shift or Command/Ctrl (or toggle [⚡ Multi-Select] on touch) and click any raised card to drop all.<br>• <strong>Shift Range Select</strong>: Pick the 1st card, hold Shift, and click another card to select the whole interval.<br>• Click outside to unselect all.' },
+        { title: '🃏 1. Selecting Cards', desc: '• Click any card to pop it up; click again to lay down.<br>• <strong>Instant Clear All</strong>: Hold Shift or Command/Ctrl (or toggle [⚡ Multi] on touch) and click any raised card to drop all.<br>• <strong>Shift Range Select</strong>: Pick the 1st card, hold Shift, and click another card to select the whole interval.<br>• Click outside to unselect all.' },
         { title: '🎯 2. Drag & Edge Auto-Scroll', desc: '• Drag any selected card to move the whole combo.<br>• <strong>Auto-Scroll Cruise</strong>: Drag cards toward screen edges to scroll smoothly in any direction, easily reaching other tiers.<br>• <strong>Blind Drop Sensor</strong>: Every row has full-width drop zones, making dropping cards into shorter rows smooth and reliable.' },
-        { title: '📑 3. Multiple Schemes & Saves', desc: '• Click <strong>[+ New Scheme]</strong> to test alternative combinations.<br>• Click <strong>[📊 Compare Schemes]</strong> to review all layouts side by side.<br>• Click <strong>[💾 Save Archive]</strong> to preserve interesting puzzles forever.' },
-        { title: '⚙️ 4. Tier Reorder & Endgame', desc: '• Drag the left <strong>"≡" handle</strong> to reorder entire tiers vertically.<br>• Open "Customize Hand" to configure any custom hand or endgame setup.<br>• Press <strong>Delete / Backspace</strong> to remove selected cards quickly.' }
+        { title: '📑 3. Multiple Schemes & Saves', desc: '• Click <strong>[+ New Scheme]</strong> to test alternative combinations.<br>• Click <strong>[📊 Compare]</strong> to review all layouts side by side.<br>• Click <strong>[💾 Save]</strong> to preserve interesting puzzles forever.' },
+        { title: '⚙️ 4. Tier Reorder & Endgame', desc: '• Drag the left <strong>"≡" handle</strong> to reorder entire tiers vertically.<br>• Open "Custom" to configure any custom hand or endgame setup.<br>• Press <strong>Delete / Backspace</strong> to remove selected cards quickly.' }
       ]
     },
     'es': {
       levelPrefix: 'Nivel: [ {level} ]',
       cardsCount: 'Mano: {count} cartas',
-      deal: 'Repartir Mano',
+      deal: 'Repartir',
       customHand: 'Personalizar',
-      compare: '📊 Comparar Planes',
-      rulesBtn: '📖 Reglas de Guandan',
-      saveArchive: '💾 Guardar Mano',
-      openArchive: '📂 Abrir Archivos',
+      compare: '📊 Comparar',
+      rulesBtn: '📖 Reglas',
+      saveArchive: '💾 Guardar',
+      openArchive: '📂 Archivos',
       deleteSelected: 'Eliminar ({count})',
       multiSelectToggle: '⚡ Multiselección',
       undo: 'Deshacer',
@@ -978,7 +1074,7 @@
       help: [
         { title: '🃏 1. Selección de Cartas', desc: '• Toca una carta para levantarla; toca de nuevo para bajarla.<br>• <strong>Bajar Todo Rápido</strong>: Mantén Shift o Command/Ctrl (o activa [⚡ Multiselección] en pantalla táctil) y toca una carta levantada para bajar todas.<br>• <strong>Selección en Rango</strong>: Elige la 1ª carta, mantén Shift y toca otra para seleccionar el bloque entero.<br>• Toca en el fondo vacío para deseleccionar todo.' },
         { title: '🎯 2. Arrastre y Desplazamiento', desc: '• Arrastra cualquier carta seleccionada para mover todo el grupo.<br>• <strong>Desplazamiento Automático</strong>: Arrastra hacia los bordes de la pantalla para deslizar la vista suavemente en cualquier dirección.<br>• <strong>Zona Amplia</strong>: Cada fila acepta cartas a lo largo de todo su ancho, facilitando organizar filas cortas.' },
-        { title: '📑 3. Múltiples Planes y Guardado', desc: '• Haz clic en <strong>[+ Nuevo Plan]</strong> para probar otra forma de ordenar.<br>• Haz clic en <strong>[📊 Comparar Planes]</strong> para ver todas las estrategias juntas.<br>• Usa <strong>[💾 Guardar Mano]</strong> para guardar jugadas de práctica para siempre.' },
+        { title: '📑 3. Múltiples Planes y Guardado', desc: '• Haz clic en <strong>[+ Nuevo Plan]</strong> para probar otra forma de ordenar.<br>• Haz clic en <strong>[📊 Comparar]</strong> para ver todas las estrategias juntas.<br>• Usa <strong>[💾 Guardar]</strong> para guardar jugadas de práctica para siempre.' },
         { title: '⚙️ 4. Reordenar Filas y Finales', desc: '• Arrastra el <strong>icono "≡"</strong> a la izquierda de cada fila para moverla arriba o abajo.<br>• Usa "Personalizar" para crear cualquier final de partida con las 108 cartas.<br>• Pulsa <strong>Delete / Backspace</strong> en el teclado para eliminar cartas.' }
       ]
     }
@@ -996,7 +1092,6 @@
     return str;
   }
 
-  // 渲染图文并茂的规则手册
   function renderRulesModalContent() {
     const container = document.getElementById('rulesContentBody');
     if (currentLang === 'en') {
@@ -1015,61 +1110,44 @@
           <h3>💣 3. Combinations & Bomb Rankings</h3>
           <p>From lowest to highest power:</p>
           <div class="rule-card-preview-row">
-            <span class="mini-chip">Single (单张)</span> <span class="mini-chip">Pair (对子)</span> <span class="mini-chip">Trips (三张)</span> <span class="mini-chip">Full House (三带二)</span>
-            <span class="mini-chip">Straight (顺子: 5 cards)</span> <span class="mini-chip">Tubes (三连对: 3 consecutive pairs)</span> <span class="mini-chip">Plates (双飞/钢板: 2 consecutive trips)</span>
+            <span class="mini-chip">Single</span> <span class="mini-chip">Pair</span> <span class="mini-chip">Trips</span> <span class="mini-chip">Full House</span>
+            <span class="mini-chip">Straight (5 cards)</span> <span class="mini-chip">3 Consecutive Pairs</span> <span class="mini-chip">2 Consecutive Trips</span>
           </div>
-          <p><strong>Bomb Power Hierarchy (Bombs beat all non-bomb hands):</strong></p>
+          <p><strong>Bomb Hierarchy (Bombs beat all non-bomb combinations):</strong></p>
           <div class="rule-card-preview-row">
-            <span class="mini-chip">4-of-a-kind Bomb</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">5-of-a-kind Bomb</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip red">Straight Flush (同花顺 5 cards)</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">6-of-a-kind</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">7-of-a-kind</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">8-of-a-kind</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip gold">👑 4-Joker Supreme Bomb (天王炸 / 四大天王)</span>
+            <span class="mini-chip">4-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">5-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">Straight Flush (5 cards)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">6-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">7-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">8-Bomb</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip gold">👑 4-Joker Supreme Bomb</span>
           </div>
-          <p style="font-size:12px; color:#94a3b8;">* Note: A 5-card Straight Flush beats any 4-of-a-kind or 5-of-a-kind bomb, but loses to 6-of-a-kind and higher!</p>
-        </div>
-        <div class="rule-section">
-          <h3>🎯 4. Essential Hand Sorting Strategy</h3>
-          <p>1. <strong>Spot the Wilds first</strong>: Separate Heart rank cards immediately; test if they turn a broken hand into a Straight Flush or high bomb.<br>
-          2. <strong>Identify Bombs</strong>: Group 4+ matching cards to secure control.<br>
-          3. <strong>Streamline Singles</strong>: Assemble loose cards into Straights, Tubes, or Full Houses to avoid getting stuck with isolated low singles.</p>
+          <p style="font-size:12px; color:#94a3b8;">* Note: Straight Flush beats 4-Bomb and 5-Bomb, but loses to 6-Bomb and higher!</p>
         </div>
       `;
     } else if (currentLang === 'es') {
       container.innerHTML = `
         <div class="rule-section">
           <h3>🏆 1. Descripción y Objetivo</h3>
-          <p><strong>Guandan (掼蛋)</strong> se juega entre 4 jugadores en parejas (compañeros sentados frente a frente) con 2 barajas de 54 cartas (108 cartas en total). El objetivo es vaciar la mano antes que los rivales colaborando con tu compañero.</p>
+          <p><strong>Guandan (掼蛋)</strong> se juega entre 4 jugadores en parejas con 2 barajas (108 cartas en total). El objetivo es vaciar la mano antes que los rivales colaborando con tu compañero.</p>
         </div>
         <div class="rule-section">
-          <h3>⭐ 2. Nivel Actual y Comodín Universal ("Feng Ren Pei")</h3>
-          <p>• <strong>Carta de Nivel (级牌)</strong>: Se juega del 2 al As. Si se juega el 5, todos los 5s suben por encima del As.<br>
-          • <strong>Comodín de Corazones (逢人配)</strong>: Las dos cartas de <strong>Corazones del nivel actual</strong> son comodines universales. Pueden reemplazar cualquier carta (excepto Jokers) para formar escaleras, colores o bombas.<br>
+          <h3>⭐ 2. Nivel Actual y Comodín Universal</h3>
+          <p>• <strong>Carta de Nivel</strong>: Si se juega el 5, todos los 5s suben por encima del As.<br>
+          • <strong>Comodín de Corazones</strong>: Las dos cartas de Corazones del nivel actual son comodines universales.<br>
           • <strong>Jerarquía</strong>: Joker Rojo > Joker Negro > Comodín de Nivel > Cartas de Nivel > A > K > Q > J > 10 > ... > 2.</p>
         </div>
         <div class="rule-section">
           <h3>💣 3. Combinaciones y Bombas</h3>
-          <p>Combinaciones estándar:</p>
+          <p><strong>Jerarquía de Bombas:</strong></p>
           <div class="rule-card-preview-row">
-            <span class="mini-chip">Individual</span> <span class="mini-chip">Pareja</span> <span class="mini-chip">Trío</span> <span class="mini-chip">Full (Trío + Pareja)</span>
-            <span class="mini-chip">Escalera (5 cartas)</span> <span class="mini-chip">3 Parejas Consecutivas</span> <span class="mini-chip">2 Tríos Consecutivos</span>
-          </div>
-          <p><strong>Jerarquía de Bombas (vencen a cualquier jugada normal):</strong></p>
-          <div class="rule-card-preview-row">
-            <span class="mini-chip">Bomba de 4</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">Bomba de 5</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip red">Escalera de Color (5 cartas)</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">Bomba de 6+</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">Bomba de 4</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">Bomba de 5</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">Escalera de Color (5)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">Bomba de 6+</span> <span style="color:var(--gold);">&lt;</span>
             <span class="mini-chip gold">👑 Bomba Suprema (4 Jokers)</span>
           </div>
-        </div>
-        <div class="rule-section">
-          <h3>🎯 4. Estrategia de Organización de Mano</h3>
-          <p>1. <strong>Localiza los comodines</strong>: Aparta los comodines de corazones para construir escaleras de color.<br>
-          2. <strong>Consolida bombas</strong>: Protege las bombas de 4 o más cartas.<br>
-          3. <strong>Reduce cartas sueltas</strong>: Junta cartas bajas en escaleras o tríos para no quedarte atrapado con cartas sueltas.</p>
         </div>
       `;
     } else if (currentLang === 'zh-TW') {
@@ -1082,32 +1160,25 @@
           <h3>⭐ 2. 級牌體系與「逢人配」萬能牌</h3>
           <p>• <strong>級牌（本局打幾）</strong>：從打 2 開始升至打 A。若當前打 5，則所有的 5 點數權重被拔高，大於 A 且僅次於小王。<br>
           • <strong>逢人配（紅心級牌）</strong>：兩張<strong>紅心級牌</strong>為萬能百搭牌（除大小王外），可替代任意點數和花色湊成同花順、順子、炸彈等。<br>
-          • <strong>大小順序</strong>：大王 ＞ 小王 ＞ 紅心逢人配 ＞ 其他花色級牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2（級牌位自動抽離提升）。</p>
+          • <strong>大小順序</strong>：大王 ＞ 小王 ＞ 紅心逢人配 ＞ 其他花色級牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
         </div>
         <div class="rule-section">
           <h3>💣 3. 牌型圖譜與炸彈威力天梯</h3>
           <p><strong>【常規牌型】</strong></p>
           <div class="rule-card-preview-row">
             <span class="mini-chip">單張</span> <span class="mini-chip">對子</span> <span class="mini-chip">三張</span> <span class="mini-chip">三帶二</span>
-            <span class="mini-chip">單順 (5張連牌)</span> <span class="mini-chip">三連對 (木板)</span> <span class="mini-chip">雙飛 (鋼板: 2個連續三張)</span>
+            <span class="mini-chip">單順 (5張連牌)</span> <span class="mini-chip">三連對 (木板)</span> <span class="mini-chip">雙飛 (鋼板)</span>
           </div>
-          <p><strong>【炸彈威力比拼（壓制所有常規牌型）】</strong></p>
+          <p><strong>【炸彈威力比拼】</strong></p>
           <div class="rule-card-preview-row">
-            <span class="mini-chip">四張炸彈</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">五張炸彈</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip red">同花順 (5張同花連續)</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">六張炸彈</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">七張炸彈</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">八張炸彈</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip gold">👑 四大天王 (四張大小王天王炸)</span>
+            <span class="mini-chip">四張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">五張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">同花順 (5張)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">六張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">七張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">八張炸彈</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip gold">👑 四大天王 (四王天王炸)</span>
           </div>
-          <p style="font-size:12px; color:#94a3b8;">* 關鍵特權：同花順威力大於五張炸彈，但小於六張炸彈！天王炸（大王+大王+小王+小王）為全場最大神牌。</p>
-        </div>
-        <div class="rule-section">
-          <h3>🎯 4. 新手前程理牌黃金法則</h3>
-          <p>1. <strong>先抽萬能牌</strong>：開局第一時間拎出紅心逢人配，觀察能否填補出極高威力的同花順或組成6炸。<br>
-          2. <strong>定死炸彈庫</strong>：將 4 張以上的硬炸彈單獨成層收納，非必要不輕易拆開。<br>
-          3. <strong>化整消單</strong>：將落單的碎牌優先編入 5 連順、三連對或三帶二中，減少手上無法走脫的單牌數量。</p>
         </div>
       `;
     } else {
@@ -1120,38 +1191,31 @@
           <h3>⭐ 2. 级牌体系与“逢人配”万能牌</h3>
           <p>• <strong>级牌（本局打几）</strong>：从打 2 开始升至打 A。若当前打 5，则所有的 5 点数权重被拔高，大于 A 且仅次于小王。<br>
           • <strong>逢人配（红心级牌）</strong>：两张<strong>红心级牌</strong>为万能百搭牌（除大小王外），可替代任意点数和花色凑成同花顺、顺子、炸弹等。<br>
-          • <strong>大小顺序</strong>：大王 ＞ 小王 ＞ 红心逢人配 ＞ 其他花色级牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2（级牌位自动抽离提升）。</p>
+          • <strong>大小顺序</strong>：大王 ＞ 小王 ＞ 红心逢人配 ＞ 其他花色级牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
         </div>
         <div class="rule-section">
           <h3>💣 3. 牌型图谱与炸弹威力天梯</h3>
           <p><strong>【常规牌型】</strong></p>
           <div class="rule-card-preview-row">
             <span class="mini-chip">单张</span> <span class="mini-chip">对子</span> <span class="mini-chip">三张</span> <span class="mini-chip">三带二</span>
-            <span class="mini-chip">单顺 (5张连牌)</span> <span class="mini-chip">三连对 (木板)</span> <span class="mini-chip">双飞 (钢板: 2个连续三张)</span>
+            <span class="mini-chip">单顺 (5张连牌)</span> <span class="mini-chip">三连对 (木板)</span> <span class="mini-chip">双飞 (钢板)</span>
           </div>
-          <p><strong>【炸弹威力比拼（压制所有常规牌型）】</strong></p>
+          <p><strong>【炸弹威力比拼】</strong></p>
           <div class="rule-card-preview-row">
-            <span class="mini-chip">四张炸弹</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">五张炸弹</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip red">同花顺 (5张同花连续)</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">六张炸弹</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">七张炸弹</span> <span style="color:#ffd700;">&lt;</span>
-            <span class="mini-chip">八张炸弹</span> <span style="color:#ffd700;">&lt;</span>
+            <span class="mini-chip">四张炸弹</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">五张炸弹</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip red">同花顺 (5张同花连续)</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">六张炸弹</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">七张炸弹</span> <span style="color:var(--gold);">&lt;</span>
+            <span class="mini-chip">八张炸弹</span> <span style="color:var(--gold);">&lt;</span>
             <span class="mini-chip gold">👑 四大天王 (四张大小王天王炸)</span>
           </div>
-          <p style="font-size:12px; color:#94a3b8;">* 关键特权：同花顺威力大于五张炸弹，但小于六张炸弹！天王炸（大王+大王+小王+小王）为全场最大神牌。</p>
-        </div>
-        <div class="rule-section">
-          <h3>🎯 4. 新手前期理牌黄金法则</h3>
-          <p>1. <strong>先抽万能牌</strong>：开局第一时间拎出红心逢人配，观察能否填补出极高威力的同花顺或组成6炸。<br>
-          2. <strong>定死炸弹库</strong>：将 4 张以上的硬炸弹单独成层收纳，非必要不轻易拆开。<br>
-          3. <strong>化整消单</strong>：将落单的碎牌优先编入 5 连顺、三连对或三带二中，减少手上无法走脱的单牌数量。</p>
+          <p style="font-size:12px; color:#94a3b8;">* 关键特权：同花顺威力大于五张炸弹，但小于六张炸弹！天王炸为全场最大神牌。</p>
         </div>
       `;
     }
   }
 
-  // 更新帮助说明文字
   function updateHelpDrawerContent() {
     const grid = document.getElementById('helpGridContent');
     grid.innerHTML = '';
@@ -1164,7 +1228,6 @@
     });
   }
 
-  // 刷新全界面文本
   function applyLanguage() {
     document.getElementById('dealBtn').textContent = t('deal');
     document.getElementById('customHandBtn').textContent = t('customHand');
@@ -1535,7 +1598,7 @@
 
     const cardEl = e.target.closest('.card');
     if (!cardEl) {
-      if (!e.target.closest('.controls-bar') && !e.target.closest('.modal-content') && !e.target.closest('.schemes-nav') && !e.target.closest('.help-drawer')) {
+      if (!e.target.closest('.header-container') && !e.target.closest('.modal-content') && !e.target.closest('.schemes-nav') && !e.target.closest('.help-drawer')) {
         if (selectedIds.size > 0) {
           selectedIds.clear();
           lastAnchorCardId = null;
@@ -1826,6 +1889,14 @@
             matched = true;
             break;
           }
+        } else {
+          if (x >= rect.left + rect.width * 0.4) {
+            chosenIndex = validCards.length;
+            caretX = rect.right + 6;
+            caretY = rect.top;
+            matched = true;
+            break;
+          }
         }
       }
       if (!matched) {
@@ -1941,7 +2012,7 @@
             <span class="scheme-col-title">${t('schemeName', { name: schemeLetter })}</span>
             <span style="font-size: 13px; color: #94a3b8; margin-left: 8px;">(${totalCount} ${t('cardUnit')} · ${validRows.length} ${t('rowLayer', { idx: '' })})</span>
           </div>
-          ${idx !== currentSchemeIndex ? `<button class="primary" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #68d391; font-weight: bold;">${t('usingCurrent')}</span>`}
+          ${idx !== currentSchemeIndex ? `<button class="action-lead" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #4ade80; font-weight: bold;">${t('usingCurrent')}</span>`}
         </div>
       `;
 
@@ -1951,7 +2022,7 @@
 
         const rowBadge = document.createElement('div');
         rowBadge.style.fontSize = '12px';
-        rowBadge.style.color = '#ffd700';
+        rowBadge.style.color = varToCss('--gold');
         rowBadge.style.fontWeight = 'bold';
         rowBadge.style.minWidth = '42px';
         rowBadge.textContent = `${t('rowLayer', { idx: rIdx + 1 })}:`;
@@ -1972,6 +2043,10 @@
     });
 
     compareModal.style.display = 'flex';
+  }
+
+  function varToCss(varName) {
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
   }
 
   window.switchSchemeAndClose = function(idx) {
@@ -2056,8 +2131,8 @@
           </div>
         </div>
         <div style="display: flex; gap: 8px;">
-          <button class="primary" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
-          <button class="danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">${t('delete')}</button>
+          <button class="action-lead" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
+          <button class="btn-danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">${t('delete')}</button>
         </div>
       `;
       archiveListContainer.appendChild(cardEl);
