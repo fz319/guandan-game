@@ -11,12 +11,6 @@
 <title>掼蛋理牌模拟器 / Guandan Cards Simulator</title>
 <style>
   :root {
-    --card-w: 68px;
-    --card-h: 106px;
-    --card-overlap: -32px;
-    --card-font-val: 17px;
-    --card-font-suit: 15px;
-
     /* 顶级深林暗调天鹅绒配色体系 */
     --bg-base: #07120e;
     --bg-gradient: radial-gradient(circle at 50% 20%, #163628 0%, #0d1e17 55%, #050d0a 100%);
@@ -29,15 +23,128 @@
     --red-lead-glow: rgba(225, 29, 72, 0.45);
     --btn-glass: rgba(255, 255, 255, 0.07);
     --btn-glass-hover: rgba(255, 255, 255, 0.16);
+
+    /* 全局基准尺寸体系（小号为基准，中号与大号等比放大） */
+    --font-ui-btn: 13px;
+    --font-ui-title-level: 16px;
+    --font-ui-title-count: 15px;
+    --font-scheme: 13px;
+    --font-handle-icon: 15px;
+    --font-handle-label: 11px;
+    --font-handle-count: 11px;
+    --handle-w: 52px;
+    --font-placeholder: 15px;
+    
+    --card-w: 68px;
+    --card-h: 106px;
+    --card-overlap: -32px;
+    --card-font-val: 17px;
+    --card-font-suit: 15px;
+    --card-badge-size: 10px;
   }
 
+  /* 尺寸小号 */
+  body.font-size-small {
+    --font-ui-btn: 12.5px;
+    --font-ui-title-level: 15px;
+    --font-ui-title-count: 14px;
+    --font-scheme: 12px;
+    --font-handle-icon: 13px;
+    --font-handle-label: 10px;
+    --font-handle-count: 10px;
+    --handle-w: 48px;
+    --font-placeholder: 14px;
+
+    --card-w: 68px;
+    --card-h: 106px;
+    --card-overlap: -32px;
+    --card-font-val: 17px;
+    --card-font-suit: 15px;
+    --card-badge-size: 9.5px;
+  }
   @media (max-width: 640px) {
-    :root {
+    body.font-size-small {
       --card-w: 52px;
       --card-h: 84px;
       --card-overlap: -25px;
       --card-font-val: 14px;
       --card-font-suit: 12px;
+      --font-placeholder: 13px;
+      --handle-w: 42px;
+      --font-handle-icon: 12px;
+      --font-handle-label: 9px;
+      --font-handle-count: 9px;
+      --card-badge-size: 8.5px;
+    }
+  }
+
+  /* 尺寸中号 (默认推荐) */
+  body.font-size-medium {
+    --font-ui-btn: 14px;
+    --font-ui-title-level: 18px;
+    --font-ui-title-count: 16.5px;
+    --font-scheme: 14px;
+    --font-handle-icon: 16px;
+    --font-handle-label: 12.5px;
+    --font-handle-count: 12.5px;
+    --handle-w: 58px;
+    --font-placeholder: 18px;
+
+    --card-w: 78px;
+    --card-h: 120px;
+    --card-overlap: -35px;
+    --card-font-val: 20px;
+    --card-font-suit: 17px;
+    --card-badge-size: 11px;
+  }
+  @media (max-width: 640px) {
+    body.font-size-medium {
+      --card-w: 58px;
+      --card-h: 92px;
+      --card-overlap: -27px;
+      --card-font-val: 16px;
+      --card-font-suit: 13px;
+      --font-placeholder: 15px;
+      --handle-w: 48px;
+      --font-handle-icon: 14px;
+      --font-handle-label: 10.5px;
+      --font-handle-count: 10.5px;
+      --card-badge-size: 9px;
+    }
+  }
+
+  /* 尺寸大号 (长辈关爱大字版) */
+  body.font-size-large {
+    --font-ui-btn: 16px;
+    --font-ui-title-level: 21px;
+    --font-ui-title-count: 19px;
+    --font-scheme: 16px;
+    --font-handle-icon: 18px;
+    --font-handle-label: 14px;
+    --font-handle-count: 14px;
+    --handle-w: 66px;
+    --font-placeholder: 22px;
+
+    --card-w: 90px;
+    --card-h: 138px;
+    --card-overlap: -40px;
+    --card-font-val: 24px;
+    --card-font-suit: 20px;
+    --card-badge-size: 12.5px;
+  }
+  @media (max-width: 640px) {
+    body.font-size-large {
+      --card-w: 66px;
+      --card-h: 104px;
+      --card-overlap: -30px;
+      --card-font-val: 18px;
+      --card-font-suit: 15px;
+      --font-placeholder: 17px;
+      --handle-w: 54px;
+      --font-handle-icon: 16px;
+      --font-handle-label: 12px;
+      --font-handle-count: 12px;
+      --card-badge-size: 10px;
     }
   }
 
@@ -66,7 +173,7 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
-    padding-top: max(28px, calc(env(safe-area-inset-top) + 16px));
+    padding-top: max(26px, calc(env(safe-area-inset-top) + 16px));
     padding-bottom: max(34px, calc(env(safe-area-inset-bottom) + 16px));
     padding-left: max(16px, env(safe-area-inset-left));
     padding-right: max(16px, env(safe-area-inset-right));
@@ -82,7 +189,7 @@
   .header-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 9px;
     width: 100%;
     min-width: min-content;
     max-width: 1380px;
@@ -91,7 +198,7 @@
     box-sizing: border-box;
   }
 
-  .header-main-row {
+  .header-tier-row {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -100,7 +207,6 @@
     width: 100%;
   }
 
-  /* 功能微岛模块 */
   .control-island {
     display: inline-flex;
     align-items: center;
@@ -110,43 +216,52 @@
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--island-border);
     border-radius: 9px;
-    padding: 5px 7px;
+    padding: 5px 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     flex-shrink: 0;
   }
 
+  .badge-cluster-island {
+    padding: 6px 12px;
+    background: rgba(14, 30, 24, 0.95);
+    border: 1px solid rgba(246, 197, 89, 0.35);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  }
   .badge-cluster {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
   }
   .badge-tag {
-    font-size: 13px;
     font-weight: 800;
-    padding: 4px 9px;
-    border-radius: 6px;
+    padding: 6px 14px;
+    border-radius: 7px;
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.3px;
   }
   .badge-level {
-    background: rgba(246, 197, 89, 0.12);
+    background: rgba(246, 197, 89, 0.16);
     color: var(--gold);
-    border: 1px solid rgba(246, 197, 89, 0.3);
+    border: 1px solid rgba(246, 197, 89, 0.45);
+    font-size: var(--font-ui-title-level);
+    text-shadow: 0 0 12px rgba(246, 197, 89, 0.3);
   }
   .badge-count {
-    background: rgba(56, 189, 248, 0.1);
+    background: rgba(56, 189, 248, 0.14);
     color: var(--blue);
-    border: 1px solid rgba(56, 189, 248, 0.25);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    font-size: var(--font-ui-title-count);
+    text-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
   }
 
   button {
     background-color: var(--btn-glass);
     color: #e2e8f0;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    padding: 6px 11px;
-    font-size: 13px;
+    padding: 6px 12px;
+    font-size: var(--font-ui-btn);
     font-weight: 600;
     border-radius: 6px;
     cursor: pointer;
@@ -175,7 +290,7 @@
     color: #ffffff;
     font-weight: 700;
     box-shadow: 0 2px 10px var(--red-lead-glow);
-    padding: 6px 12px;
+    padding: 6px 14px;
     border-radius: 6px;
   }
   button.action-lead-btn:hover:not(:disabled) {
@@ -210,27 +325,27 @@
     box-shadow: 0 0 10px var(--gold-glow);
   }
 
-  .lang-select-wrapper {
+  .tool-select-wrapper {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 6px;
-    padding: 0 4px 0 6px;
+    padding: 0 5px 0 7px;
   }
-  .lang-icon { font-size: 13px; color: #94a3b8; }
-  .lang-select-box {
+  .tool-select-icon { font-size: calc(var(--font-ui-btn) * 0.95); color: #94a3b8; }
+  .tool-select-box {
     background: transparent;
     color: #cbd5e1;
     border: none;
     padding: 5px 2px;
-    font-size: 12px;
+    font-size: calc(var(--font-ui-btn) * 0.92);
     font-weight: 600;
     outline: none;
     cursor: pointer;
   }
-  .lang-select-box option {
+  .tool-select-box option {
     background-color: #0f172a;
     color: #e2e8f0;
   }
@@ -253,7 +368,7 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 7px;
     color: #cbd5e1;
-    font-size: 13px;
+    font-size: var(--font-scheme);
     font-weight: 600;
     cursor: pointer;
     display: flex;
@@ -268,6 +383,16 @@
     border-color: var(--blue);
     color: #ffffff;
     box-shadow: 0 2px 10px rgba(56, 189, 248, 0.25);
+  }
+  .scheme-tab .tab-edit-btn {
+    color: #94a3b8;
+    font-size: 11px;
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+  .scheme-tab .tab-edit-btn:hover {
+    color: var(--gold);
+    background: rgba(255, 255, 255, 0.1);
   }
   .scheme-tab .tab-del {
     color: #94a3b8;
@@ -318,14 +443,18 @@
     padding-left: 20px;
     min-width: 100%;
   }
+
+  /* 提示词跟随全局字号联动放大 */
   .card-row.empty-row::after {
     content: attr(data-placeholder);
     position: absolute;
     left: 120px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.35);
+    font-size: var(--font-placeholder);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.38);
+    letter-spacing: 0.5px;
     pointer-events: none;
     white-space: nowrap;
   }
@@ -336,12 +465,13 @@
   .card-row.row-indicator-top { border-top: 4px solid var(--gold) !important; }
   .card-row.row-indicator-bottom { border-bottom: 4px solid var(--gold) !important; }
 
+  /* 层级手柄与张数显示完全跟随全局尺寸变量 */
   .row-handle {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 50px;
+    width: var(--handle-w);
     height: var(--card-h);
     background: rgba(0, 0, 0, 0.32);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -356,9 +486,9 @@
   }
   .row-handle:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--gold); }
   .row-handle:active { cursor: grabbing; }
-  .row-handle .handle-icon { font-size: 15px; color: #cbd5e1; line-height: 1; }
-  .row-handle .handle-label { font-size: 10px; color: var(--gold); font-weight: 700; margin-top: 4px; }
-  .row-handle .handle-count { font-size: 10px; color: var(--blue); font-weight: 700; margin-top: 2px; }
+  .row-handle .handle-icon { font-size: var(--font-handle-icon); color: #cbd5e1; line-height: 1; }
+  .row-handle .handle-label { font-size: var(--font-handle-label); color: var(--gold); font-weight: 700; margin-top: 5px; white-space: nowrap; }
+  .row-handle .handle-count { font-size: var(--font-handle-count); color: var(--blue); font-weight: 700; margin-top: 3px; white-space: nowrap; }
 
   .cards-wrapper {
     display: flex;
@@ -369,15 +499,16 @@
     width: max-content;
   }
 
+  /* 彻底回退至最早版本的原版纯净卡牌样式 */
   .card {
     width: var(--card-w);
     height: var(--card-h);
-    background-color: #ffffff;
-    border-radius: 7px;
-    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.35);
+    background-color: #ffffff !important;
+    border-radius: 6px;
+    box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
-    padding: 10px 8px 6px;
+    padding: 8px 6px 6px;
     box-sizing: border-box;
     cursor: pointer;
     margin-left: var(--card-overlap);
@@ -388,10 +519,14 @@
   }
   .card:first-child { margin-left: 0 !important; }
 
+  /* 最早版本的鲜艳经典红与深炭黑 */
+  .red { color: #e53e3e !important; }
+  .black { color: #1a202c !important; }
+
   .card.selected {
     transform: translateY(-30px) !important;
-    box-shadow: 0 12px 22px rgba(246, 197, 89, 0.45), -2px 4px 8px rgba(0,0,0,0.4);
-    border: 2px solid var(--gold);
+    box-shadow: 0 10px 18px rgba(246, 224, 94, 0.5), -2px 4px 8px rgba(0,0,0,0.4);
+    border: 2px solid #ecc94b;
   }
   .card.selected + .card:not(.selected) { margin-left: calc(var(--card-overlap) + 8px); }
 
@@ -405,24 +540,34 @@
     line-height: 1;
     pointer-events: none;
   }
-  .card-val { font-size: var(--card-font-val); font-weight: 800; line-height: 1; }
-  .card-suit { font-size: var(--card-font-suit); line-height: 1; margin-top: 3px; }
-  .wild-badge {
-    position: absolute;
-    bottom: 6px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 10px;
-    font-weight: bold;
-    background: #e11d48;
-    color: #fff;
-    padding: 2px 4px;
-    border-radius: 3px;
-    white-space: nowrap;
-    pointer-events: none;
+  .card-val { 
+    font-size: var(--card-font-val); 
+    font-weight: 800; 
+    line-height: 1; 
   }
-  .red { color: #dc2626; }
-  .black { color: #0f172a; }
+  .card-suit { 
+    font-size: var(--card-font-suit); 
+    line-height: 1; 
+    margin-top: 3px; 
+  }
+
+  /* 全新“逢人配”左上角完全防遮挡徽标方案 */
+  .wild-badge-corner {
+    margin-top: 4px;
+    font-size: var(--card-badge-size);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #e11d48, #b91c1c);
+    color: #ffd700;
+    padding: 1.5px 3.5px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    pointer-events: none;
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+    width: fit-content;
+  }
 
   #dropCaret {
     position: absolute;
@@ -624,6 +769,15 @@
   .mini-chip.red { color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
   .mini-chip.gold { color: var(--gold); border-color: rgba(246, 197, 89, 0.4); }
 
+  .strategy-box {
+    background: rgba(56, 189, 248, 0.05);
+    border-left: 3px solid #38bdf8;
+    padding: 10px 14px;
+    margin-top: 8px;
+    border-radius: 0 6px 6px 0;
+  }
+  .strategy-box strong { color: #38bdf8; }
+
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
@@ -687,7 +841,6 @@
   }
   .scheme-mini-row .card .card-val { font-size: 13px; }
   .scheme-mini-row .card .card-suit { font-size: 11px; margin-top: 1px; }
-  .scheme-mini-row .wild-badge { font-size: 8px; padding: 1px 2px; bottom: 3px; }
 
   .saves-list {
     display: flex;
@@ -788,57 +941,73 @@
   }
 </style>
 </head>
-<body>
+<body class="font-size-medium">
 
 <header class="header-container">
-  <div class="header-main-row">
-    <!-- 微岛 1：局况状态岛 -->
+  <!-- 第 1 层：独立顶层工具栏（掼蛋规则、使用指南、尺寸选择、语言选择） -->
+  <div class="header-tier-row">
     <div class="control-island">
-      <div class="badge-cluster">
-        <div class="badge-tag badge-level" id="levelInfo">打：--</div>
-        <div class="badge-tag badge-count" id="totalCountInfo">手牌：0 张</div>
-      </div>
-    </div>
-
-    <!-- 微岛 2：发牌、调牌与方案比较 -->
-    <div class="control-island">
-      <button class="action-lead-btn" id="dealBtn">新一局发牌</button>
-      <button class="action-accent" id="customHandBtn">自定义调牌</button>
-      <button class="action-accent" id="compareSchemesBtn">📊 方案比较</button>
-    </div>
-
-    <!-- 微岛 3：批量连选、删除选中与重置排序 -->
-    <div class="control-island">
-      <button id="multiSelectToggleBtn" title="触屏端批量连选">⚡ 批量连选</button>
-      <button class="btn-danger" id="deleteBtn" disabled>🗑️ 删除选中 (0)</button>
-      <button id="resetBtn">🔄 重置排序</button>
-    </div>
-
-    <!-- 微岛 4：历史操作岛（撤销与重做） -->
-    <div class="control-island">
-      <button id="undoBtn" disabled>↩ 撤销</button>
-      <button id="redoBtn" disabled>↪ 重做</button>
-    </div>
-
-    <!-- 微岛 5：档案数据岛（存档与存档箱） -->
-    <div class="control-island">
-      <button id="saveArchiveBtn">💾 存档</button>
-      <button id="openArchiveBtn">📂 存档箱</button>
-    </div>
-
-    <!-- 微岛 6：知识与国际化岛（使用指南、掼蛋规则、语言选择） -->
-    <div class="control-island">
-      <button id="toggleHelpBtn">💡 使用指南</button>
       <button id="rulesBtn">📖 掼蛋规则</button>
-      <div class="lang-select-wrapper" title="Language / 语言">
-        <span class="lang-icon">🌐</span>
-        <select class="lang-select-box" id="langSelect">
+      <button id="toggleHelpBtn">💡 使用指南</button>
+      <!-- 尺寸大小选择器 -->
+      <div class="tool-select-wrapper" title="整体界面与牌面尺寸">
+        <span class="tool-select-icon">📐</span>
+        <select class="tool-select-box" id="fontSizeSelect">
+          <option value="small">尺寸小号</option>
+          <option value="medium" selected>尺寸中号</option>
+          <option value="large">尺寸大号</option>
+        </select>
+      </div>
+      <!-- 语言选择器（🇨🇳 标志） -->
+      <div class="tool-select-wrapper" title="Language / 语言">
+        <span class="tool-select-icon">🌐</span>
+        <select class="tool-select-box" id="langSelect">
           <option value="zh-CN">🇨🇳 简体中文</option>
           <option value="zh-TW">🇨🇳 繁體中文</option>
           <option value="en">🇺🇸 English</option>
           <option value="es">🇪🇸 Español</option>
         </select>
       </div>
+    </div>
+  </div>
+
+  <!-- 第 2 层：打几和手牌张数（单独一层，主标题视觉优先级） -->
+  <div class="header-tier-row">
+    <div class="control-island badge-cluster-island">
+      <div class="badge-cluster">
+        <div class="badge-tag badge-level" id="levelInfo">打：--</div>
+        <div class="badge-tag badge-count" id="totalCountInfo">手牌：0 张</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第 3 层：发牌、调牌与方案比较（单独一层） -->
+  <div class="header-tier-row">
+    <div class="control-island">
+      <button class="action-lead-btn" id="dealBtn">🎴 新一局发牌</button>
+      <button class="action-accent" id="customHandBtn">🛠️ 自定义调牌</button>
+      <button class="action-accent" id="compareSchemesBtn">⚖️ 方案比较</button>
+    </div>
+  </div>
+
+  <!-- 第 4 层：整理工具组（单独一层：批量连选、删除选中、重置排序） -->
+  <div class="header-tier-row">
+    <div class="control-island">
+      <button id="multiSelectToggleBtn" title="触屏端批量连选">⚡ 批量连选</button>
+      <button class="btn-danger" id="deleteBtn" disabled>🗑️ 删除选中 (0)</button>
+      <button id="resetBtn">🔄 重置排序</button>
+    </div>
+  </div>
+
+  <!-- 第 5 层：最后一层（存档组 与 撤销重做组 并排） -->
+  <div class="header-tier-row">
+    <div class="control-island">
+      <button id="saveArchiveBtn">💾 存档</button>
+      <button id="openArchiveBtn">📂 存档箱</button>
+    </div>
+    <div class="control-island">
+      <button id="undoBtn" disabled>↩ 撤销</button>
+      <button id="redoBtn" disabled>↪ 重做</button>
     </div>
   </div>
 </header>
@@ -857,7 +1026,7 @@
 <div class="modal-backdrop" id="compareModal">
   <div class="compare-modal-content">
     <div class="modal-header">
-      <div class="modal-title" id="compareModalTitle">📊 多方案理牌思路横向比较</div>
+      <div class="modal-title" id="compareModalTitle">⚖️ 多方案理牌思路横向比较</div>
       <button class="action-lead-btn" id="closeCompareBtn" style="padding: 6px 14px;">返回理牌</button>
     </div>
     <div class="compare-schemes-scroll" id="compareContainer"></div>
@@ -930,9 +1099,9 @@
     'zh-CN': {
       levelPrefix: '打：【 {level} 】',
       cardsCount: '手牌：{count} 张',
-      deal: '新一局发牌',
-      customHand: '自定义调牌',
-      compare: '📊 方案比较',
+      deal: '🎴 新一局发牌',
+      customHand: '🛠️ 自定义调牌',
+      compare: '⚖️ 方案比较',
       rulesBtn: '📖 掼蛋规则',
       saveArchive: '💾 存档',
       openArchive: '📂 存档箱',
@@ -945,8 +1114,8 @@
       newSchemeBtn: '+ 新建方案',
       schemeName: '方案 {name}',
       rowLayer: '第{idx}层',
-      rowPlaceholder: '将牌拖到此处开启新的一层',
-      wildTag: '逢人配',
+      rowPlaceholder: '将牌移动此处帮助理牌',
+      wildTag: '配',
       suits: { '♥': '红桃', '♦': '方块', '♠': '黑桃', '♣': '梅花', 'joker': '王牌' },
       bigJoker: '大王',
       smallJoker: '小王',
@@ -954,7 +1123,7 @@
       backToPlay: '返回理牌',
       applyScheme: '切换以此排布',
       usingCurrent: '当前使用中',
-      compareTitle: '📊 多方案理牌思路横向比较',
+      compareTitle: '⚖️ 多方案理牌思路横向比较',
       archiveTitle: '📂 本地手牌存档箱',
       noArchives: '暂无保存的手牌存档。',
       load: '载入',
@@ -971,6 +1140,8 @@
       cancel: '取消',
       confirmApply: '确认应用到手牌',
       rulesTitle: '📖 掼蛋核心游戏规则与知识图谱',
+      fontOptions: { small: '尺寸小号', medium: '尺寸中号', large: '尺寸大号' },
+      renamePrompt: '请输入此理牌方案的名称：',
       help: [
         {
           title: '🃏 选牌与放平',
@@ -986,16 +1157,16 @@
         },
         {
           title: '⌨️ 效率快捷键与多方案',
-          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">+ 新建方案</span> 可在同一把牌中探索不同拆牌路线并横向比较。'
+          desc: '• <span class="help-pill">Space / N</span> 发新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 撤销 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 保存当前牌局 | <span class="help-pill">R</span> 重置降序<br>• 点击顶部 <span class="help-pill">+ 新建方案</span> 可在同一把牌中探索不同拆牌路线；<strong>双击方案标签或点✏️即可重命名</strong>！'
         }
       ]
     },
     'zh-TW': {
       levelPrefix: '打：【 {level} 】',
       cardsCount: '手牌：{count} 張',
-      deal: '新一局發牌',
-      customHand: '自訂調牌',
-      compare: '📊 方案比較',
+      deal: '🎴 新一局發牌',
+      customHand: '🛠️ 自訂調牌',
+      compare: '⚖️ 方案比較',
       rulesBtn: '📖 掼蛋規則',
       saveArchive: '💾 存檔',
       openArchive: '📂 存檔箱',
@@ -1008,8 +1179,8 @@
       newSchemeBtn: '+ 新建方案',
       schemeName: '方案 {name}',
       rowLayer: '第{idx}層',
-      rowPlaceholder: '將牌拖到此處開啟新的一層',
-      wildTag: '逢人配',
+      rowPlaceholder: '將牌移動此處幫助理牌',
+      wildTag: '配',
       suits: { '♥': '紅心', '♦': '方塊', '♠': '黑桃', '♣': '梅花', 'joker': '王牌' },
       bigJoker: '大王',
       smallJoker: '小王',
@@ -1017,7 +1188,7 @@
       backToPlay: '返回理牌',
       applyScheme: '切換以此排布',
       usingCurrent: '目前使用中',
-      compareTitle: '📊 多方案理牌思路橫向比較',
+      compareTitle: '⚖️ 多方案理牌思路橫向比較',
       archiveTitle: '📂 本地手牌存檔箱',
       noArchives: '暫無儲存的手牌存檔。',
       load: '載入',
@@ -1034,6 +1205,8 @@
       cancel: '取消',
       confirmApply: '確認應用到手牌',
       rulesTitle: '📖 掼蛋核心遊戲規則與知識圖譜',
+      fontOptions: { small: '尺寸小號', medium: '尺寸中號', large: '尺寸大號' },
+      renamePrompt: '請輸入此理牌方案的名稱：',
       help: [
         {
           title: '🃏 選牌與放平',
@@ -1049,16 +1222,16 @@
         },
         {
           title: '⌨️ 效率快捷鍵與多方案',
-          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">+ 新建方案</span> 可在同一把牌中探索不同拆牌路線並橫向比較。'
+          desc: '• <span class="help-pill">Space / N</span> 發新牌 | <span class="help-pill">' + modKeySymbol + 'Z</span> 復原 | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> 重做<br>• <span class="help-pill">' + modKeySymbol + 'S</span> 儲存目前牌局 | <span class="help-pill">R</span> 重置降序<br>• 點擊頂部 <span class="help-pill">+ 新建方案</span> 可在同一把牌中探索不同拆牌路線；<strong>雙擊標籤或點✏️即可重新命名</strong>！'
         }
       ]
     },
     'en': {
       levelPrefix: 'Rank: [ {level} ]',
       cardsCount: 'Hand: {count} cards',
-      deal: 'Deal Hand',
-      customHand: 'Custom',
-      compare: '📊 Compare',
+      deal: '🎴 Deal Hand',
+      customHand: '🛠️ Custom',
+      compare: '⚖️ Compare',
       rulesBtn: '📖 Rules',
       saveArchive: '💾 Save',
       openArchive: '📂 Vault',
@@ -1071,8 +1244,8 @@
       newSchemeBtn: '+ New Scheme',
       schemeName: 'Scheme {name}',
       rowLayer: 'Tier {idx}',
-      rowPlaceholder: 'Drag cards here to create a new tier',
-      wildTag: 'Wild',
+      rowPlaceholder: 'Drag cards here to help organize hand',
+      wildTag: 'WILD',
       suits: { '♥': 'Hearts', '♦': 'Diamonds', '♠': 'Spades', '♣': 'Clubs', 'joker': 'Joker' },
       bigJoker: 'Red Joker',
       smallJoker: 'Black Joker',
@@ -1080,7 +1253,7 @@
       backToPlay: 'Back',
       applyScheme: 'Use Scheme',
       usingCurrent: 'In Use',
-      compareTitle: '📊 Guandan Scheme Comparisons',
+      compareTitle: '⚖️ Guandan Scheme Comparisons',
       archiveTitle: '📂 Saved Hands Vault',
       noArchives: 'No saved archives found.',
       load: 'Load',
@@ -1097,6 +1270,8 @@
       cancel: 'Cancel',
       confirmApply: 'Apply to Hand',
       rulesTitle: '📖 Guandan Complete Rules & Master Guide',
+      fontOptions: { small: 'Small Size', medium: 'Medium Size', large: 'Large Size' },
+      renamePrompt: 'Enter new name for this scheme:',
       help: [
         {
           title: '🃏 Pick & Drop Cards',
@@ -1112,16 +1287,16 @@
         },
         {
           title: '⌨️ Shortcuts & Multi-Schemes',
-          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">+ New Scheme</span> to test and contrast distinct strategies side by side.'
+          desc: '• <span class="help-pill">Space / N</span> Deal | <span class="help-pill">' + modKeySymbol + 'Z</span> Undo | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Redo<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Save Hand | <span class="help-pill">R</span> Reset Rank Order<br>• Click <span class="help-pill">+ New Scheme</span> to explore distinct strategies; <strong>double-click tab or tap ✏️ to rename</strong>!'
         }
       ]
     },
     'es': {
       levelPrefix: 'Nivel: [ {level} ]',
       cardsCount: 'Mano: {count} cartas',
-      deal: 'Repartir',
-      customHand: 'Personalizar',
-      compare: '📊 Comparar',
+      deal: '🎴 Repartir',
+      customHand: '🛠️ Personalizar',
+      compare: '⚖️ Comparar',
       rulesBtn: '📖 Reglas',
       saveArchive: '💾 Guardar',
       openArchive: '📂 Archivos',
@@ -1134,8 +1309,8 @@
       newSchemeBtn: '+ Nuevo Plan',
       schemeName: 'Plan {name}',
       rowLayer: 'Fila {idx}',
-      rowPlaceholder: 'Arrastra cartas aquí para crear una nueva fila',
-      wildTag: 'Comodín',
+      rowPlaceholder: 'Mueve cartas aquí para ordenar tu mano',
+      wildTag: 'COMODÍN',
       suits: { '♥': 'Corazones', '♦': 'Diamantes', '♠': 'Picas', '♣': 'Tréboles', 'joker': 'Comodines' },
       bigJoker: 'Joker Rojo',
       smallJoker: 'Joker Negro',
@@ -1143,7 +1318,7 @@
       backToPlay: 'Volver',
       applyScheme: 'Usar este',
       usingCurrent: 'En uso',
-      compareTitle: '📊 Comparación de Planes de Juego',
+      compareTitle: '⚖️ Comparación de Planes de Juego',
       archiveTitle: '📂 Archivo de Manos Guardadas',
       noArchives: 'No hay partidas guardadas.',
       load: 'Cargar',
@@ -1160,6 +1335,8 @@
       cancel: 'Cancelar',
       confirmApply: 'Aplicar a la Mano',
       rulesTitle: '📖 Reglas Completas de Guandan y Guía Maestra',
+      fontOptions: { small: 'Tamaño Pequeño', medium: 'Tamaño Mediano', large: 'Tamaño Grande' },
+      renamePrompt: 'Introduce el nuevo nombre para este plan:',
       help: [
         {
           title: '🃏 Levantar y Bajar Cartas',
@@ -1175,13 +1352,14 @@
         },
         {
           title: '⌨️ Atajos y Comparativa',
-          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">+ Nuevo Plan</span> para probar distintas formas de combinar y compararlas.'
+          desc: '• <span class="help-pill">Espacio / N</span> Repartir | <span class="help-pill">' + modKeySymbol + 'Z</span> Deshacer | <span class="help-pill">' + modKeySymbol + (isMac ? '⇧Z' : 'Y') + '</span> Rehacer<br>• <span class="help-pill">' + modKeySymbol + 'S</span> Guardar Mano | <span class="help-pill">R</span> Reiniciar Orden<br>• Pulsa <span class="help-pill">+ Nuevo Plan</span> para comparar; ¡<strong>doble toque en la pestaña o pulsa ✏️ para renombrar</strong>!'
         }
       ]
     }
   };
 
   let currentLang = 'zh-CN';
+  let currentFontSize = localStorage.getItem('GUANDAN_FONT_SIZE') || 'medium';
 
   function t(key, params = {}) {
     let str = I18N[currentLang][key] || I18N['zh-CN'][key] || key;
@@ -1221,6 +1399,18 @@
           </div>
           <p style="font-size:12px; color:#94a3b8;">* Note: Straight Flush beats 4-Bomb and 5-Bomb, but loses to 6-Bomb and higher!</p>
         </div>
+        <div class="rule-section">
+          <h3>💡 4. Master Tactics & Philosophy for Beginners</h3>
+          <div class="strategy-box">
+            <p><strong>1. "Wilds make Bombs" Priority</strong>: Never waste your Heart Wild cards on basic pairs or full houses. Always look to build a <em>Straight Flush</em> or 5/6-card Bomb first. Turning a single into an explosive bomb is the single highest-value play in Guandan.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>2. Partner Synergy & Division of Roles</strong>: Pay close attention to what your partner leads. If your partner has an aggressive hand, your role is to suppress the opponent's strong plays and pass control back to your partner. Win together, not alone.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>3. Keep the Key Counters in Mind</strong>: You don't need to count every card, but track these 3 essentials: How many Jokers have been played? Are all current rank cards out? How many cards are left in opponents' hands (under 6 cards means beware of singles/bombs)?</p>
+          </div>
+        </div>
       `;
     } else if (currentLang === 'es') {
       container.innerHTML = `
@@ -1243,6 +1433,18 @@
             <span class="mini-chip red">Escalera de Color (5)</span> <span style="color:var(--gold);">&lt;</span>
             <span class="mini-chip">Bomba de 6+</span> <span style="color:var(--gold);">&lt;</span>
             <span class="mini-chip gold">👑 Bomba Suprema (4 Jokers)</span>
+          </div>
+        </div>
+        <div class="rule-section">
+          <h3>💡 4. Estrategia y Consejos para Principiantes</h3>
+          <div class="strategy-box">
+            <p><strong>1. Usa los comodines para Bombas</strong>: Nunca gastes un comodín en parejas simples. Úsalos siempre para crear Escaleras de Color o bombas de 5-6 cartas.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>2. Trabajo en Pareja</strong>: Observa lo que juega tu compañero. Si tiene buena mano, tu deber es bloquear a los rivales y cederle el turno.</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>3. Memoria Básica</strong>: No memorices todo, solo vigila los Jokers y las cartas de nivel que van saliendo.</p>
           </div>
         </div>
       `;
@@ -1276,6 +1478,21 @@
             <span class="mini-chip gold">👑 四大天王 (四王天王炸)</span>
           </div>
         </div>
+        <div class="rule-section">
+          <h3>💡 4. 實戰進階：掼蛋核心戰術思路與控局哲學</h3>
+          <div class="strategy-box">
+            <p><strong>一、配火第一，絕不湊零（逢人配的黃金法則）</strong><br>
+            逢人配萬萬不可隨便拿去湊三帶二或單順。它的<strong>最優價值永遠是「配炸」或「配同花順」</strong>。多一個炸彈，整手牌的防守與進攻能力將迎來質的飛躍。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>二、隊友同心，角色分工（一主一副打法）</strong><br>
+            掼蛋是雙人默契運動：摸完牌後要迅速評估自己的牌力。若牌力強、炸彈多，主動當<strong>「主攻手」</strong>衝刺頭遊；若手牌零散、小牌多，要甘願當<strong>「掩護手」</strong>，負責頂對手大牌、拆炸彈卡位，把出牌路數留給隊友。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>三、基礎算牌基線（知己知彼）</strong><br>
+            不需要背下全部 108 張牌，新手只要記住三條線：① 四張王牌出了幾張？② 當前級牌有沒有出完？③ 對手手牌小於 6 張時，隨時防範其一擊走脫！</p>
+          </div>
+        </div>
       `;
     } else {
       container.innerHTML = `
@@ -1307,6 +1524,21 @@
             <span class="mini-chip gold">👑 四大天王 (四张大小王天王炸)</span>
           </div>
           <p style="font-size:12px; color:#94a3b8;">* 关键特权：同花顺威力大于五张炸弹，但小于六张炸弹！天王炸为全场最大神牌。</p>
+        </div>
+        <div class="rule-section">
+          <h3>💡 4. 实战进阶：掼蛋核心战术思路与控局哲学</h3>
+          <div class="strategy-box">
+            <p><strong>一、配火第一，绝不凑零（逢人配的黄金法则）</strong><br>
+            逢人配万万不可随便拿去凑三带二或单顺。它的<strong>最优价值永远是“配炸”或“配同花顺”</strong>。多一个炸弹，整手牌的防守与进攻能力将迎来质的飞跃。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>二、队友同心，角色分工（一主一副打法）</strong><br>
+            掼蛋是双人默契运动：摸完牌后要迅速评估自己的牌力。若牌力强、炸弹多，主动当<strong>“主攻手”</strong>冲刺头游；若手牌零散、小牌多，要甘愿当<strong>“掩护手”</strong>，负责顶对手大牌、拆炸弹卡位，把出牌路数留给队友。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>三、基础算牌基线（知己知彼）</strong><br>
+            不需要背下全部 108 张牌，新手只要记住三条线：① 四张王牌出了几张？② 当前级牌有没有出完？③ 对手手牌小于 6 张时，随时防范其一击走脱！</p>
+          </div>
         </div>
       `;
     }
@@ -1359,6 +1591,13 @@
     document.getElementById('cancelModalBtn').textContent = t('cancel');
     document.getElementById('confirmModalBtn').textContent = t('confirmApply');
 
+    // 动态同步字号选项文本
+    const fontOpts = I18N[currentLang].fontOptions || I18N['zh-CN'].fontOptions;
+    const fontSelect = document.getElementById('fontSizeSelect');
+    fontSelect.options[0].text = fontOpts.small;
+    fontSelect.options[1].text = fontOpts.medium;
+    fontSelect.options[2].text = fontOpts.large;
+
     document.getElementById('levelInfo').textContent = t('levelPrefix', { level: currentLevel });
     updateTotalCount();
     updateButtonStates();
@@ -1367,6 +1606,19 @@
     renderSchemesNav();
     renderBoard();
   }
+
+  // ---------------- 字号持久化应用 ----------------
+  function applyFontSize(size) {
+    document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
+    document.body.classList.add(`font-size-${size}`);
+    currentFontSize = size;
+    localStorage.setItem('GUANDAN_FONT_SIZE', size);
+    document.getElementById('fontSizeSelect').value = size;
+  }
+
+  document.getElementById('fontSizeSelect').addEventListener('change', (e) => {
+    applyFontSize(e.target.value);
+  });
 
   const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
   const SUITS = [
@@ -1464,7 +1716,7 @@
     document.getElementById('redoBtn').disabled = !cur || cur.redoStack.length === 0;
     const delBtn = document.getElementById('deleteBtn');
     delBtn.disabled = selectedIds.size === 0;
-    delBtn.textContent = t('deleteSelected', { count: selectedIds.size });
+    delBtn.textContent = `🗑️ ${t('deleteSelected', { count: selectedIds.size }).replace('🗑️ ', '')}`;
   }
 
   function updateTotalCount() {
@@ -1486,8 +1738,8 @@
       <div class="card-top">
         <div class="card-val">${getCardDisplayRank(card)}</div>
         <div class="card-suit">${card.suit}</div>
+        ${isWild ? `<div class="wild-badge-corner">${t('wildTag')}</div>` : ''}
       </div>
-      ${isWild ? `<div class="wild-badge">${t('wildTag')}</div>` : ''}
     `;
   }
 
@@ -1498,9 +1750,12 @@
     schemes.forEach((s, idx) => {
       const tab = document.createElement('div');
       tab.className = 'scheme-tab' + (idx === currentSchemeIndex ? ' active' : '');
-      const schemeLetter = String.fromCharCode(65 + idx);
+      const defaultSchemeLabel = t('schemeName', { name: String.fromCharCode(65 + idx) });
+      const displayName = s.customName || defaultSchemeLabel;
+
       tab.innerHTML = `
-        <span>${t('schemeName', { name: schemeLetter })}</span>
+        <span class="tab-title-text" title="双击重命名">${displayName}</span>
+        <span class="tab-edit-btn" title="重命名方案">✏️</span>
         ${schemes.length > 1 ? `<span class="tab-del" title="删除该方案">✕</span>` : ''}
       `;
 
@@ -1510,7 +1765,17 @@
           deleteScheme(idx);
           return;
         }
+        if (e.target.classList.contains('tab-edit-btn')) {
+          e.stopPropagation();
+          promptRenameScheme(idx);
+          return;
+        }
         switchScheme(idx);
+      });
+
+      tab.addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        promptRenameScheme(idx);
       });
 
       nav.appendChild(tab);
@@ -1521,6 +1786,16 @@
     addBtn.innerHTML = t('newSchemeBtn');
     addBtn.addEventListener('click', addNewScheme);
     nav.appendChild(addBtn);
+  }
+
+  function promptRenameScheme(idx) {
+    const currentName = schemes[idx].customName || schemes[idx].name || `方案 ${String.fromCharCode(65 + idx)}`;
+    const newName = prompt(t('renamePrompt'), currentName);
+    if (newName && newName.trim() !== '') {
+      schemes[idx].customName = newName.trim();
+      schemes[idx].name = newName.trim();
+      renderSchemesNav();
+    }
   }
 
   function switchScheme(idx) {
@@ -1536,6 +1811,7 @@
     const clonedCards = getFlattenedCards();
     schemes.push({
       name: `Scheme ${letter}`,
+      customName: null,
       rows: [sortCards(clonedCards, currentLevel)],
       historyStack: [],
       redoStack: []
@@ -2143,15 +2419,15 @@
 
       const validRows = s.rows.filter(r => r.length > 0);
       const totalCount = validRows.reduce((acc, r) => acc + r.length, 0);
-      const schemeLetter = String.fromCharCode(65 + idx);
+      const displayName = s.customName || t('schemeName', { name: String.fromCharCode(65 + idx) });
 
       col.innerHTML = `
         <div class="scheme-col-header">
           <div>
-            <span class="scheme-col-title">${t('schemeName', { name: schemeLetter })}</span>
+            <span class="scheme-col-title">${displayName}</span>
             <span style="font-size: 13px; color: #94a3b8; margin-left: 8px;">(${totalCount} ${t('cardUnit')} · ${validRows.length} ${t('rowLayer', { idx: '' })})</span>
           </div>
-          ${idx !== currentSchemeIndex ? `<button class="action-primary" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #4ade80; font-weight: bold;">${t('usingCurrent')}</span>`}
+          ${idx !== currentSchemeIndex ? `<button class="action-lead-btn" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #4ade80; font-weight: bold;">${t('usingCurrent')}</span>`}
         </div>
       `;
 
@@ -2270,7 +2546,7 @@
           </div>
         </div>
         <div style="display: flex; gap: 8px;">
-          <button class="action-primary" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
+          <button class="action-lead-btn" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
           <button class="btn-danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">${t('delete')}</button>
         </div>
       `;
@@ -2456,6 +2732,7 @@
     schemes = [
       {
         name: 'Scheme A',
+        customName: null,
         rows: [sortCards(newCards, currentLevel)],
         historyStack: [],
         redoStack: []
@@ -2485,7 +2762,7 @@
     if (!cur || cur.historyStack.length === 0) return;
     cur.redoStack.push(JSON.stringify(cur.rows.filter(r => r.length > 0)));
     const prev = cur.historyStack.pop();
-    cur.rows = JSON.parse(prev);
+    rows = JSON.parse(prev);
     selectedIds.clear();
     lastAnchorCardId = null;
     renderBoard();
@@ -2523,6 +2800,7 @@
     schemes = [
       {
         name: 'Scheme A',
+        customName: null,
         rows: [sortCards(rawHand, currentLevel)],
         historyStack: [],
         redoStack: []
@@ -2543,6 +2821,7 @@
   document.getElementById('resetBtn').addEventListener('click', resetSort);
 
   window.onload = () => {
+    applyFontSize(currentFontSize);
     applyLanguage();
     startNewGame();
   };
