@@ -11,6 +11,7 @@
 <title>掼蛋理牌模拟器 / Guandan Cards Simulator</title>
 <style>
   :root {
+    /* 深林暗调天鹅绒配色体系 */
     --bg-base: #07120e;
     --bg-gradient: radial-gradient(circle at 50% 20%, #163628 0%, #0d1e17 55%, #050d0a 100%);
     --island-bg: rgba(18, 36, 28, 0.85);
@@ -23,6 +24,7 @@
     --btn-glass: rgba(255, 255, 255, 0.07);
     --btn-glass-hover: rgba(255, 255, 255, 0.16);
 
+    /* 全局基准尺寸体系 */
     --font-ui-btn: 13px;
     --font-ui-title-level: 16px;
     --font-ui-title-count: 15px;
@@ -39,6 +41,7 @@
     --card-font-val: 17px;
     --card-font-suit: 15px;
 
+    /* 弹窗及文本模块联动变量 */
     --font-modal-title: 17px;
     --font-modal-body: 14px;
     --font-modal-sec-title: 15px;
@@ -213,17 +216,30 @@
     }
   }
 
-  /* 彻底消除 iOS 顶部白色毛玻璃与横向变黑 */
+  /* 彻底锁死橡皮筋与全向拖拽露黑 */
   html {
     background-color: #07120e;
-    background-image: radial-gradient(circle at 50% 20%, #163628 0%, #0d1e17 55%, #050d0a 100%);
-    background-attachment: fixed;
-    background-size: cover;
-    min-height: 100%;
     width: 100%;
+    min-height: 100%;
     overflow-x: auto;
     overflow-y: auto;
+    overscroll-behavior: none !important;
+    -webkit-overscroll-behavior: none !important;
     -webkit-text-size-adjust: 100%;
+  }
+
+  /* 固定全景底层画布，无论怎么拉动弹跳永远100%覆盖 */
+  #fixedBackdropCanvas {
+    position: fixed;
+    top: -100px;
+    left: -100px;
+    right: -100px;
+    bottom: -100px;
+    background: radial-gradient(circle at 50% 20%, #163628 0%, #0d1e17 55%, #050d0a 100%);
+    background-color: #07120e;
+    z-index: -9999;
+    pointer-events: none;
+    transform: translateZ(0);
   }
 
   body {
@@ -232,7 +248,7 @@
     width: max-content;
     margin: 0;
     padding: 0;
-    background-color: transparent;
+    background: transparent;
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #f3f3f3;
@@ -247,6 +263,8 @@
     -webkit-user-select: none;
     -webkit-touch-callout: none;
     touch-action: manipulation;
+    overscroll-behavior: none !important;
+    -webkit-overscroll-behavior: none !important;
   }
 
   .header-container {
@@ -355,10 +373,6 @@
     box-shadow: 0 2px 10px var(--red-lead-glow);
     padding: 6px 14px;
     border-radius: 6px;
-  }
-  button.action-lead-btn:hover:not(:disabled) {
-    background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
-    box-shadow: 0 4px 14px var(--red-lead-glow);
   }
 
   button.toggle-active {
@@ -865,6 +879,7 @@
   }
   .strategy-box strong { color: #38bdf8; }
 
+  /* 思路比较弹窗样式 */
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
@@ -1148,6 +1163,9 @@
 </head>
 <body class="font-size-medium">
 
+<!-- 恒定视口底层背景画布，彻底根绝橡皮筋拉拽露黑 -->
+<div id="fixedBackdropCanvas"></div>
+
 <header class="header-container">
   <!-- 第 1 层：顶层工具栏（掼蛋规则、使用指南、尺寸选择、语言选择） -->
   <div class="header-tier-row">
@@ -1319,7 +1337,6 @@
   let compareViewMode = 'full';
   let mainDeskCompactMode = false;
 
-  // ---------------- 完整容错字典体系 ----------------
   const I18N = {
     'zh-CN': {
       levelPrefix: '打：【 {level} 】',
@@ -1600,188 +1617,9 @@
     return str;
   }
 
-  // 严格安全的 DOM 文本设值器，杜绝因元素暂未挂载导致的 JS 崩溃
   function setSafeText(id, text) {
     const el = document.getElementById(id);
     if (el) el.textContent = text;
-  }
-  function setSafeTitle(id, title) {
-    const el = document.getElementById(id);
-    if (el) el.title = title;
-  }
-
-  function renderRulesModalContent() {
-    const container = document.getElementById('rulesContentBody');
-    if (!container) return;
-    if (currentLang === 'en') {
-      container.innerHTML = `
-        <div class="rule-section">
-          <h3>🏆 1. Overview & Objectives</h3>
-          <p><strong>Guandan (掼蛋)</strong> is a climbing card game played by 4 players (teams of two seated opposite each other) using two standard 54-card decks (108 cards in total). The objective is to work together with your teammate to empty your hands before opponents do.</p>
-        </div>
-        <div class="rule-section">
-          <h3>⭐ 2. Rank & Wild Cards ("Feng Ren Pei")</h3>
-          <p>• <strong>Current Rank (级牌)</strong>: The game plays through ranks 2 to Ace. If playing Rank 5, all 5s are promoted above Aces.<br>
-          • <strong>Heart Wild Card (红桃级牌·逢人配)</strong>: The two <strong>Heart cards of current rank</strong> are universal Wild Cards. They can substitute any card (except Jokers) to form straights, flushes, bombs, or full houses.<br>
-          • <strong>Card Hierarchy</strong>: Red Joker > Black Joker > Heart Rank Wild > Normal Rank Cards > A > K > Q > J > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3 > 2.</p>
-        </div>
-        <div class="rule-section">
-          <h3>💣 3. Combinations & Bomb Rankings</h3>
-          <p><strong>Bomb Hierarchy (Bombs beat all non-bomb combinations):</strong></p>
-          <div class="rule-card-preview-row">
-            <span class="mini-chip">4-Bomb</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">5-Bomb</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip red">Straight Flush (5 cards)</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">6-Bomb</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">7-Bomb</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">8-Bomb</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip gold">👑 4-Joker Supreme Bomb</span>
-          </div>
-          <p style="font-size:var(--font-modal-small); color:#94a3b8;">* Note: Straight Flush beats 4-Bomb and 5-Bomb, but loses to 6-Bomb and higher!</p>
-        </div>
-        <div class="rule-section">
-          <h3>💡 4. Master Tactics & Philosophy for Beginners</h3>
-          <div class="strategy-box">
-            <p><strong>1. "Wilds make Bombs" Priority</strong>: Never waste your Heart Wild cards on basic pairs or full houses. Always look to build a <em>Straight Flush</em> or 5/6-card Bomb first. Turning a single into an explosive bomb is the single highest-value play in Guandan.</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>2. Partner Synergy & Division of Roles</strong>: Pay close attention to what your partner leads. If your partner has an aggressive hand, your role is to suppress the opponent's strong plays and pass control back to your partner. Win together, not alone.</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>3. Keep the Key Counters in Mind</strong>: You don't need to count every card, but track these 3 essentials: How many Jokers have been played? Are all current rank cards out? How many cards are left in opponents' hands (under 6 cards means beware of singles/bombs)?</p>
-          </div>
-        </div>
-      `;
-    } else if (currentLang === 'es') {
-      container.innerHTML = `
-        <div class="rule-section">
-          <h3>🏆 1. Descripción y Objetivo</h3>
-          <p><strong>Guandan (掼蛋)</strong> se juega entre 4 jugadores en parejas con 2 barajas (108 cartas en total). El objetivo es vaciar la mano antes que los rivales colaborando con tu compañero.</p>
-        </div>
-        <div class="rule-section">
-          <h3>⭐ 2. Nivel Actual y Comodín Universal</h3>
-          <p>• <strong>Carta de Nivel</strong>: Si se juega el 5, todos los 5s suben por encima del As.<br>
-          • <strong>Comodín de Corazones</strong>: Las dos cartas de Corazones del nivel actual son comodines universales.<br>
-          • <strong>Jerarquía</strong>: Joker Rojo > Joker Negro > Comodín de Nivel > Cartas de Nivel > A > K > Q > J > 10 > ... > 2.</p>
-        </div>
-        <div class="rule-section">
-          <h3>💣 3. Combinaciones y Bombas</h3>
-          <p><strong>Jerarquía de Bombas:</strong></p>
-          <div class="rule-card-preview-row">
-            <span class="mini-chip">Bomba de 4</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">Bomba de 5</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip red">Escalera de Color (5)</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">Bomba de 6+</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip gold">👑 Bomba Suprema (4 Jokers)</span>
-          </div>
-        </div>
-        <div class="rule-section">
-          <h3>💡 4. Estrategia y Consejos para Principiantes</h3>
-          <div class="strategy-box">
-            <p><strong>1. Usa los comodines para Bombas</strong>: Nunca gastes un comodín en parejas simples. Úsalos siempre para crear Escaleras de Color o bombas de 5-6 cartas.</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>2. Trabajo en Pareja</strong>: Observa lo que juega tu compañero. Si tiene buena mano, tu deber es bloquear a los rivales y cederle el turno.</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>3. Memoria Básica</strong>: No memorices todo, solo vigila los Jokers y las cartas de nivel que van saliendo.</p>
-          </div>
-        </div>
-      `;
-    } else if (currentLang === 'zh-TW') {
-      container.innerHTML = `
-        <div class="rule-section">
-          <h3>🏆 1. 遊戲綜述與勝負目標</h3>
-          <p><strong>掼蛋</strong>源自江蘇淮安，採用<strong>兩副牌（共 108 張）</strong>，4人參與，對家兩人為一組配合。遊戲核心目標是在隊友的戰術掩護下，儘早將手中的 27 張牌全部出完（第一名出完者稱為「頭遊」）。</p>
-        </div>
-        <div class="rule-section">
-          <h3>⭐ 2. 級牌體系與「逢人配」萬能牌</h3>
-          <p>• <strong>級牌（本局打幾）</strong>：從打 2 開始升至打 A。若當前打 5，則所有的 5 點數權重被拔高，大於 A 且僅次於小王。<br>
-          • <strong>逢人配（紅心級牌）</strong>：兩張<strong>紅心級牌</strong>為萬能百搭牌（除大小王外），可替代任意點數和花色湊成同花順、順子、炸彈等。<br>
-          • <strong>大小順序</strong>：大王 ＞ 小王 ＞ 紅心逢人配 ＞ 其他花色級牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
-        </div>
-        <div class="rule-section">
-          <h3>💣 3. 牌型圖譜與炸彈威力天梯</h3>
-          <p><strong>【常規牌型】</strong></p>
-          <div class="rule-card-preview-row">
-            <span class="mini-chip">單張</span> <span class="mini-chip">對子</span> <span class="mini-chip">三張</span> <span class="mini-chip">三帶二</span>
-            <span class="mini-chip">單順 (5張連牌)</span> <span class="mini-chip">三連對 (木板)</span> <span class="mini-chip">雙飛 (鋼板)</span>
-          </div>
-          <p><strong>【炸彈威力比拼】</strong></p>
-          <div class="rule-card-preview-row">
-            <span class="mini-chip">四張炸彈</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">五張炸彈</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip red">同花順 (5張)</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">六張炸彈</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">七張炸彈</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">八張炸彈</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip gold">👑 四大天王 (四王天王炸)</span>
-          </div>
-        </div>
-        <div class="rule-section">
-          <h3>💡 4. 實戰進階：掼蛋核心戰術思路與控局哲學</h3>
-          <div class="strategy-box">
-            <p><strong>一、配火第一，絕不湊零（逢人配的黃金法則）</strong><br>
-            逢人配萬萬不可隨便拿去湊三帶二或單順。它的<strong>最優價值永遠是「配炸」或「配同花順」</strong>。多一個炸彈，整手牌的防守與進攻能力將迎來質的飛躍。</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>二、隊友同心，角色分工（一主一副打法）</strong><br>
-            掼蛋是雙人默契運動：摸完牌後要迅速評估自己的牌力。若牌力強、炸彈多，主動當<strong>「主攻手」</strong>衝刺頭遊；若手牌零散、小牌多，要甘願當<strong>「掩護手」</strong>，負責頂對手大牌、拆炸彈卡位，把出牌路數留給隊友。</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>三、基礎算牌基線（知己知彼）</strong><br>
-            不需要背下全部 108 張牌，新手只要記住三條線：① 四張王牌出了幾張？② 當前級牌有沒有出完？③ 對手手牌小於 6 張時，隨時防範其一擊走脫！</p>
-          </div>
-        </div>
-      `;
-    } else {
-      container.innerHTML = `
-        <div class="rule-section">
-          <h3>🏆 1. 游戏综述与胜负目标</h3>
-          <p><strong>掼蛋</strong>源自江苏淮安，采用<strong>两副牌（共 108 张）</strong>，4人参与，对家两人为一组配合。游戏核心目标是在队友的战术掩护下，尽早将手中的 27 张牌全部出完（第一名出完者称为“头游”）。</p>
-        </div>
-        <div class="rule-section">
-          <h3>⭐ 2. 级牌体系与“逢人配”万能牌</h3>
-          <p>• <strong>级牌（本局打几）</strong>：从打 2 开始升至打 A。若当前打 5，则所有的 5 点数权重被拔高，大于 A 且仅次于小王。<br>
-          • <strong>逢人配（红心级牌）</strong>：两张<strong>红心级牌</strong>为万能百搭牌（除大小王外），可替代任意点数和花色凑成同花顺、顺子、炸弹等。<br>
-          • <strong>大小顺序</strong>：大王 ＞ 小王 ＞ 红心逢人配 ＞ 其他花色级牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
-        </div>
-        <div class="rule-section">
-          <h3>💣 3. 牌型图谱与炸弹威力天梯</h3>
-          <p><strong>【常规牌型】</strong></p>
-          <div class="rule-card-preview-row">
-            <span class="mini-chip">单张</span> <span class="mini-chip">对子</span> <span class="mini-chip">三张</span> <span class="mini-chip">三带二</span>
-            <span class="mini-chip">单顺 (5张连牌)</span> <span class="mini-chip">三连对 (木板)</span> <span class="mini-chip">双飞 (钢板)</span>
-          </div>
-          <p><strong>【炸弹威力比拼】</strong></p>
-          <div class="rule-card-preview-row">
-            <span class="mini-chip">四张炸弹</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">五张炸弹</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip red">同花顺 (5张同花连续)</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">六张炸弹</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">七张炸弹</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip">八张炸弹</span> <span style="color:var(--gold);">&lt;</span>
-            <span class="mini-chip gold">👑 四大天王 (四张大小王天王炸)</span>
-          </div>
-          <p style="font-size:var(--font-modal-small); color:#94a3b8;">* 关键特权：同花顺威力大于五张炸弹，但小于六张炸弹！天王炸为全场最大神牌。</p>
-        </div>
-        <div class="rule-section">
-          <h3>💡 4. 实战进阶：掼蛋核心战术思路与控局哲学</h3>
-          <div class="strategy-box">
-            <p><strong>一、配火第一，绝不凑零（逢人配的黄金法则）</strong><br>
-            逢人配万万不可随便拿去凑三带二或单顺。它的<strong>最优价值永远是“配炸”或“配同花顺”</strong>。多一个炸弹，整手牌的防守与进攻能力将迎来质的飞跃。</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>二、队友同心，角色分工（一主一副打法）</strong><br>
-            掼蛋是双人默契运动：摸完牌后要迅速评估自己的牌力。若牌力强、炸弹多，主动当<strong>“主攻手”</strong>冲刺头游；若手牌零散、小牌多，要甘愿当<strong>“掩护手”</strong>，负责顶对手大牌、拆炸弹卡位，把出牌路数留给队友。</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>三、基础算牌基线（知己知彼）</strong><br>
-            不需要背下全部 108 张牌，新手只要记住三条线：① 四张王牌出了几张？② 当前级牌有没有出完？③ 对手手牌小于 6 张时，随时防范其一击走脱！</p>
-          </div>
-        </div>
-      `;
-    }
   }
 
   function updateHelpDrawerContent() {
