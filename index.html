@@ -205,6 +205,7 @@
     }
   }
 
+  /* 消除背景与露底问题 */
   html {
     background-color: #07120e;
     width: 100%;
@@ -742,6 +743,7 @@
     margin: 0 2px;
   }
 
+  /* 规则与高亮标注系统 */
   .rule-highlight-gold {
     color: #f6c559;
     font-weight: 700;
@@ -754,6 +756,26 @@
   .rule-highlight-blue {
     color: #38bdf8;
     font-weight: 700;
+  }
+  .rule-badge-chip {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    margin: 0 2px;
+  }
+  .rule-badge-chip.fire {
+    background: rgba(225, 29, 72, 0.2);
+    border-color: rgba(225, 29, 72, 0.45);
+    color: #fda4af;
+  }
+  .rule-badge-chip.gold {
+    background: rgba(246, 197, 89, 0.18);
+    border-color: rgba(246, 197, 89, 0.45);
+    color: #fef08a;
   }
 
   .modal-backdrop {
@@ -838,6 +860,7 @@
     gap: 6px;
   }
 
+  /* 思路比较弹窗防遮挡与全屏适配 */
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
@@ -1155,7 +1178,7 @@
     </div>
   </div>
 
-  <!-- 第 3 层：发牌与自定义调牌（自定义调牌无背景色） -->
+  <!-- 第 3 层：发牌与自定义调牌 -->
   <div class="header-tier-row">
     <div class="control-island">
       <button class="action-lead-btn" id="dealBtn">🎴 新一局发牌</button>
@@ -1163,7 +1186,7 @@
     </div>
   </div>
 
-  <!-- 第 4 层：推荐思路在前(无背景)、思路比较在后(无背景) -->
+  <!-- 第 4 层：推荐思路在前、思路比较在后 -->
   <div class="header-tier-row">
     <div class="control-island">
       <button id="aiRecommendBtn" title="一键生成当前手牌推荐理牌思路">💡 推荐思路</button>
@@ -1171,7 +1194,7 @@
     </div>
   </div>
 
-  <!-- 第 5 层：整理工具组（彻底删除批量连选，删除选中无背景色） -->
+  <!-- 第 5 层：整理工具组（彻底删除批量连选） -->
   <div class="header-tier-row">
     <div class="control-island">
       <button id="deleteBtn" disabled>🗑️ 删除选中 (0)</button>
@@ -1289,62 +1312,22 @@
 
   localStorage.removeItem('GUANDAN_CARD_THEME');
 
-  // ---------------- 安全事件绑定区 ----------------
-  document.addEventListener('DOMContentLoaded', () => {
-    bindActionEvents();
-  });
-
-  function bindActionEvents() {
-    const dealBtn = document.getElementById('dealBtn');
-    if (dealBtn) dealBtn.onclick = startNewGame;
-
-    const undoBtn = document.getElementById('undoBtn');
-    if (undoBtn) undoBtn.onclick = undo;
-
-    const redoBtn = document.getElementById('redoBtn');
-    if (redoBtn) redoBtn.onclick = redo;
-
-    const resetBtn = document.getElementById('resetBtn');
-    if (resetBtn) resetBtn.onclick = resetSort;
-
-    const deleteBtn = document.getElementById('deleteBtn');
-    if (deleteBtn) deleteBtn.onclick = deleteSelectedCards;
-
-    const customHandBtn = document.getElementById('customHandBtn');
-    if (customHandBtn) customHandBtn.onclick = openCustomModal;
-
-    const cancelModalBtn = document.getElementById('cancelModalBtn');
-    if (cancelModalBtn) cancelModalBtn.onclick = closeCustomModal;
-
-    const clearAllModalBtn = document.getElementById('clearAllModalBtn');
-    if (clearAllModalBtn) clearAllModalBtn.onclick = () => { modalSelectionMap = {}; renderModalCards(); };
-
-    const confirmModalBtn = document.getElementById('confirmModalBtn');
-    if (confirmModalBtn) confirmModalBtn.onclick = applyCustomCards;
-
-    const aiRecommendBtn = document.getElementById('aiRecommendBtn');
-    if (aiRecommendBtn) aiRecommendBtn.onclick = handleGenerateAIRecommend;
-
-    const compareSchemesBtn = document.getElementById('compareSchemesBtn');
-    if (compareSchemesBtn) compareSchemesBtn.onclick = openCompareModal;
-
-    const closeCompareBtn = document.getElementById('closeCompareBtn');
-    if (closeCompareBtn) closeCompareBtn.onclick = () => { document.getElementById('compareModal').style.display = 'none'; };
-
-    const saveArchiveBtn = document.getElementById('saveArchiveBtn');
-    if (saveArchiveBtn) saveArchiveBtn.onclick = saveCurrentArchive;
-
-    const openArchiveBtn = document.getElementById('openArchiveBtn');
-    if (openArchiveBtn) openArchiveBtn.onclick = openArchiveModal;
-
-    const closeArchiveBtn = document.getElementById('closeArchiveBtn');
-    if (closeArchiveBtn) closeArchiveBtn.onclick = () => { document.getElementById('archiveModal').style.display = 'none'; };
-
+  // 全局事件与核心功能直接自执行初始化绑定，防止任何后续代码异常阻断
+  function initBaseEventListeners() {
     const rulesBtn = document.getElementById('rulesBtn');
-    if (rulesBtn) rulesBtn.onclick = () => { renderRulesModalContent(); document.getElementById('rulesModal').style.display = 'flex'; };
-
     const closeRulesBtn = document.getElementById('closeRulesBtn');
-    if (closeRulesBtn) closeRulesBtn.onclick = () => { document.getElementById('rulesModal').style.display = 'none'; };
+    const rulesModal = document.getElementById('rulesModal');
+    if (rulesBtn && rulesModal) {
+      rulesBtn.onclick = () => {
+        renderRulesModalContent();
+        rulesModal.style.display = 'flex';
+      };
+    }
+    if (closeRulesBtn && rulesModal) {
+      closeRulesBtn.onclick = () => {
+        rulesModal.style.display = 'none';
+      };
+    }
 
     const toggleHelpBtn = document.getElementById('toggleHelpBtn');
     const helpDrawer = document.getElementById('helpDrawer');
@@ -1360,6 +1343,33 @@
       };
     }
 
+    const dealBtn = document.getElementById('dealBtn');
+    if (dealBtn) dealBtn.onclick = startNewGame;
+
+    const undoBtn = document.getElementById('undoBtn');
+    if (undoBtn) undoBtn.onclick = undo;
+
+    const redoBtn = document.getElementById('redoBtn');
+    if (redoBtn) redoBtn.onclick = redo;
+
+    const resetBtn = document.getElementById('resetBtn');
+    if (resetBtn) resetBtn.onclick = resetSort;
+
+    const deleteBtn = document.getElementById('deleteBtn');
+    if (deleteBtn) deleteBtn.onclick = deleteSelectedCards;
+
+    const aiRecommendBtn = document.getElementById('aiRecommendBtn');
+    if (aiRecommendBtn) aiRecommendBtn.onclick = handleGenerateAIRecommend;
+
+    const compareSchemesBtn = document.getElementById('compareSchemesBtn');
+    if (compareSchemesBtn) compareSchemesBtn.onclick = openCompareModal;
+
+    const closeCompareBtn = document.getElementById('closeCompareBtn');
+    if (closeCompareBtn) closeCompareBtn.onclick = () => {
+      const modal = document.getElementById('compareModal');
+      if (modal) modal.style.display = 'none';
+    };
+
     const mainViewFullBtn = document.getElementById('mainViewFullBtn');
     if (mainViewFullBtn) mainViewFullBtn.onclick = () => setMainDeskViewMode(false);
 
@@ -1367,38 +1377,93 @@
     if (mainViewCompactBtn) mainViewCompactBtn.onclick = () => setMainDeskViewMode(true);
 
     const viewFullBtn = document.getElementById('viewFullBtn');
-    if (viewFullBtn) {
-      viewFullBtn.onclick = () => {
-        compareViewMode = 'full';
-        viewFullBtn.classList.add('active');
-        document.getElementById('viewCompactBtn').classList.remove('active');
-        renderCompareContent();
-      };
-    }
+    if (viewFullBtn) viewFullBtn.onclick = () => {
+      compareViewMode = 'full';
+      viewFullBtn.classList.add('active');
+      const cpt = document.getElementById('viewCompactBtn');
+      if (cpt) cpt.classList.remove('active');
+      renderCompareContent();
+    };
 
     const viewCompactBtn = document.getElementById('viewCompactBtn');
-    if (viewCompactBtn) {
-      viewCompactBtn.onclick = () => {
-        compareViewMode = 'compact';
-        viewCompactBtn.classList.add('active');
-        document.getElementById('viewFullBtn').classList.remove('active');
-        renderCompareContent();
-      };
-    }
+    if (viewCompactBtn) viewCompactBtn.onclick = () => {
+      compareViewMode = 'compact';
+      viewCompactBtn.classList.add('active');
+      const ful = document.getElementById('viewFullBtn');
+      if (ful) ful.classList.remove('active');
+      renderCompareContent();
+    };
+
+    const saveArchiveBtn = document.getElementById('saveArchiveBtn');
+    if (saveArchiveBtn) saveArchiveBtn.onclick = handleSaveArchive;
+
+    const openArchiveBtn = document.getElementById('openArchiveBtn');
+    if (openArchiveBtn) openArchiveBtn.onclick = () => {
+      renderArchiveList();
+      const modal = document.getElementById('archiveModal');
+      if (modal) modal.style.display = 'flex';
+    };
+
+    const closeArchiveBtn = document.getElementById('closeArchiveBtn');
+    if (closeArchiveBtn) closeArchiveBtn.onclick = () => {
+      const modal = document.getElementById('archiveModal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    const customHandBtn = document.getElementById('customHandBtn');
+    if (customHandBtn) customHandBtn.onclick = openCustomModal;
+
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    if (cancelModalBtn) cancelModalBtn.onclick = closeCustomModal;
+
+    const clearAllModalBtn = document.getElementById('clearAllModalBtn');
+    if (clearAllModalBtn) clearAllModalBtn.onclick = () => {
+      modalSelectionMap = {};
+      renderModalCards();
+    };
+
+    const confirmModalBtn = document.getElementById('confirmModalBtn');
+    if (confirmModalBtn) confirmModalBtn.onclick = handleConfirmCustomModal;
 
     const langSelect = document.getElementById('langSelect');
-    if (langSelect) {
-      langSelect.onchange = (e) => {
-        currentLang = e.target.value;
-        applyLanguage();
-      };
-    }
+    if (langSelect) langSelect.onchange = (e) => {
+      currentLang = e.target.value;
+      applyLanguage();
+    };
+
+    const fontSizeSelect = document.getElementById('fontSizeSelect');
+    if (fontSizeSelect) fontSizeSelect.onchange = (e) => {
+      applyFontSize(e.target.value);
+    };
   }
 
-  function applyCustomCards() {
+  function handleSaveArchive() {
+    const defaultName = `${t('saveDefault', { level: currentLevel })} (${new Date().toLocaleDateString()})`;
+    const customName = prompt(t('savePrompt'), defaultName);
+    if (!customName) return;
+
+    const archives = getSavedArchives();
+    const newRecord = {
+      id: 'save_' + Date.now(),
+      name: customName.trim(),
+      date: new Date().toLocaleString(),
+      currentLevel: currentLevel,
+      initialCards: initialCards,
+      schemes: schemes,
+      currentSchemeIndex: currentSchemeIndex
+    };
+
+    archives.unshift(newRecord);
+    setSavedArchives(archives);
+    alert(t('saveSuccess'));
+  }
+
+  function handleConfirmCustomModal() {
     const modalLevelSelect = document.getElementById('modalLevelSelect');
-    currentLevel = modalLevelSelect ? modalLevelSelect.value : '2';
-    setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
+    if (modalLevelSelect) {
+      currentLevel = modalLevelSelect.value;
+      setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
+    }
 
     const newCards = [];
     let idGen = 1000;
@@ -1445,44 +1510,17 @@
     renderBoard();
   }
 
-  function saveCurrentArchive() {
-    const defaultName = `${t('saveDefault', { level: currentLevel })} (${new Date().toLocaleDateString()})`;
-    const customName = prompt(t('savePrompt'), defaultName);
-    if (!customName) return;
-
-    const archives = getSavedArchives();
-    const newRecord = {
-      id: 'save_' + Date.now(),
-      name: customName.trim(),
-      date: new Date().toLocaleString(),
-      currentLevel: currentLevel,
-      initialCards: initialCards,
-      schemes: schemes,
-      currentSchemeIndex: currentSchemeIndex
-    };
-
-    archives.unshift(newRecord);
-    setSavedArchives(archives);
-    alert(t('saveSuccess'));
-  }
-
-  function openArchiveModal() {
-    renderArchiveList();
-    const modal = document.getElementById('archiveModal');
-    if (modal) modal.style.display = 'flex';
-  }
-
-  // 保证极速启动与绝对安全
-  window.onload = () => {
+  // 严格安全的脚本启动
+  window.addEventListener('DOMContentLoaded', () => {
     try {
-      bindActionEvents();
+      initBaseEventListeners();
       applyFontSize(currentFontSize);
       startNewGame();
       applyLanguage();
-    } catch(err) {
-      console.error('Fatal initialization error bypassed:', err);
+    } catch (err) {
+      console.error('Fatal init error:', err);
     }
-  };
+  });
 </script>
 </body>
 </html>
