@@ -205,6 +205,7 @@
     }
   }
 
+  /* 消除任何设备拉拽露黑 */
   html {
     background-color: #07120e;
     width: 100%;
@@ -833,7 +834,6 @@
     gap: 6px;
   }
 
-  /* 规则与策略高光彩色标签系统 */
   .rule-card-preview-row {
     display: flex;
     align-items: center;
@@ -867,7 +867,6 @@
   .strategy-box.gold-edge strong { color: var(--gold); }
   .strategy-box.green-edge strong { color: #4ade80; }
 
-  /* 思路比较弹窗样式与针对 iPhone 顶部毛玻璃遮挡的防御 */
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
@@ -1026,7 +1025,6 @@
     overflow: visible;
   }
   
-  /* 思路比较内牌面固定展示，禁用交互 */
   .scheme-mini-row .card {
     width: 48px;
     height: 74px;
@@ -1214,7 +1212,7 @@
     </div>
   </div>
 
-  <!-- 第 5 层：整理工具组（彻底移除冗余连选按钮） -->
+  <!-- 第 5 层：整理工具组（已移除冗余批量连选按钮） -->
   <div class="header-tier-row">
     <div class="control-island">
       <button id="deleteBtn" disabled>🗑️ 删除选中 (0)</button>
@@ -1252,7 +1250,6 @@
 <div id="dragProxy"></div>
 <div id="rowDragBadge"></div>
 
-<!-- 思路比较弹窗 -->
 <div class="modal-backdrop" id="compareModal">
   <div class="compare-modal-content">
     <div class="modal-header">
@@ -1269,7 +1266,6 @@
   </div>
 </div>
 
-<!-- 完整规则学习指南弹窗 -->
 <div class="modal-backdrop" id="rulesModal">
   <div class="rules-modal-content">
     <div class="modal-header">
@@ -1280,7 +1276,6 @@
   </div>
 </div>
 
-<!-- 存档箱弹窗 -->
 <div class="modal-backdrop" id="archiveModal">
   <div class="modal-content" style="max-width: 680px;">
     <div class="modal-header">
@@ -1293,7 +1288,6 @@
   </div>
 </div>
 
-<!-- 自定义选牌弹窗 -->
 <div class="modal-backdrop" id="customModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -1387,7 +1381,7 @@
       help: [
         {
           title: '🃏 选牌与放平技巧',
-          desc: '• <span class="help-pill">单击</span> 任何一张牌即可立起选中；再次点击该牌放平。<br>• <strong>一键收回</strong>：点桌面任意空白处，所有立起的牌全员归位。<br>• <strong>连续多选</strong>：用手指或鼠标在牌上滑动即可连续全选；电脑端可按住 <span class="help-pill">Shift</span> 选区间。'
+          desc: '• <span class="help-pill">单击</span> 任何一张牌即可立起选中；再次点击该牌放平。<br>• <strong>一键收回</strong>：点桌面任意空白处，所有立起的牌全员归位。<br>• <strong>连续多选</strong>：用手指或鼠标在牌面上连续滑动即可成段连选；电脑端可按住 <span class="help-pill">Shift</span> 选区间。'
         },
         {
           title: '🎯 拖拽与智能分层',
@@ -1624,7 +1618,6 @@
     if (el) el.textContent = text;
   }
 
-  // 深度富色彩「掼蛋规则」知识库
   function renderRulesModalContent() {
     const container = document.getElementById('rulesContentBody');
     if (!container) return;
@@ -1638,7 +1631,7 @@
           <h3>⭐ 2. Rank & Wild Cards ("Feng Ren Pei")</h3>
           <p>• <strong>Current Rank</strong>: Plays through ranks 2 to Ace. Rank cards are promoted above Aces.<br>
           • <strong>Heart Wild Card</strong>: The two Heart cards of current rank are universal Wild Cards.<br>
-          • <strong>Card Hierarchy</strong>: <span class="mini-chip red">Red Joker</span> &gt; <span class="mini-chip">Black Joker</span> &gt; <span class="mini-chip red">Heart Rank Wild</span> &gt; <span class="mini-chip blue">Rank Cards</span> &gt; A &gt; K &gt; Q &gt; J &gt; 10 &gt; 9 &gt; 8 &gt; 7 &gt; 6 &gt; 5 &gt; 4 &gt; 3 &gt; 2.</p>
+          • <strong>Hierarchy</strong>: <span class="mini-chip red">Red Joker</span> &gt; <span class="mini-chip">Black Joker</span> &gt; <span class="mini-chip red">Heart Rank Wild</span> &gt; <span class="mini-chip blue">Rank Cards</span> &gt; A &gt; K &gt; Q &gt; J &gt; 10 &gt; 9 &gt; 8 &gt; 7 &gt; 6 &gt; 5 &gt; 4 &gt; 3 &gt; 2.</p>
         </div>
         <div class="rule-section">
           <h3>💣 3. Combinations & Bomb Hierarchy</h3>
@@ -1719,7 +1712,7 @@
       container.innerHTML = `
         <div class="rule-section">
           <h3>🏆 1. 游戏综述与胜负目标</h3>
-          <p><strong>掼蛋</strong>源自江苏淮安，采用<strong>两副牌（共 108 张）</strong>，4人参与，对家两人为一组配合。核心目标是在队友战术掩护下，尽早将手中的 27 张牌全部出完（第一名出完者称为“头游”）。</p>
+          <p><strong>掼蛋</strong>源自江苏淮安，采用<strong>两副牌（共 108 张）</strong>，4人参与，对家两人为一组配合。游戏核心目标是在队友战术掩护下，尽早将手中的 27 张牌全部出完（第一名出完者称为“头游”）。</p>
         </div>
         <div class="rule-section">
           <h3>⭐ 2. 级牌体系与“逢人配”万能牌</h3>
@@ -1978,7 +1971,7 @@
     return `思路 ${num}`;
   }
 
-  // ---------------- 智能启发式理牌算法引擎（带小对消耗优化） ----------------
+  // ---------------- 智能启发式理牌算法引擎 ----------------
   function generateAIRecommendedRows(cardsPool, level) {
     let pool = sortCards([...cardsPool], level);
     const rows = [];
@@ -2094,8 +2087,7 @@
       }
     }
 
-    // 6. 木板（三连对）与钢板（两连三张）
-    // 钢板判定 (两连三张，如 333444)
+    // 6. 钢板 (两连三张，如 333444)
     const normTripsMap = {};
     pool.forEach(c => {
       if (!c.isJoker) {
@@ -2113,7 +2105,7 @@
       }
     }
 
-    // 木板判定 (三连对，如 334455)
+    // 7. 木板 (三连对，如 334455)
     for (let i = 0; i <= orderRanksSeq.length - 3; i++) {
       const r1 = orderRanksSeq[i], r2 = orderRanksSeq[i+1], r3 = orderRanksSeq[i+2];
       const p1 = pool.filter(c => c.rank === r1 && !c.isJoker);
@@ -2125,7 +2117,7 @@
       }
     }
 
-    // 7. 5 连常规单顺 (从大到小排列)
+    // 8. 5 连常规单顺 (从大到小)
     for (let i = 0; i <= orderRanksSeq.length - 5; i++) {
       const windowRanks = orderRanksSeq.slice(i, i + 5);
       const candidateCombo = [];
@@ -2142,12 +2134,11 @@
       }
 
       if (canForm && candidateCombo.length === 5) {
-        // 顺子内部严格自左向右自大到小排列
         rows.push(sortCards(takeCardsByIds(candidateCombo.map(c => c.id)), level));
       }
     }
 
-    // 8. 三带二（战术优化：三条从大到小，对子从最小开始配对消耗！）
+    // 9. 三带二（三条从大到小，对子从最小配起消耗）
     const countsMap = {};
     pool.forEach(c => {
       if (!c.isJoker) {
@@ -2167,26 +2158,23 @@
       }
     });
 
-    // 三条按点数权重从大到小排序
     trips.sort((a, b) => getCardWeight(b[0], level) - getCardWeight(a[0], level));
-    // 对子按点数权重从小到大排序（优先带走小对，留下大对争牌权）
     pairs.sort((a, b) => getCardWeight(a[0], level) - getCardWeight(b[0], level));
 
     while (trips.length > 0 && pairs.length > 0) {
-      const tGroup = trips.shift(); // 最大的三条
-      const pGroup = pairs.shift(); // 最小的对子
-      // 严格排列：三张主体在左，对子在右（如 AAAJJ，杜绝 JJAAA）
+      const tGroup = trips.shift();
+      const pGroup = pairs.shift();
       const comboCards = [...sortCards(tGroup, level), ...sortCards(pGroup, level)];
       rows.push(takeCardsByIds(comboCards.map(c => c.id)));
     }
 
-    // 9. 纯三条（未带出对子的三张）
+    // 10. 纯三条
     while (trips.length > 0) {
       const tGroup = trips.shift();
       rows.push(sortCards(takeCardsByIds(tGroup.map(c => c.id)), level));
     }
 
-    // 10. 剩余对子（标准视角：每一对独立成层，从大到小）
+    // 11. 剩余对子（标准视角：每对独立成层）
     const remainBuckets = {};
     pool.forEach(c => {
       remainBuckets[c.rank] = remainBuckets[c.rank] || [];
@@ -2200,13 +2188,12 @@
         remainPairsList.push(sortCards(pCards, level));
       }
     });
-    // 对子从大到小排布
     remainPairsList.sort((a, b) => getCardWeight(b[0], level) - getCardWeight(a[0], level));
     remainPairsList.forEach(p => {
       rows.push(takeCardsByIds(p.map(c => c.id)));
     });
 
-    // 11. 杂单（从大到小）
+    // 12. 杂单
     if (pool.length > 0) {
       rows.push(sortCards(takeCardsByIds(pool.map(c => c.id)), level));
     }
@@ -2214,7 +2201,7 @@
     return rows.filter(r => r.length > 0);
   }
 
-  // 紧凑分层归类算法（严格牌型隔离，结构自律排列）
+  // 严格牌型分类鉴别与紧凑归类（木板与钢板彻底分家）
   function buildCompactRows(rowsList, level) {
     const compactBuckets = {
       kingBomb: [],
@@ -2224,8 +2211,8 @@
       straightFlush: [],
       bomb5: [],
       bomb4: [],
-      plates: [],
-      tubes: [],
+      plates: [],  // 钢板（双飞 6 张）
+      tubes: [],   // 木板（三连对 6 张）
       straights: [],
       fullHouses: [],
       trips: [],
@@ -2249,9 +2236,9 @@
         compactBuckets.plates.push(row);
       } else if (row.length === 6 && isTubesRow(row, level)) {
         compactBuckets.tubes.push(row);
-      } else if (row.length === 5 && isStraightRow(row, level)) {
+      } else if (row.length === 5 && isStrictStraightRow(row, level)) {
         compactBuckets.straights.push(row);
-      } else if (row.length === 5 && isFullHouseRow(row, level)) {
+      } else if (row.length === 5 && isStrictFullHouseRow(row, level)) {
         compactBuckets.fullHouses.push(row);
       } else if (row.length === 3 && isTripRow(row, level)) {
         compactBuckets.trips.push(row);
@@ -2268,12 +2255,10 @@
     keys.forEach(k => {
       const groups = compactBuckets[k];
       if (groups.length > 0) {
-        // 对组本身从大到小排序
         groups.sort((gA, gB) => getCardWeight(gB[0], level) - getCardWeight(gA[0], level));
         const mergedCards = [];
         groups.forEach(g => {
           if (k === 'fullHouses') {
-            // 三带二保持“三张在左、对子在右”
             const nonWild = g.filter(c => !(c.rank === level && c.isHeart));
             const rCounts = {};
             nonWild.forEach(c => rCounts[c.rank] = (rCounts[c.rank] || 0) + 1);
@@ -2305,28 +2290,49 @@
     if (nonWild.length === 0) return true;
     const baseSuit = nonWild[0].suit;
     if (!nonWild.every(c => c.suit === baseSuit)) return false;
-    return isStraightRow(cards, level);
+    return isStrictStraightRow(cards, level);
   }
 
-  function isStraightRow(cards, level) {
+  // 严格顺子校验（支持逢人配，互斥三带二）
+  function isStrictStraightRow(cards, level) {
     if (cards.length !== 5) return false;
-    const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
+    const wildCount = cards.filter(c => c.rank === level && c.isHeart).length;
     const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
-    const ranks = nonWild.map(c => c.rank);
+    const ranks = Array.from(new Set(nonWild.map(c => c.rank)));
+    if (ranks.length !== nonWild.length) return false; // 顺子内不能有重复点数
+
+    const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
     for (let i = 0; i <= normOrder.length - 5; i++) {
-      const slice = normOrder.slice(i, i + 5);
-      if (ranks.every(r => slice.includes(r))) return true;
+      const windowRanks = normOrder.slice(i, i + 5);
+      const matchCount = ranks.filter(r => windowRanks.includes(r)).length;
+      if (matchCount + wildCount === 5) return true;
     }
     return false;
   }
 
-  function isFullHouseRow(cards, level) {
+  // 严格三带二校验（必须满足三张+对子）
+  function isStrictFullHouseRow(cards, level) {
     if (cards.length !== 5) return false;
+    if (isStrictStraightRow(cards, level)) return false; // 与顺子互斥
+
+    const wildCount = cards.filter(c => c.rank === level && c.isHeart).length;
     const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
     const counts = {};
     nonWild.forEach(c => counts[c.rank] = (counts[c.rank] || 0) + 1);
-    const vals = Object.values(counts);
-    return vals.includes(3) || vals.length === 2;
+    const uniqueRanks = Object.keys(counts);
+
+    if (uniqueRanks.length === 1) return false; // 5炸或纯同点
+    if (uniqueRanks.length > 2) return false; // 超过两个点数绝不是三带二
+
+    const vals = Object.values(counts).sort((a,b)=>b-a);
+    if (wildCount === 0) {
+      return vals[0] === 3 && vals[1] === 2;
+    } else if (wildCount === 1) {
+      return (vals[0] === 2 && vals[1] === 2) || (vals[0] === 3 && vals[1] === 1);
+    } else if (wildCount === 2) {
+      return true;
+    }
+    return false;
   }
 
   function isTripRow(cards, level) {
@@ -2345,10 +2351,21 @@
   }
 
   function isTubesRow(cards, level) { 
-    return cards.length === 6 && isStraightRow(cards.slice(0,5), level) === false; 
+    if (cards.length !== 6) return false;
+    const nonWild = cards.filter(c => !c.isJoker);
+    const counts = {};
+    nonWild.forEach(c => counts[c.rank] = (counts[c.rank] || 0) + 1);
+    const ranks = Object.keys(counts);
+    return ranks.length === 3 && Object.values(counts).every(v => v === 2);
   }
+
   function isPlatesRow(cards, level) { 
-    return cards.length === 6; 
+    if (cards.length !== 6) return false;
+    const nonWild = cards.filter(c => !c.isJoker);
+    const counts = {};
+    nonWild.forEach(c => counts[c.rank] = (counts[c.rank] || 0) + 1);
+    const ranks = Object.keys(counts);
+    return ranks.length === 2 && Object.values(counts).every(v => v === 3);
   }
 
   // ---------------- 智能语义对齐与容错差异检测 ----------------
@@ -2386,7 +2403,6 @@
       const sig = getSortedIds(row);
       let isRowLegit = validStdSet.has(sig) || validCptSet.has(sig);
       if (!isRowLegit) {
-        // 智能兼容：如果用户把所有对子集中在同一层（无论内部前后顺序如何）
         if (row.length % 2 === 0 && row.every((_, i, arr) => i % 2 !== 0 || isPairRow([arr[i], arr[i+1]], level))) {
           const recPairs = cleanStd.filter(r => r.length === 2 && isPairRow(r, level)).map(getSortedIds);
           let allSubPairsInRec = true;
@@ -2633,7 +2649,6 @@
         const handle = document.createElement('div');
         handle.className = 'row-handle';
         handle.dataset.rowIndex = rIndex;
-        // 严格统一显示第几层
         handle.innerHTML = `
           <div class="handle-icon">≡</div>
           <div class="handle-label">${t('rowLayer', { idx: rIndex + 1 })}</div>
@@ -2745,7 +2760,7 @@
     autoScrollSpeedY = 0;
   }
 
-  // ---------------- 全局指针交互（支持滑动连选） ----------------
+  // ---------------- 全局指针交互 ----------------
   document.addEventListener('pointerdown', (e) => {
     if (e.button && e.button !== 0) return;
     startX = e.clientX;
@@ -3182,421 +3197,7 @@
 
   document.getElementById('deleteBtn').addEventListener('click', deleteSelectedCards);
 
-  // ---------------- 保证规则弹窗与使用指南百分之百可靠触发 ----------------
-  const rulesModal = document.getElementById('rulesModal');
-  const rulesBtn = document.getElementById('rulesBtn');
-  const closeRulesBtn = document.getElementById('closeRulesBtn');
-
-  if (rulesBtn) {
-    rulesBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      renderRulesModalContent();
-      if (rulesModal) rulesModal.style.display = 'flex';
-    });
-  }
-  if (closeRulesBtn) {
-    closeRulesBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (rulesModal) rulesModal.style.display = 'none';
-    });
-  }
-
-  const toggleHelpBtn = document.getElementById('toggleHelpBtn');
-  const helpDrawer = document.getElementById('helpDrawer');
-  if (toggleHelpBtn && helpDrawer) {
-    toggleHelpBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isVisible = (helpDrawer.style.display === 'block');
-      if (!isVisible) {
-        updateHelpDrawerContent();
-        helpDrawer.style.display = 'block';
-      } else {
-        helpDrawer.style.display = 'none';
-      }
-    });
-  }
-
-  // ---------------- 思路比较弹窗 ----------------
-  const compareModal = document.getElementById('compareModal');
-  const compareContainer = document.getElementById('compareContainer');
-
-  document.getElementById('viewFullBtn').addEventListener('click', () => {
-    compareViewMode = 'full';
-    document.getElementById('viewFullBtn').classList.add('active');
-    document.getElementById('viewCompactBtn').classList.remove('active');
-    renderCompareContent();
-  });
-
-  document.getElementById('viewCompactBtn').addEventListener('click', () => {
-    compareViewMode = 'compact';
-    document.getElementById('viewCompactBtn').classList.add('active');
-    document.getElementById('viewFullBtn').classList.remove('active');
-    renderCompareContent();
-  });
-
-  function renderCompareContent() {
-    compareContainer.innerHTML = '';
-
-    const allCards = getFlattenedCards();
-    const benchmarkStdRows = generateAIRecommendedRows(allCards, currentLevel);
-    const benchmarkCptRows = buildCompactRows(benchmarkStdRows, currentLevel);
-
-    schemes.forEach((s, idx) => {
-      const col = document.createElement('div');
-      col.className = 'scheme-column';
-
-      const validRows = (s.rows || []).filter(r => r && r.length > 0);
-      const totalCount = validRows.reduce((acc, r) => acc + r.length, 0);
-
-      const prefixEmoji = s.isRecommended ? '💡' : '📌';
-      const displayName = `${prefixEmoji} ${s.customName || s.name || getDefaultSchemeName(idx)}`;
-
-      // 智能语义比对
-      const analysis = analyzeSemanticMatch(validRows, benchmarkStdRows, benchmarkCptRows, currentLevel);
-
-      if (analysis.isExactMatch && !s.isRecommended) {
-        col.classList.add('is-exact-match');
-      }
-
-      const summaryText = t('compareSummary', { tiers: validRows.length, cards: totalCount });
-
-      col.innerHTML = `
-        <div class="scheme-col-header">
-          <div>
-            <div class="scheme-col-title">${displayName}</div>
-            <div style="font-size: var(--font-modal-small); color: #94a3b8; margin-top: 2px;">
-              ${summaryText}
-            </div>
-            ${analysis.isExactMatch && !s.isRecommended ? `<div class="match-badge">🎯 与推荐思路完全一致</div>` : ''}
-            ${s.isRecommended ? `<div style="font-size:11px; color:#c084fc; font-weight:bold; margin-top:2px;">★ 标准答案基线</div>` : ''}
-          </div>
-          ${idx !== currentSchemeIndex ? `<button class="action-lead-btn" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #4ade80; font-weight: bold;">${t('usingCurrent')}</span>`}
-        </div>
-      `;
-
-      let displayRows = validRows;
-      if (compareViewMode === 'compact' && s.isRecommended) {
-        displayRows = benchmarkCptRows;
-      }
-
-      displayRows.forEach((r, rIdx) => {
-        const miniRow = document.createElement('div');
-        miniRow.className = 'scheme-mini-row';
-
-        const isDiffRow = !s.isRecommended && !analysis.isExactMatch && analysis.diffRowIndices.has(rIdx);
-        if (isDiffRow) {
-          miniRow.classList.add('is-diff-row');
-        }
-
-        const rowBadge = document.createElement('div');
-        rowBadge.className = 'scheme-mini-row-badge';
-        rowBadge.innerHTML = `${t('rowLayer', { idx: rIdx + 1 })} (${r.length}):${isDiffRow ? '<span class="diff-indicator-tag">⚡差异</span>' : ''}`;
-        miniRow.appendChild(rowBadge);
-
-        const cardsWrap = document.createElement('div');
-        cardsWrap.className = 'scheme-mini-cards-wrap';
-
-        r.forEach((c, cIdx) => {
-          const miniCard = document.createElement('div');
-          miniCard.className = `card ${c.color}`;
-          miniCard.style.zIndex = cIdx + 5;
-          miniCard.innerHTML = buildCardHTML(c);
-          cardsWrap.appendChild(miniCard);
-        });
-
-        miniRow.appendChild(cardsWrap);
-        col.appendChild(miniRow);
-      });
-
-      compareContainer.appendChild(col);
-    });
-  }
-
-  function openCompareModal() {
-    renderCompareContent();
-    compareModal.style.display = 'flex';
-  }
-
-  window.switchSchemeAndClose = function(idx) {
-    switchScheme(idx);
-    compareModal.style.display = 'none';
-  };
-
-  document.getElementById('compareSchemesBtn').addEventListener('click', openCompareModal);
-  document.getElementById('closeCompareBtn').addEventListener('click', () => {
-    compareModal.style.display = 'none';
-  });
-
-  const STORAGE_KEY = 'GUANDAN_SAVED_ARCHIVES';
-  const archiveModal = document.getElementById('archiveModal');
-  const archiveListContainer = document.getElementById('archiveListContainer');
-
-  function getSavedArchives() {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function setSavedArchives(list) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-  }
-
-  document.getElementById('saveArchiveBtn').addEventListener('click', () => {
-    const defaultName = `${t('saveDefault', { level: currentLevel })} (${new Date().toLocaleDateString()})`;
-    const customName = prompt(t('savePrompt'), defaultName);
-    if (!customName) return;
-
-    const archives = getSavedArchives();
-    const newRecord = {
-      id: 'save_' + Date.now(),
-      name: customName.trim(),
-      date: new Date().toLocaleString(),
-      currentLevel: currentLevel,
-      initialCards: initialCards,
-      schemes: schemes,
-      currentSchemeIndex: currentSchemeIndex
-    };
-
-    archives.unshift(newRecord);
-    setSavedArchives(archives);
-    alert(t('saveSuccess'));
-  });
-
-  document.getElementById('openArchiveBtn').addEventListener('click', () => {
-    renderArchiveList();
-    archiveModal.style.display = 'flex';
-  });
-
-  document.getElementById('closeArchiveBtn').addEventListener('click', () => {
-    archiveModal.style.display = 'none';
-  });
-
-  function renderArchiveList() {
-    archiveListContainer.innerHTML = '';
-    const archives = getSavedArchives();
-
-    if (archives.length === 0) {
-      archiveListContainer.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 24px 0;">${t('noArchives')}</div>`;
-      return;
-    }
-
-    archives.forEach((item) => {
-      const cardEl = document.createElement('div');
-      cardEl.className = 'save-card-item';
-
-      const totalCards = item.initialCards ? item.initialCards.length : (item.schemes[0]?.rows.reduce((acc, r) => acc + (r ? r.length : 0), 0) || 0);
-
-      cardEl.innerHTML = `
-        <div style="flex-grow: 1;">
-          <div class="save-info-title">${item.name}</div>
-          <div class="save-info-meta">
-            ${t('levelPrefix', { level: item.currentLevel })} · ${totalCards} ${t('cardUnit')} · ${item.schemes.length} 个思路 · ${item.date}
-          </div>
-        </div>
-        <div style="display: flex; gap: 8px;">
-          <button class="action-lead-btn" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
-          <button class="btn-danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">${t('delete')}</button>
-        </div>
-      `;
-      archiveListContainer.appendChild(cardEl);
-    });
-  }
-
-  window.loadArchive = function(id) {
-    const archives = getSavedArchives();
-    const target = archives.find(a => a.id === id);
-    if (!target) return;
-
-    currentLevel = target.currentLevel;
-    setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
-
-    initialCards = JSON.parse(JSON.stringify(target.initialCards || []));
-    schemes = JSON.parse(JSON.stringify(target.schemes || []));
-    currentSchemeIndex = target.currentSchemeIndex || 0;
-
-    selectedIds.clear();
-    lastAnchorCardId = null;
-
-    archiveModal.style.display = 'none';
-    renderSchemesNav();
-    renderBoard();
-  };
-
-  window.deleteArchive = function(id) {
-    if (!confirm(t('confirmDelArchive'))) return;
-    let archives = getSavedArchives();
-    archives = archives.filter(a => a.id !== id);
-    setSavedArchives(archives);
-    renderArchiveList();
-  };
-
-  const modalBackdrop = document.getElementById('customModal');
-  const modalCardsList = document.getElementById('modalCardsList');
-  const modalLevelSelect = document.getElementById('modalLevelSelect');
-  const modalSelectedCount = document.getElementById('modalSelectedCount');
-
-  function renderLevelSelectOptions() {
-    modalLevelSelect.innerHTML = '';
-    RANKS.forEach(r => {
-      const opt = document.createElement('option');
-      opt.value = r;
-      opt.textContent = `${t('levelPrefix', { level: r })}`;
-      modalLevelSelect.appendChild(opt);
-    });
-  }
-
-  function openCustomModal() {
-    modalSelectionMap = {};
-    renderLevelSelectOptions();
-    modalLevelSelect.value = currentLevel;
-
-    const flat = getFlattenedCards();
-    flat.forEach(c => {
-      const key = `${c.rank}_${c.suit}`;
-      modalSelectionMap[key] = (modalSelectionMap[key] || 0) + 1;
-    });
-
-    renderModalCards();
-    modalBackdrop.style.display = 'flex';
-  }
-
-  function closeCustomModal() {
-    modalBackdrop.style.display = 'none';
-  }
-
-  function renderModalCards() {
-    modalCardsList.innerHTML = '';
-    let totalSelected = 0;
-
-    const jokerRow = document.createElement('div');
-    jokerRow.className = 'picker-row';
-    jokerRow.innerHTML = `<div class="picker-label">${t('suits')['joker']}</div><div class="picker-cards-grid"></div>`;
-    const jokerGrid = jokerRow.querySelector('.picker-cards-grid');
-
-    [
-      { rank: '大王', suit: '★', color: 'red' },
-      { rank: '小王', suit: '★', color: 'black' }
-    ].forEach(j => {
-      const key = `${j.rank}_${j.suit}`;
-      const count = modalSelectionMap[key] || 0;
-      totalSelected += count;
-      jokerGrid.appendChild(createPickerCardEl(j, count, key));
-    });
-    modalCardsList.appendChild(jokerRow);
-
-    SUITS.forEach(s => {
-      const row = document.createElement('div');
-      row.className = 'picker-row';
-      const suitLabel = t('suits')[s.name] || s.name;
-      row.innerHTML = `<div class="picker-label ${s.color}">${suitLabel}</div><div class="picker-cards-grid"></div>`;
-      const grid = row.querySelector('.picker-cards-grid');
-
-      [...RANKS].reverse().forEach(r => {
-        const key = `${r}_${s.name}`;
-        const count = modalSelectionMap[key] || 0;
-        totalSelected += count;
-        grid.appendChild(createPickerCardEl({ rank: r, suit: s.name, color: s.color }, count, key));
-      });
-      modalCardsList.appendChild(row);
-    });
-
-    modalSelectedCount.textContent = totalSelected;
-  }
-
-  function createPickerCardEl(item, count, key) {
-    const el = document.createElement('div');
-    el.className = `picker-card-btn ${item.color}` + (count > 0 ? ' has-selected' : '');
-    const displayRank = (item.rank === '大王' ? t('bigJoker') : (item.rank === '小王' ? t('smallJoker') : item.rank));
-    el.innerHTML = `
-      <div class="card-val">${displayRank}</div>
-      <div class="card-suit">${item.suit}</div>
-      <div class="picker-count-badge">${count}</div>
-    `;
-
-    el.addEventListener('click', () => {
-      const current = modalSelectionMap[key] || 0;
-      modalSelectionMap[key] = current >= 2 ? 0 : current + 1;
-      renderModalCards();
-    });
-
-    el.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      const current = modalSelectionMap[key] || 0;
-      if (current > 0) {
-        modalSelectionMap[key] = current - 1;
-        renderModalCards();
-      }
-    });
-
-    return el;
-  }
-
-  document.getElementById('customHandBtn').addEventListener('click', openCustomModal);
-  document.getElementById('cancelModalBtn').addEventListener('click', closeCustomModal);
-  document.getElementById('clearAllModalBtn').addEventListener('click', () => {
-    modalSelectionMap = {};
-    renderModalCards();
-  });
-
-  document.getElementById('confirmModalBtn').addEventListener('click', () => {
-    currentLevel = modalLevelSelect.value;
-    setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
-
-    const newCards = [];
-    let idGen = 1000;
-
-    for (const [key, count] of Object.entries(modalSelectionMap)) {
-      if (count <= 0) continue;
-      const [rank, suit] = key.split('_');
-      const isJoker = (rank === '大王' || rank === '小王');
-      const isHeart = (suit === '♥');
-      const color = (suit === '♥' || suit === '♦' || rank === '大王') ? 'red' : 'black';
-
-      for (let i = 0; i < count; i++) {
-        newCards.push({
-          id: idGen++,
-          rank,
-          suit,
-          color,
-          isHeart,
-          isJoker,
-          jokerType: rank === '大王' ? 'big' : (rank === '小王' ? 'small' : null)
-        });
-      }
-    }
-
-    initialCards = [...newCards];
-
-    schemes = [
-      {
-        name: getDefaultSchemeName(0),
-        customName: getDefaultSchemeName(0),
-        isRecommended: false,
-        rows: [sortCards(newCards, currentLevel)],
-        historyStack: [],
-        redoStack: []
-      }
-    ];
-    currentSchemeIndex = 0;
-
-    selectedIds.clear();
-    lastAnchorCardId = null;
-
-    closeCustomModal();
-    renderSchemesNav();
-    renderBoard();
-  });
-
-  const langSelect = document.getElementById('langSelect');
-  langSelect.addEventListener('change', (e) => {
-    currentLang = e.target.value;
-    applyLanguage();
-  });
-
-  // ---------------- 撤销与重做安全回滚 ----------------
+  // ---------------- 撤销与重做 ----------------
   function undo() {
     const cur = getCurrentScheme();
     if (!cur || !cur.historyStack || cur.historyStack.length === 0) return;
@@ -3637,7 +3238,6 @@
     }
   }
 
-  // 重置排序：处于推荐思路方案时，重置为该方案对应的默认推荐顺序
   function resetSort() {
     const cur = getCurrentScheme();
     if (!cur) return;
