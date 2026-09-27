@@ -837,6 +837,41 @@
     gap: 6px;
   }
 
+  /* 规则与策略高光彩色标签系统 */
+  .rule-card-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0;
+    flex-wrap: wrap;
+  }
+  .mini-chip {
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: var(--font-modal-small);
+    font-weight: 600;
+  }
+  .mini-chip.red { color: #f87171; border-color: rgba(248, 113, 113, 0.35); background: rgba(248, 113, 113, 0.1); }
+  .mini-chip.gold { color: var(--gold); border-color: rgba(246, 197, 89, 0.45); background: rgba(246, 197, 89, 0.12); }
+  .mini-chip.blue { color: #38bdf8; border-color: rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.1); }
+  .mini-chip.green { color: #4ade80; border-color: rgba(74, 222, 128, 0.4); background: rgba(74, 222, 128, 0.1); }
+  
+  .strategy-box {
+    background: rgba(56, 189, 248, 0.05);
+    border-left: 3px solid #38bdf8;
+    padding: 10px 14px;
+    margin-top: 8px;
+    border-radius: 0 6px 6px 0;
+  }
+  .strategy-box.gold-edge { border-left-color: var(--gold); background: rgba(246, 197, 89, 0.05); }
+  .strategy-box.green-edge { border-left-color: #4ade80; background: rgba(74, 222, 128, 0.05); }
+  .strategy-box strong { color: #38bdf8; }
+  .strategy-box.gold-edge strong { color: var(--gold); }
+  .strategy-box.green-edge strong { color: #4ade80; }
+
+  /* 思路比较弹窗样式与针对 iPhone 顶部毛玻璃遮挡的防御 */
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
@@ -995,6 +1030,7 @@
     overflow: visible;
   }
   
+  /* 思路比较内牌面固定展示，禁用交互 */
   .scheme-mini-row .card {
     width: 48px;
     height: 74px;
@@ -1182,7 +1218,7 @@
     </div>
   </div>
 
-  <!-- 第 5 层：整理工具组（已安全移除冗余连选按钮） -->
+  <!-- 第 5 层：整理工具组 -->
   <div class="header-tier-row">
     <div class="control-island">
       <button id="deleteBtn" disabled>🗑️ 删除选中 (0)</button>
@@ -1303,428 +1339,433 @@
   let compareViewMode = 'full';
   let mainDeskCompactMode = false;
 
-  const I18N = {
-    'zh-CN': {
-      levelPrefix: '打：【 {level} 】',
-      cardsCount: '手牌：{count} 张',
-      deal: '🎴 新一局发牌',
-      customHand: '🛠️ 自定义调牌',
-      compare: '⚖️ 思路比较',
-      aiRecommend: '💡 推荐思路',
-      rulesBtn: '📖 掼蛋规则',
-      saveArchive: '💾 存档',
-      openArchive: '📂 存档箱',
-      deleteSelected: '🗑️ 删除选中 ({count})',
-      undo: '↩ 撤销',
-      redo: '↪ 重做',
-      resetSort: '🔄 重置排序',
-      toggleHelp: '💡 使用指南',
-      newSchemeBtn: '+ 新建思路',
-      rowLayer: '第{idx}层',
-      rowPlaceholder: '移动手牌到此，帮助理牌',
-      wildTag: '配',
-      suits: { '♥': '红桃', '♦': '方块', '♠': '黑桃', '♣': '梅花', 'joker': '王牌' },
-      bigJoker: '大王',
-      smallJoker: '小王',
-      close: '关闭',
-      backToPlay: '返回理牌',
-      applyScheme: '切换以此排布',
-      usingCurrent: '当前使用中',
-      compareTitle: '⚖️ 思路比较',
-      archiveTitle: '📂 本地手牌存档箱',
-      noArchives: '暂无保存的手牌存档。',
-      load: '载入',
-      delete: '删除',
-      savePrompt: '请为当前手牌存档命名：',
-      saveDefault: '牌局存档 - 打{level}',
-      saveSuccess: '保存成功！随时可在“打开存档箱”中调取继续理牌。',
-      confirmDelArchive: '确定要删除这条存档吗？此操作不可逆。',
-      customTitle: '自定义手牌与残局配置（两副牌·共108张库）',
-      customSelected: '当前选中',
-      cardUnit: '张',
-      customSetLevel: '设置当前打几：',
-      clearAll: '清空重选',
-      cancel: '取消',
-      confirmApply: '确认应用到手牌',
-      rulesTitle: '📖 掼蛋规则',
-      fontOptions: { small: '尺寸小号', medium: '尺寸中号', large: '尺寸大号', xlarge: '尺寸特大' },
-      renamePrompt: '请输入此理牌思路的名称：',
-      compareSummary: '共 {tiers} 层 · {cards} 张',
-      viewFull: '标准',
-      viewCompact: '紧凑'
-    },
-    'zh-TW': {
-      levelPrefix: '打：【 {level} 】',
-      cardsCount: '手牌：{count} 張',
-      deal: '🎴 新一局發牌',
-      customHand: '🛠️ 自訂調牌',
-      compare: '⚖️ 思路比較',
-      aiRecommend: '💡 推薦思路',
-      rulesBtn: '📖 掼蛋規則',
-      saveArchive: '💾 存檔',
-      openArchive: '📂 存檔箱',
-      deleteSelected: '🗑️ 刪除選取 ({count})',
-      undo: '↩ 復原',
-      redo: '↪ 重做',
-      resetSort: '🔄 重置排序',
-      toggleHelp: '💡 使用指南',
-      newSchemeBtn: '+ 新建思路',
-      rowLayer: '第{idx}層',
-      rowPlaceholder: '移動手牌到此，幫助理牌',
-      wildTag: '配',
-      suits: { '♥': '紅心', '♦': '方塊', '♠': '黑桃', '♣': '梅花', 'joker': '王牌' },
-      bigJoker: '大王',
-      smallJoker: '小王',
-      close: '關閉',
-      backToPlay: '返回理牌',
-      applyScheme: '切換以此排布',
-      usingCurrent: '目前使用中',
-      compareTitle: '⚖️ 思路比較',
-      archiveTitle: '📂 本地手牌存檔箱',
-      noArchives: '暫無儲存的手牌存檔。',
-      load: '載入',
-      delete: '刪除',
-      savePrompt: '請為目前手牌存檔命名：',
-      saveDefault: '牌局存檔 - 打{level}',
-      saveSuccess: '儲存成功！隨時可在「打開存檔箱」中調取繼續理牌。',
-      confirmDelArchive: '確定要刪除這條存檔嗎？此操作不可逆。',
-      customTitle: '自訂手牌與殘局配置（兩副牌·共108張庫）',
-      customSelected: '目前選取',
-      cardUnit: '張',
-      customSetLevel: '設定目前打幾：',
-      clearAll: '清空重選',
-      cancel: '取消',
-      confirmApply: '確認應用到手牌',
-      rulesTitle: '📖 掼蛋規則',
-      fontOptions: { small: '尺寸小號', medium: '尺寸中號', large: '尺寸大號', xlarge: '尺寸特大' },
-      renamePrompt: '請輸入此理牌思路的名稱：',
-      compareSummary: '共 {tiers} 層 · {cards} 張',
-      viewFull: '標準',
-      viewCompact: '緊湊'
-    },
-    'en': {
-      levelPrefix: 'Rank: [ {level} ]',
-      cardsCount: 'Hand: {count} cards',
-      deal: '🎴 Deal Hand',
-      customHand: '🛠️ Custom',
-      compare: '⚖️ Compare Ideas',
-      aiRecommend: '💡 Recommend',
-      rulesBtn: '📖 Rules',
-      saveArchive: '💾 Save',
-      openArchive: '📂 Vault',
-      deleteSelected: '🗑️ Delete ({count})',
-      undo: '↩ Undo',
-      redo: '↪ Redo',
-      resetSort: '🔄 Reset',
-      toggleHelp: '💡 User Guide',
-      newSchemeBtn: '+ New Idea',
-      rowLayer: 'Tier {idx}',
-      rowPlaceholder: 'Move cards here to help organize hand',
-      wildTag: 'WILD',
-      suits: { '♥': 'Hearts', '♦': 'Diamonds', '♠': 'Spades', '♣': 'Clubs', 'joker': 'Joker' },
-      bigJoker: 'Red Joker',
-      smallJoker: 'Black Joker',
-      close: 'Close',
-      backToPlay: 'Back',
-      applyScheme: 'Use Scheme',
-      usingCurrent: 'In Use',
-      compareTitle: '⚖️ Compare Ideas',
-      archiveTitle: '📂 Saved Hands Vault',
-      noArchives: 'No saved archives found.',
-      load: 'Load',
-      delete: 'Delete',
-      savePrompt: 'Name your hand archive:',
-      saveDefault: 'Hand Save - Rank {level}',
-      saveSuccess: 'Saved successfully! Access it anytime from the vault.',
-      confirmDelArchive: 'Are you sure you want to delete this archive?',
-      customTitle: 'Customize Cards & Endgame (108 Deck Pool)',
-      customSelected: 'Selected',
-      cardUnit: 'cards',
-      customSetLevel: 'Set Current Rank:',
-      clearAll: 'Clear All',
-      cancel: 'Cancel',
-      confirmApply: 'Apply to Hand',
-      rulesTitle: '📖 Rules',
-      fontOptions: { small: 'Small Size', medium: 'Medium Size', large: 'Large Size', xlarge: 'Extra Large' },
-      renamePrompt: 'Enter new name for this idea:',
-      compareSummary: 'Total {tiers} Tiers · {cards} Cards',
-      viewFull: 'Standard',
-      viewCompact: 'Compact'
-    },
-    'es': {
-      levelPrefix: 'Nivel: [ {level} ]',
-      cardsCount: 'Mano: {count} cartas',
-      deal: '🎴 Repartir',
-      customHand: '🛠️ Personalizar',
-      compare: '⚖️ Comparar Ideas',
-      aiRecommend: '💡 Idea Óptima',
-      rulesBtn: '📖 Reglas',
-      saveArchive: '💾 Guardar',
-      openArchive: '📂 Archivos',
-      deleteSelected: '🗑️ Eliminar ({count})',
-      undo: '↩ Deshacer',
-      redo: '↪ Rehacer',
-      resetSort: '🔄 Reiniciar',
-      toggleHelp: '💡 Guía de Uso',
-      newSchemeBtn: '+ Nueva Idea',
-      rowLayer: 'Fila {idx}',
-      rowPlaceholder: 'Mueve cartas aquí para ordenar tu mano',
-      wildTag: 'COMODÍN',
-      suits: { '♥': 'Corazones', '♦': 'Diamantes', '♠': 'Picas', '♣': 'Tréboles', 'joker': 'Comodines' },
-      bigJoker: 'Joker Rojo',
-      smallJoker: 'Joker Negro',
-      close: 'Cerrar',
-      backToPlay: 'Volver',
-      applyScheme: 'Usar este',
-      usingCurrent: 'En uso',
-      compareTitle: '⚖️ Comparar Ideas',
-      archiveTitle: '📂 Archivo de Manos Guardadas',
-      noArchives: 'No hay partidas guardadas.',
-      load: 'Cargar',
-      delete: 'Borrar',
-      savePrompt: 'Nombre para este archivo de mano:',
-      saveDefault: 'Mano Guardada - Nivel {level}',
-      saveSuccess: '¡Guardado con éxito! Puedes acceder desde el menú en cualquier momento.',
-      confirmDelArchive: '¿Estás seguro de eliminar este archivo?',
-      customTitle: 'Configuración Personalizada y Finales (108 Cartas)',
-      customSelected: 'Seleccionado',
-      cardUnit: 'cartas',
-      customSetLevel: 'Nivel Actual:',
-      clearAll: 'Limpiar Todo',
-      cancel: 'Cancelar',
-      confirmApply: 'Aplicar a la Mano',
-      rulesTitle: '📖 Reglas',
-      fontOptions: { small: 'Tamaño Pequeño', medium: 'Tamaño Mediano', large: 'Tamaño Grande', xlarge: 'Tamaño Extra Grande' },
-      renamePrompt: 'Introduce el nuevo nombre para esta idea:',
-      compareSummary: 'Total {tiers} Filas · {cards} Cartas',
-      viewFull: 'Estándar',
-      viewCompact: 'Compacto'
-    }
-  };
-
-  let currentLang = 'zh-CN';
-  let currentFontSize = localStorage.getItem('GUANDAN_FONT_SIZE') || 'medium';
-
-  function t(key, params = {}) {
-    let str = I18N[currentLang]?.[key] || I18N['zh-CN']?.[key] || key;
-    if (typeof str === 'string') {
-      for (const [k, v] of Object.entries(params)) {
-        str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
-      }
-    }
-    return str;
-  }
-
-  function setSafeText(id, text) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  }
-
-  function applyLanguage() {
-    setSafeText('dealBtn', t('deal'));
-    setSafeText('customHandBtn', t('customHand'));
-    setSafeText('compareSchemesBtn', t('compare'));
-    setSafeText('aiRecommendBtn', t('aiRecommend'));
-    setSafeText('rulesBtn', t('rulesBtn'));
-    setSafeText('saveArchiveBtn', t('saveArchive'));
-    setSafeText('openArchiveBtn', t('openArchive'));
-    setSafeText('undoBtn', t('undo'));
-    setSafeText('redoBtn', t('redo'));
-    setSafeText('resetBtn', t('resetSort'));
-    setSafeText('toggleHelpBtn', t('toggleHelp'));
-
-    setSafeText('compareModalTitle', t('compareTitle'));
-    setSafeText('rulesModalTitle', t('rulesTitle'));
-    setSafeText('archiveModalTitle', t('archiveTitle'));
-    setSafeText('customModalTitle', t('customTitle'));
-    setSafeText('customSelectedLabel', t('customSelected'));
-    setSafeText('customCardUnit', t('cardUnit'));
-    setSafeText('customLevelSetLabel', t('customSetLevel'));
-    setSafeText('clearAllModalBtn', t('clearAll'));
-    setSafeText('cancelModalBtn', t('cancel'));
-    setSafeText('confirmModalBtn', t('confirmApply'));
-
-    setSafeText('mainViewFullBtn', t('viewFull'));
-    setSafeText('mainViewCompactBtn', t('viewCompact'));
-    setSafeText('viewFullBtn', t('viewFull'));
-    setSafeText('viewCompactBtn', t('viewCompact'));
-
-    const fontOpts = I18N[currentLang]?.fontOptions || I18N['zh-CN'].fontOptions;
-    const fontSelect = document.getElementById('fontSizeSelect');
-    if (fontSelect && fontSelect.options.length >= 4) {
-      fontSelect.options[0].text = fontOpts.small;
-      fontSelect.options[1].text = fontOpts.medium;
-      fontSelect.options[2].text = fontOpts.large;
-      fontSelect.options[3].text = fontOpts.xlarge;
-    }
-
-    setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
-    updateTotalCount();
-    updateButtonStates();
-    updateHelpDrawerContent();
+  function renderRulesModalContentWrapper() {
     renderRulesModalContent();
-    renderSchemesNav();
-    renderBoard();
   }
 
-  function applyFontSize(size) {
-    document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large', 'font-size-xlarge');
-    document.body.classList.add(`font-size-${size}`);
-    currentFontSize = size;
-    localStorage.setItem('GUANDAN_FONT_SIZE', size);
-    const fontSelect = document.getElementById('fontSizeSelect');
-    if (fontSelect) fontSelect.value = size;
+  // ---------------- 保证规则弹窗与使用指南百分之百可靠触发 ----------------
+  const rulesModal = document.getElementById('rulesModal');
+  const rulesBtn = document.getElementById('rulesBtn');
+  const closeRulesBtn = document.getElementById('closeRulesBtn');
+
+  if (rulesBtn) {
+    rulesBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      renderRulesModalContent();
+      if (rulesModal) rulesModal.style.display = 'flex';
+    });
   }
-
-  document.getElementById('fontSizeSelect').addEventListener('change', (e) => {
-    applyFontSize(e.target.value);
-  });
-
-  const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-  const SUITS = [
-    { name: '♥', color: 'red', isHeart: true },
-    { name: '♦', color: 'red', isHeart: false },
-    { name: '♠', color: 'black', isHeart: false },
-    { name: '♣', color: 'black', isHeart: false }
-  ];
-
-  let currentLevel = '2';
-  let initialCards = [];
-  let schemes = [];
-  let currentSchemeIndex = 0;
-
-  function getCurrentScheme() {
-    if (!schemes || schemes.length === 0) return null;
-    if (currentSchemeIndex >= schemes.length) currentSchemeIndex = 0;
-    return schemes[currentSchemeIndex];
-  }
-
-  const selectedIds = new Set();
-  let lastAnchorCardId = null;
-  let interactionMode = null;
-  let startX = 0, startY = 0;
-  let currentClientX = 0, currentClientY = 0;
-  let clickedCardId = null;
-  let clickedCardInitialSelected = false;
-  let hasMovedEnough = false;
-  let mousePressedWithShiftOrCmd = false;
-
-  let dropTarget = null;
-  let draggedRowIndex = null;
-  let rowTargetDrop = null;
-  let modalSelectionMap = {};
-
-  let autoScrollAnimationId = null;
-  let autoScrollSpeedY = 0;
-  autoScrollSpeedX = 0;
-
-  let draggedSchemeIndex = null;
-  let isTabDraggingPointer = false;
-  let tabDragStartX = 0;
-
-  function pickRandomLevel() {
-    return RANKS[Math.floor(Math.random() * RANKS.length)];
-  }
-
-  function buildDoubleDeck() {
-    const deck = [];
-    let idCounter = 1;
-    for (let d = 0; d < 2; d++) {
-      for (let r of RANKS) {
-        for (let s of SUITS) {
-          deck.push({ id: idCounter++, rank: r, suit: s.name, color: s.color, isHeart: s.isHeart, isJoker: false });
-        }
-      }
-      deck.push({ id: idCounter++, rank: '小王', suit: '★', color: 'black', isHeart: false, isJoker: true, jokerType: 'small' });
-      deck.push({ id: idCounter++, rank: '大王', suit: '★', color: 'red', isHeart: false, isJoker: true, jokerType: 'big' });
-    }
-    return deck;
-  }
-
-  function dealHand() {
-    const deck = buildDoubleDeck();
-    for (let i = deck.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-    return deck.slice(0, 27);
-  }
-
-  function getCardWeight(card, level) {
-    if (card.isJoker) return card.jokerType === 'big' ? 1000 : 900;
-    if (card.rank === level && card.isHeart) return 800;
-    if (card.rank === level) return 700;
-    const idx = RANKS.indexOf(card.rank);
-    return idx >= 0 ? idx + 10 : 0;
-  }
-
-  function sortCards(cards, level) {
-    return [...cards].sort((a, b) => {
-      const wA = getCardWeight(a, level);
-      const wB = getCardWeight(b, level);
-      if (wA !== wB) return wB - wA;
-      const suitPriority = { '♠': 4, '♥': 3, '♣': 2, '♦': 1, '★': 0 };
-      return (suitPriority[b.suit] || 0) - (suitPriority[a.suit] || 0);
+  if (closeRulesBtn) {
+    closeRulesBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (rulesModal) rulesModal.style.display = 'none';
     });
   }
 
-  function pushState() {
-    const cur = getCurrentScheme();
-    if (!cur) return;
-    if (!cur.historyStack) cur.historyStack = [];
-    const snapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
-    cur.historyStack.push(snapshot);
-    cur.redoStack = [];
-    updateButtonStates();
+  const toggleHelpBtn = document.getElementById('toggleHelpBtn');
+  const helpDrawer = document.getElementById('helpDrawer');
+  if (toggleHelpBtn && helpDrawer) {
+    toggleHelpBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = (helpDrawer.style.display === 'block');
+      if (!isVisible) {
+        updateHelpDrawerContent();
+        helpDrawer.style.display = 'block';
+      } else {
+        helpDrawer.style.display = 'none';
+      }
+    });
   }
 
-  function updateButtonStates() {
-    const cur = getCurrentScheme();
-    const undoEl = document.getElementById('undoBtn');
-    const redoEl = document.getElementById('redoBtn');
-    const delBtn = document.getElementById('deleteBtn');
-    if (undoEl) undoEl.disabled = !cur || !cur.historyStack || cur.historyStack.length === 0;
-    if (redoEl) redoEl.disabled = !cur || !cur.redoStack || cur.redoStack.length === 0;
-    if (delBtn) {
-      delBtn.disabled = selectedIds.size === 0;
-      delBtn.textContent = `🗑️ ${t('deleteSelected', { count: selectedIds.size }).replace('🗑️ ', '')}`;
+  // ---------------- 思路比较弹窗 ----------------
+  const compareModal = document.getElementById('compareModal');
+  const compareContainer = document.getElementById('compareContainer');
+
+  document.getElementById('viewFullBtn').addEventListener('click', () => {
+    compareViewMode = 'full';
+    document.getElementById('viewFullBtn').classList.add('active');
+    document.getElementById('viewCompactBtn').classList.remove('active');
+    renderCompareContent();
+  });
+
+  document.getElementById('viewCompactBtn').addEventListener('click', () => {
+    compareViewMode = 'compact';
+    document.getElementById('viewCompactBtn').classList.add('active');
+    document.getElementById('viewFullBtn').classList.remove('active');
+    renderCompareContent();
+  });
+
+  function renderCompareContent() {
+    compareContainer.innerHTML = '';
+
+    const allCards = getFlattenedCards();
+    const benchmarkStdRows = generateAIRecommendedRows(allCards, currentLevel);
+    const benchmarkCptRows = buildCompactRows(benchmarkStdRows, currentLevel);
+
+    schemes.forEach((s, idx) => {
+      const col = document.createElement('div');
+      col.className = 'scheme-column';
+
+      const validRows = (s.rows || []).filter(r => r && r.length > 0);
+      const totalCount = validRows.reduce((acc, r) => acc + r.length, 0);
+
+      const prefixEmoji = s.isRecommended ? '💡' : '📌';
+      const displayName = `${prefixEmoji} ${s.customName || s.name || getDefaultSchemeName(idx)}`;
+
+      // 智能语义比对
+      const analysis = analyzeSemanticMatch(validRows, benchmarkStdRows, benchmarkCptRows, currentLevel);
+
+      if (analysis.isExactMatch && !s.isRecommended) {
+        col.classList.add('is-exact-match');
+      }
+
+      const summaryText = t('compareSummary', { tiers: validRows.length, cards: totalCount });
+
+      col.innerHTML = `
+        <div class="scheme-col-header">
+          <div>
+            <div class="scheme-col-title">${displayName}</div>
+            <div style="font-size: var(--font-modal-small); color: #94a3b8; margin-top: 2px;">
+              ${summaryText}
+            </div>
+            ${analysis.isExactMatch && !s.isRecommended ? `<div class="match-badge">🎯 与推荐思路完全一致</div>` : ''}
+            ${s.isRecommended ? `<div style="font-size:11px; color:#c084fc; font-weight:bold; margin-top:2px;">★ 标准答案基线</div>` : ''}
+          </div>
+          ${idx !== currentSchemeIndex ? `<button class="action-lead-btn" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #4ade80; font-weight: bold;">${t('usingCurrent')}</span>`}
+        </div>
+      `;
+
+      let displayRows = validRows;
+      if (compareViewMode === 'compact' && s.isRecommended) {
+        displayRows = benchmarkCptRows;
+      }
+
+      displayRows.forEach((r, rIdx) => {
+        const miniRow = document.createElement('div');
+        miniRow.className = 'scheme-mini-row';
+
+        const isDiffRow = !s.isRecommended && !analysis.isExactMatch && analysis.diffRowIndices.has(rIdx);
+        if (isDiffRow) {
+          miniRow.classList.add('is-diff-row');
+        }
+
+        const rowBadge = document.createElement('div');
+        rowBadge.className = 'scheme-mini-row-badge';
+        rowBadge.innerHTML = `${t('rowLayer', { idx: rIdx + 1 })} (${r.length}):${isDiffRow ? '<span class="diff-indicator-tag">⚡差异</span>' : ''}`;
+        miniRow.appendChild(rowBadge);
+
+        const cardsWrap = document.createElement('div');
+        cardsWrap.className = 'scheme-mini-cards-wrap';
+
+        r.forEach((c, cIdx) => {
+          const miniCard = document.createElement('div');
+          miniCard.className = `card ${c.color}`;
+          miniCard.style.zIndex = cIdx + 5;
+          miniCard.innerHTML = buildCardHTML(c);
+          cardsWrap.appendChild(miniCard);
+        });
+
+        miniRow.appendChild(cardsWrap);
+        col.appendChild(miniRow);
+      });
+
+      compareContainer.appendChild(col);
+    });
+  }
+
+  function openCompareModal() {
+    renderCompareContent();
+    compareModal.style.display = 'flex';
+  }
+
+  function varToCss(varName) {
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  }
+
+  window.switchSchemeAndClose = function(idx) {
+    switchScheme(idx);
+    compareModal.style.display = 'none';
+  };
+
+  document.getElementById('compareSchemesBtn').addEventListener('click', openCompareModal);
+  document.getElementById('closeCompareBtn').addEventListener('click', () => {
+    compareModal.style.display = 'none';
+  });
+
+  const STORAGE_KEY = 'GUANDAN_SAVED_ARCHIVES';
+  const archiveModal = document.getElementById('archiveModal');
+  const archiveListContainer = document.getElementById('archiveListContainer');
+
+  function getSavedArchives() {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      return [];
     }
   }
 
-  function updateTotalCount() {
-    const cur = getCurrentScheme();
-    const total = cur && cur.rows ? cur.rows.reduce((acc, r) => acc + (r ? r.length : 0), 0) : 0;
-    setSafeText('totalCountInfo', t('cardsCount', { count: total }));
+  function setSavedArchives(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
   }
 
-  function getCardDisplayRank(card) {
-    if (card.isJoker) {
-      return card.jokerType === 'big' ? t('bigJoker') : t('smallJoker');
+  document.getElementById('saveArchiveBtn').addEventListener('click', () => {
+    const defaultName = `${t('saveDefault', { level: currentLevel })} (${new Date().toLocaleDateString()})`;
+    const customName = prompt(t('savePrompt'), defaultName);
+    if (!customName) return;
+
+    const archives = getSavedArchives();
+    const newRecord = {
+      id: 'save_' + Date.now(),
+      name: customName.trim(),
+      date: new Date().toLocaleString(),
+      currentLevel: currentLevel,
+      initialCards: initialCards,
+      schemes: schemes,
+      currentSchemeIndex: currentSchemeIndex
+    };
+
+    archives.unshift(newRecord);
+    setSavedArchives(archives);
+    alert(t('saveSuccess'));
+  });
+
+  document.getElementById('openArchiveBtn').addEventListener('click', () => {
+    renderArchiveList();
+    archiveModal.style.display = 'flex';
+  });
+
+  document.getElementById('closeArchiveBtn').addEventListener('click', () => {
+    archiveModal.style.display = 'none';
+  });
+
+  function renderArchiveList() {
+    archiveListContainer.innerHTML = '';
+    const archives = getSavedArchives();
+
+    if (archives.length === 0) {
+      archiveListContainer.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 24px 0;">${t('noArchives')}</div>`;
+      return;
     }
-    return card.rank;
+
+    archives.forEach((item) => {
+      const cardEl = document.createElement('div');
+      cardEl.className = 'save-card-item';
+
+      const totalCards = item.initialCards ? item.initialCards.length : (item.schemes[0]?.rows.reduce((acc, r) => acc + (r ? r.length : 0), 0) || 0);
+
+      cardEl.innerHTML = `
+        <div style="flex-grow: 1;">
+          <div class="save-info-title">${item.name}</div>
+          <div class="save-info-meta">
+            ${t('levelPrefix', { level: item.currentLevel })} · ${totalCards} ${t('cardUnit')} · ${item.schemes.length} 个思路 · ${item.date}
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="action-lead-btn" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
+          <button class="btn-danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">${t('delete')}</button>
+        </div>
+      `;
+      archiveListContainer.appendChild(cardEl);
+    });
   }
 
-  function buildCardHTML(card) {
-    const isWild = (card.rank === currentLevel && card.isHeart);
-    return `
-      <div class="card-top">
-        <div class="card-val">${getCardDisplayRank(card)}</div>
-        <div class="card-suit">${card.suit}</div>
-        ${isWild ? `<div class="wild-badge-corner">${t('wildTag')}</div>` : ''}
-      </div>
+  window.loadArchive = function(id) {
+    const archives = getSavedArchives();
+    const target = archives.find(a => a.id === id);
+    if (!target) return;
+
+    currentLevel = target.currentLevel;
+    setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
+
+    initialCards = JSON.parse(JSON.stringify(target.initialCards || []));
+    schemes = JSON.parse(JSON.stringify(target.schemes || []));
+    currentSchemeIndex = target.currentSchemeIndex || 0;
+
+    selectedIds.clear();
+    lastAnchorCardId = null;
+
+    archiveModal.style.display = 'none';
+    renderSchemesNav();
+    renderBoard();
+  };
+
+  window.deleteArchive = function(id) {
+    if (!confirm(t('confirmDelArchive'))) return;
+    let archives = getSavedArchives();
+    archives = archives.filter(a => a.id !== id);
+    setSavedArchives(archives);
+    renderArchiveList();
+  };
+
+  const modalBackdrop = document.getElementById('customModal');
+  const modalCardsList = document.getElementById('modalCardsList');
+  const modalLevelSelect = document.getElementById('modalLevelSelect');
+  const modalSelectedCount = document.getElementById('modalSelectedCount');
+
+  function renderLevelSelectOptions() {
+    modalLevelSelect.innerHTML = '';
+    RANKS.forEach(r => {
+      const opt = document.createElement('option');
+      opt.value = r;
+      opt.textContent = `${t('levelPrefix', { level: r })}`;
+      modalLevelSelect.appendChild(opt);
+    });
+  }
+
+  function openCustomModal() {
+    modalSelectionMap = {};
+    renderLevelSelectOptions();
+    modalLevelSelect.value = currentLevel;
+
+    const flat = getFlattenedCards();
+    flat.forEach(c => {
+      const key = `${c.rank}_${c.suit}`;
+      modalSelectionMap[key] = (modalSelectionMap[key] || 0) + 1;
+    });
+
+    renderModalCards();
+    modalBackdrop.style.display = 'flex';
+  }
+
+  function closeCustomModal() {
+    modalBackdrop.style.display = 'none';
+  }
+
+  function renderModalCards() {
+    modalCardsList.innerHTML = '';
+    let totalSelected = 0;
+
+    const jokerRow = document.createElement('div');
+    jokerRow.className = 'picker-row';
+    jokerRow.innerHTML = `<div class="picker-label">${t('suits')['joker']}</div><div class="picker-cards-grid"></div>`;
+    const jokerGrid = jokerRow.querySelector('.picker-cards-grid');
+
+    [
+      { rank: '大王', suit: '★', color: 'red' },
+      { rank: '小王', suit: '★', color: 'black' }
+    ].forEach(j => {
+      const key = `${j.rank}_${j.suit}`;
+      const count = modalSelectionMap[key] || 0;
+      totalSelected += count;
+      jokerGrid.appendChild(createPickerCardEl(j, count, key));
+    });
+    modalCardsList.appendChild(jokerRow);
+
+    SUITS.forEach(s => {
+      const row = document.createElement('div');
+      row.className = 'picker-row';
+      const suitLabel = t('suits')[s.name] || s.name;
+      row.innerHTML = `<div class="picker-label ${s.color}">${suitLabel}</div><div class="picker-cards-grid"></div>`;
+      const grid = row.querySelector('.picker-cards-grid');
+
+      [...RANKS].reverse().forEach(r => {
+        const key = `${r}_${s.name}`;
+        const count = modalSelectionMap[key] || 0;
+        totalSelected += count;
+        grid.appendChild(createPickerCardEl({ rank: r, suit: s.name, color: s.color }, count, key));
+      });
+      modalCardsList.appendChild(row);
+    });
+
+    modalSelectedCount.textContent = totalSelected;
+  }
+
+  function createPickerCardEl(item, count, key) {
+    const el = document.createElement('div');
+    el.className = `picker-card-btn ${item.color}` + (count > 0 ? ' has-selected' : '');
+    const displayRank = (item.rank === '大王' ? t('bigJoker') : (item.rank === '小王' ? t('smallJoker') : item.rank));
+    el.innerHTML = `
+      <div class="card-val">${displayRank}</div>
+      <div class="card-suit">${item.suit}</div>
+      <div class="picker-count-badge">${count}</div>
     `;
+
+    el.addEventListener('click', () => {
+      const current = modalSelectionMap[key] || 0;
+      modalSelectionMap[key] = current >= 2 ? 0 : current + 1;
+      renderModalCards();
+    });
+
+    el.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      const current = modalSelectionMap[key] || 0;
+      if (current > 0) {
+        modalSelectionMap[key] = current - 1;
+        renderModalCards();
+      }
+    });
+
+    return el;
   }
 
-  function getDefaultSchemeName(targetIndex) {
-    const num = targetIndex + 1;
-    if (currentLang === 'en') return `Idea ${num}`;
-    if (currentLang === 'es') return `Idea ${num}`;
-    return `思路 ${num}`;
-  }
+  document.getElementById('customHandBtn').addEventListener('click', openCustomModal);
+  document.getElementById('cancelModalBtn').addEventListener('click', closeCustomModal);
+  document.getElementById('clearAllModalBtn').addEventListener('click', () => {
+    modalSelectionMap = {};
+    renderModalCards();
+  });
 
+  document.getElementById('confirmModalBtn').addEventListener('click', () => {
+    currentLevel = modalLevelSelect.value;
+    setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
+
+    const newCards = [];
+    let idGen = 1000;
+
+    for (const [key, count] of Object.entries(modalSelectionMap)) {
+      if (count <= 0) continue;
+      const [rank, suit] = key.split('_');
+      const isJoker = (rank === '大王' || rank === '小王');
+      const isHeart = (suit === '♥');
+      const color = (suit === '♥' || suit === '♦' || rank === '大王') ? 'red' : 'black';
+
+      for (let i = 0; i < count; i++) {
+        newCards.push({
+          id: idGen++,
+          rank,
+          suit,
+          color,
+          isHeart,
+          isJoker,
+          jokerType: rank === '大王' ? 'big' : (rank === '小王' ? 'small' : null)
+        });
+      }
+    }
+
+    initialCards = [...newCards];
+
+    schemes = [
+      {
+        name: getDefaultSchemeName(0),
+        customName: getDefaultSchemeName(0),
+        isRecommended: false,
+        rows: [sortCards(newCards, currentLevel)],
+        historyStack: [],
+        redoStack: []
+      }
+    ];
+    currentSchemeIndex = 0;
+
+    selectedIds.clear();
+    lastAnchorCardId = null;
+
+    closeCustomModal();
+    renderSchemesNav();
+    renderBoard();
+  });
+
+  const langSelect = document.getElementById('langSelect');
+  langSelect.addEventListener('change', (e) => {
+    currentLang = e.target.value;
+    applyLanguage();
+  });
+
+  // ---------------- 撤销与重做安全回滚 ----------------
   function undo() {
     const cur = getCurrentScheme();
     if (!cur || !cur.historyStack || cur.historyStack.length === 0) return;
+    
     try {
       const currentSnapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
       if (!cur.redoStack) cur.redoStack = [];
@@ -1744,6 +1785,7 @@
   function redo() {
     const cur = getCurrentScheme();
     if (!cur || !cur.redoStack || cur.redoStack.length === 0) return;
+
     try {
       const currentSnapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
       if (!cur.historyStack) cur.historyStack = [];
@@ -1760,6 +1802,7 @@
     }
   }
 
+  // 重置排序：若当前处于推荐思路方案，按要求重置为内置算法推荐的策略，而非乱序
   function resetSort() {
     const cur = getCurrentScheme();
     if (!cur) return;
