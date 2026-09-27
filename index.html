@@ -11,7 +11,6 @@
 <title>掼蛋理牌模拟器 / Guandan Cards Simulator</title>
 <style>
   :root {
-    /* 深林暗调天鹅绒配色体系 */
     --bg-base: #07120e;
     --bg-gradient: radial-gradient(circle at 50% 20%, #163628 0%, #0d1e17 55%, #050d0a 100%);
     --island-bg: rgba(18, 36, 28, 0.85);
@@ -24,7 +23,6 @@
     --btn-glass: rgba(255, 255, 255, 0.07);
     --btn-glass-hover: rgba(255, 255, 255, 0.16);
 
-    /* 全局基准尺寸体系 */
     --font-ui-btn: 13px;
     --font-ui-title-level: 16px;
     --font-ui-title-count: 15px;
@@ -41,7 +39,6 @@
     --card-font-val: 17px;
     --card-font-suit: 15px;
 
-    /* 弹窗及文本模块联动变量 */
     --font-modal-title: 17px;
     --font-modal-body: 14px;
     --font-modal-sec-title: 15px;
@@ -208,7 +205,6 @@
     }
   }
 
-  /* 消除 iOS 顶部白色毛玻璃与横向变黑 */
   html {
     background-color: #07120e;
     width: 100%;
@@ -1218,7 +1214,7 @@
     </div>
   </div>
 
-  <!-- 第 5 层：整理工具组（无连选冗余按钮） -->
+  <!-- 第 5 层：整理工具组（彻底移除冗余连选按钮） -->
   <div class="header-tier-row">
     <div class="control-island">
       <button id="deleteBtn" disabled>🗑️ 删除选中 (0)</button>
@@ -1338,6 +1334,1853 @@
 
   let compareViewMode = 'full';
   let mainDeskCompactMode = false;
+
+  const I18N = {
+    'zh-CN': {
+      levelPrefix: '打：【 {level} 】',
+      cardsCount: '手牌：{count} 张',
+      deal: '🎴 新一局发牌',
+      customHand: '🛠️ 自定义调牌',
+      compare: '⚖️ 思路比较',
+      aiRecommend: '💡 推荐思路',
+      rulesBtn: '📖 掼蛋规则',
+      saveArchive: '💾 存档',
+      openArchive: '📂 存档箱',
+      deleteSelected: '🗑️ 删除选中 ({count})',
+      undo: '↩ 撤销',
+      redo: '↪ 重做',
+      resetSort: '🔄 重置排序',
+      toggleHelp: '💡 使用指南',
+      newSchemeBtn: '+ 新建思路',
+      rowLayer: '第{idx}层',
+      rowPlaceholder: '移动手牌到此，帮助理牌',
+      wildTag: '配',
+      suits: { '♥': '红桃', '♦': '方块', '♠': '黑桃', '♣': '梅花', 'joker': '王牌' },
+      bigJoker: '大王',
+      smallJoker: '小王',
+      close: '关闭',
+      backToPlay: '返回理牌',
+      applyScheme: '切换以此排布',
+      usingCurrent: '当前使用中',
+      compareTitle: '⚖️ 思路比较',
+      archiveTitle: '📂 本地手牌存档箱',
+      noArchives: '暂无保存的手牌存档。',
+      load: '载入',
+      delete: '删除',
+      savePrompt: '请为当前手牌存档命名：',
+      saveDefault: '牌局存档 - 打{level}',
+      saveSuccess: '保存成功！随时可在“打开存档箱”中调取继续理牌。',
+      confirmDelArchive: '确定要删除这条存档吗？此操作不可逆。',
+      customTitle: '自定义手牌与残局配置（两副牌·共108张库）',
+      customSelected: '当前选中',
+      cardUnit: '张',
+      customSetLevel: '设置当前打几：',
+      clearAll: '清空重选',
+      cancel: '取消',
+      confirmApply: '确认应用到手牌',
+      rulesTitle: '📖 掼蛋规则',
+      fontOptions: { small: '尺寸小号', medium: '尺寸中号', large: '尺寸大号', xlarge: '尺寸特大' },
+      renamePrompt: '请输入此理牌思路的名称：',
+      compareSummary: '共 {tiers} 层 · {cards} 张',
+      viewFull: '标准',
+      viewCompact: '紧凑',
+      help: [
+        {
+          title: '🃏 选牌与放平技巧',
+          desc: '• <span class="help-pill">单击</span> 任何一张牌即可立起选中；再次点击该牌放平。<br>• <strong>一键收回</strong>：点桌面任意空白处，所有立起的牌全员归位。<br>• <strong>连续多选</strong>：用手指或鼠标在牌上滑动即可连续全选；电脑端可按住 <span class="help-pill">Shift</span> 选区间。'
+        },
+        {
+          title: '🎯 拖拽与智能分层',
+          desc: '• <strong>整组打包</strong>：立起几张牌后，拖动其中任意一张，整组牌一起移动。<br>• <strong>黄色光标指引</strong>：光标指示精确插牌空隙，松手即落位。<br>• <strong>开辟新层</strong>：拖到底部虚线槽自动成立新一层；拖住左侧 <span class="help-pill">≡</span> 手柄可上下调整整层顺序。'
+        },
+        {
+          title: '📱 手机端横屏与触屏漫游',
+          desc: '• <strong>左右自由滑屏</strong>：竖屏查看第一层所有 27 张牌，手指直接横向划屏查看。<br>• <strong>全向巡航滚屏</strong>：按住选中的牌往屏幕边缘靠拢，页面会自动平滑回滚，轻松跨层挪牌。'
+        },
+        {
+          title: '⚖️ 推荐思路与智能复盘',
+          desc: '• 点击 <span class="help-pill">💡 推荐思路</span>，系统会自动按照大炸弹、同花顺、顺子、带小对的顶级策略排布。<br>• 点击 <span class="help-pill">⚖️ 思路比较</span> 会自动与算法对齐；如果本质牌型一致即刻点亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span> 勋章；若有拆牌出入自动标红差异层！'
+        }
+      ]
+    },
+    'zh-TW': {
+      levelPrefix: '打：【 {level} 】',
+      cardsCount: '手牌：{count} 張',
+      deal: '🎴 新一局發牌',
+      customHand: '🛠️ 自訂調牌',
+      compare: '⚖️ 思路比較',
+      aiRecommend: '💡 推薦思路',
+      rulesBtn: '📖 掼蛋規則',
+      saveArchive: '💾 存檔',
+      openArchive: '📂 存檔箱',
+      deleteSelected: '🗑️ 刪除選取 ({count})',
+      undo: '↩ 復原',
+      redo: '↪ 重做',
+      resetSort: '🔄 重置排序',
+      toggleHelp: '💡 使用指南',
+      newSchemeBtn: '+ 新建思路',
+      rowLayer: '第{idx}層',
+      rowPlaceholder: '移動手牌到此，幫助理牌',
+      wildTag: '配',
+      suits: { '♥': '紅心', '♦': '方塊', '♠': '黑桃', '♣': '梅花', 'joker': '王牌' },
+      bigJoker: '大王',
+      smallJoker: '小王',
+      close: '關閉',
+      backToPlay: '返回理牌',
+      applyScheme: '切換以此排布',
+      usingCurrent: '目前使用中',
+      compareTitle: '⚖️ 思路比較',
+      archiveTitle: '📂 本地手牌存檔箱',
+      noArchives: '暫無儲存的手牌存檔。',
+      load: '載入',
+      delete: '刪除',
+      savePrompt: '請為目前手牌存檔命名：',
+      saveDefault: '牌局存檔 - 打{level}',
+      saveSuccess: '儲存成功！隨時可在「打開存檔箱」中調取繼續理牌。',
+      confirmDelArchive: '確定要刪除這條存檔嗎？此操作不可逆。',
+      customTitle: '自訂手牌與殘局配置（兩副牌·共108張庫）',
+      customSelected: '目前選取',
+      cardUnit: '張',
+      customSetLevel: '設定目前打幾：',
+      clearAll: '清空重選',
+      cancel: '取消',
+      confirmApply: '確認應用到手牌',
+      rulesTitle: '📖 掼蛋規則',
+      fontOptions: { small: '尺寸小號', medium: '尺寸中號', large: '尺寸大號', xlarge: '尺寸特大' },
+      renamePrompt: '請輸入此理牌思路的名稱：',
+      compareSummary: '共 {tiers} 層 · {cards} 張',
+      viewFull: '標準',
+      viewCompact: '緊湊',
+      help: [
+        {
+          title: '🃏 選牌與放平技巧',
+          desc: '• <span class="help-pill">單擊</span> 任何一張牌即可立起選取；再次點擊該牌放平。<br>• <strong>一鍵收回</strong>：點桌面任意空白處，所有立起的牌全員歸位。<br>• <strong>連續多選</strong>：手指或滑鼠在牌面上滑動即可連選。'
+        },
+        {
+          title: '🎯 拖曳與智慧分層',
+          desc: '• <strong>整組打包</strong>：立起幾張牌後，拖曳其中任意一張，整組牌一起移動。<br>• <strong>黃色游標指引</strong>：游標指示精確插牌空隙，鬆手即落位。'
+        },
+        {
+          title: '📱 手機端操作',
+          desc: '• <strong>左右自由滑屏</strong>：直屏查看所有牌，手指橫向滑動查看。<br>• <strong>全向巡航滾屏</strong>：按住選取的牌往邊緣靠攏自動平滑回滾。'
+        },
+        {
+          title: '⚖️ 推薦思路與智慧覆盤',
+          desc: '• 點擊 <span class="help-pill">💡 推薦思路</span> 依據頂級戰術分層。<br>• 點擊 <span class="help-pill">⚖️ 思路比較</span> 自動與演算法對齊，點亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span> 或標紅差異層！'
+        }
+      ]
+    },
+    'en': {
+      levelPrefix: 'Rank: [ {level} ]',
+      cardsCount: 'Hand: {count} cards',
+      deal: '🎴 Deal Hand',
+      customHand: '🛠️ Custom',
+      compare: '⚖️ Compare Ideas',
+      aiRecommend: '💡 Recommend',
+      rulesBtn: '📖 Rules',
+      saveArchive: '💾 Save',
+      openArchive: '📂 Vault',
+      deleteSelected: '🗑️ Delete ({count})',
+      undo: '↩ Undo',
+      redo: '↪ Redo',
+      resetSort: '🔄 Reset',
+      toggleHelp: '💡 User Guide',
+      newSchemeBtn: '+ New Idea',
+      rowLayer: 'Tier {idx}',
+      rowPlaceholder: 'Move cards here to help organize hand',
+      wildTag: 'WILD',
+      suits: { '♥': 'Hearts', '♦': 'Diamonds', '♠': 'Spades', '♣': 'Clubs', 'joker': 'Joker' },
+      bigJoker: 'Red Joker',
+      smallJoker: 'Black Joker',
+      close: 'Close',
+      backToPlay: 'Back',
+      applyScheme: 'Use Scheme',
+      usingCurrent: 'In Use',
+      compareTitle: '⚖️ Compare Ideas',
+      archiveTitle: '📂 Saved Hands Vault',
+      noArchives: 'No saved archives found.',
+      load: 'Load',
+      delete: 'Delete',
+      savePrompt: 'Name your hand archive:',
+      saveDefault: 'Hand Save - Rank {level}',
+      saveSuccess: 'Saved successfully! Access it anytime from the vault.',
+      confirmDelArchive: 'Are you sure you want to delete this archive?',
+      customTitle: 'Customize Cards & Endgame (108 Deck Pool)',
+      customSelected: 'Selected',
+      cardUnit: 'cards',
+      customSetLevel: 'Set Current Rank:',
+      clearAll: 'Clear All',
+      cancel: 'Cancel',
+      confirmApply: 'Apply to Hand',
+      rulesTitle: '📖 Rules',
+      fontOptions: { small: 'Small Size', medium: 'Medium Size', large: 'Large Size', xlarge: 'Extra Large' },
+      renamePrompt: 'Enter new name for this idea:',
+      compareSummary: 'Total {tiers} Tiers · {cards} Cards',
+      viewFull: 'Standard',
+      viewCompact: 'Compact',
+      help: [
+        {
+          title: '🃏 Card Controls',
+          desc: '• <span class="help-pill">Tap</span> any card to raise it; tap again to lower it.<br>• <strong>Clear All</strong>: Tap empty felt to drop all raised cards.<br>• <strong>Swipe Select</strong>: Drag your finger across cards to select sequentially.'
+        },
+        {
+          title: '🎯 Drag & Auto Tiering',
+          desc: '• <strong>Combo Drag</strong>: When cards are raised, drag any one card to move the entire group together.<br>• <strong>Yellow Guide Caret</strong>: Follow the luminous yellow caret for exact placement.'
+        },
+        {
+          title: '📱 Mobile Hand Navigation',
+          desc: '• <strong>Smooth Pan</strong>: Swipe horizontally to inspect cards.<br>• <strong>Edge Auto-Cruise</strong>: Move cards near screen borders to auto-scroll smoothly.'
+        },
+        {
+          title: '⚖️ Smart Layout Audit',
+          desc: '• Click <span class="help-pill">💡 Recommend</span> for optimal hierarchy.<br>• Click <span class="help-pill">⚖️ Compare Ideas</span> to highlight matches and deviations instantly.'
+        }
+      ]
+    },
+    'es': {
+      levelPrefix: 'Nivel: [ {level} ]',
+      cardsCount: 'Mano: {count} cartas',
+      deal: '🎴 Repartir',
+      customHand: '🛠️ Personalizar',
+      compare: '⚖️ Comparar Ideas',
+      aiRecommend: '💡 Idea Óptima',
+      rulesBtn: '📖 Reglas',
+      saveArchive: '💾 Guardar',
+      openArchive: '📂 Archivos',
+      deleteSelected: '🗑️ Eliminar ({count})',
+      undo: '↩ Deshacer',
+      redo: '↪ Rehacer',
+      resetSort: '🔄 Reiniciar',
+      toggleHelp: '💡 Guía de Uso',
+      newSchemeBtn: '+ Nueva Idea',
+      rowLayer: 'Fila {idx}',
+      rowPlaceholder: 'Mueve cartas aquí para ordenar tu mano',
+      wildTag: 'COMODÍN',
+      suits: { '♥': 'Corazones', '♦': 'Diamantes', '♠': 'Picas', '♣': 'Tréboles', 'joker': 'Comodines' },
+      bigJoker: 'Joker Rojo',
+      smallJoker: 'Joker Negro',
+      close: 'Cerrar',
+      backToPlay: 'Volver',
+      applyScheme: 'Usar este',
+      usingCurrent: 'En uso',
+      compareTitle: '⚖️ Comparar Ideas',
+      archiveTitle: '📂 Archivo de Manos Guardadas',
+      noArchives: 'No hay partidas guardadas.',
+      load: 'Cargar',
+      delete: 'Borrar',
+      savePrompt: 'Nombre para este archivo de mano:',
+      saveDefault: 'Mano Guardada - Nivel {level}',
+      saveSuccess: '¡Guardado con éxito! Puedes acceder desde el menú en cualquier momento.',
+      confirmDelArchive: '¿Estás seguro de eliminar este archivo?',
+      customTitle: 'Configuración Personalizada y Finales (108 Cartas)',
+      customSelected: 'Seleccionado',
+      cardUnit: 'cartas',
+      customSetLevel: 'Nivel Actual:',
+      clearAll: 'Limpiar Todo',
+      cancel: 'Cancelar',
+      confirmApply: 'Aplicar a la Mano',
+      rulesTitle: '📖 Reglas',
+      fontOptions: { small: 'Tamaño Pequeño', medium: 'Tamaño Mediano', large: 'Tamaño Grande', xlarge: 'Tamaño Extra Grande' },
+      renamePrompt: 'Introduce el nuevo nombre para esta idea:',
+      compareSummary: 'Total {tiers} Filas · {cards} Cartas',
+      viewFull: 'Estándar',
+      viewCompact: 'Compacto',
+      help: [
+        {
+          title: '🃏 Manejo de Cartas',
+          desc: '• <span class="help-pill">Toca</span> para levantar cartas; pulsa en vacío para bajarlas todas.<br>• Desliza el dedo sobre las cartas para selección continua.'
+        },
+        {
+          title: '🎯 Arrastre Suave',
+          desc: '• Arrastra cualquier carta levantada para mover el combo entero.<br>• Suelta donde indique el cursor amarillo.'
+        },
+        {
+          title: '📱 Teléfonos Móviles',
+          desc: '• Desliza horizontalmente para ver toda la mano cómodamente.'
+        },
+        {
+          title: '⚖️ Comparación Inteligente',
+          desc: '• Pulsa <span class="help-pill">💡 Idea Óptima</span> para ver la estrategia experta.<br>• Pulsa <span class="help-pill">⚖️ Comparar</span> para contrastar y auditar discrepancias.'
+        }
+      ]
+    }
+  };
+
+  let currentLang = 'zh-CN';
+  let currentFontSize = localStorage.getItem('GUANDAN_FONT_SIZE') || 'medium';
+
+  function t(key, params = {}) {
+    let str = I18N[currentLang]?.[key] || I18N['zh-CN']?.[key] || key;
+    if (typeof str === 'string') {
+      for (const [k, v] of Object.entries(params)) {
+        str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
+      }
+    }
+    return str;
+  }
+
+  function setSafeText(id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+
+  // 深度富色彩「掼蛋规则」知识库
+  function renderRulesModalContent() {
+    const container = document.getElementById('rulesContentBody');
+    if (!container) return;
+    if (currentLang === 'en') {
+      container.innerHTML = `
+        <div class="rule-section">
+          <h3>🏆 1. Overview & Objectives</h3>
+          <p><strong>Guandan (掼蛋)</strong> is a climbing card game played by 4 players using two standard 54-card decks (108 cards in total). Cooperate with your partner to empty your hands before opponents do.</p>
+        </div>
+        <div class="rule-section">
+          <h3>⭐ 2. Rank & Wild Cards ("Feng Ren Pei")</h3>
+          <p>• <strong>Current Rank</strong>: Plays through ranks 2 to Ace. Rank cards are promoted above Aces.<br>
+          • <strong>Heart Wild Card</strong>: The two Heart cards of current rank are universal Wild Cards.<br>
+          • <strong>Card Hierarchy</strong>: <span class="mini-chip red">Red Joker</span> &gt; <span class="mini-chip">Black Joker</span> &gt; <span class="mini-chip red">Heart Rank Wild</span> &gt; <span class="mini-chip blue">Rank Cards</span> &gt; A &gt; K &gt; Q &gt; J &gt; 10 &gt; 9 &gt; 8 &gt; 7 &gt; 6 &gt; 5 &gt; 4 &gt; 3 &gt; 2.</p>
+        </div>
+        <div class="rule-section">
+          <h3>💣 3. Combinations & Bomb Hierarchy</h3>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">4-Bomb</span> &lt;
+            <span class="mini-chip">5-Bomb</span> &lt;
+            <span class="mini-chip red">🔥 Straight Flush (5)</span> &lt;
+            <span class="mini-chip">6-Bomb</span> &lt;
+            <span class="mini-chip">7-Bomb</span> &lt;
+            <span class="mini-chip">8-Bomb</span> &lt;
+            <span class="mini-chip gold">👑 Supreme Bomb (4 Jokers)</span>
+          </div>
+        </div>
+        <div class="rule-section">
+          <h3>💡 4. Master Tactics & Philosophy</h3>
+          <div class="strategy-box gold-edge"><p><strong>1. "Wilds make Bombs" Priority</strong>: Never waste your Heart Wild cards on basic pairs. Always seek Straight Flushes or 5/6-card Bombs first.</p></div>
+          <div class="strategy-box green-edge"><p><strong>2. Partner Synergy & Roles</strong>: Divide roles between aggressor (running first) and supporter (controlling high cards).</p></div>
+        </div>
+      `;
+    } else if (currentLang === 'es') {
+      container.innerHTML = `
+        <div class="rule-section">
+          <h3>🏆 1. Descripción y Objetivo</h3>
+          <p><strong>Guandan (掼蛋)</strong> se juega entre 4 jugadores en parejas con 2 barajas (108 cartas en total).</p>
+        </div>
+        <div class="rule-section">
+          <h3>⭐ 2. Jerarquía y Comodines</h3>
+          <p>• Los dos Corazones del nivel actual son comodines universales.</p>
+        </div>
+        <div class="rule-section">
+          <h3>💣 3. Jerarquía de Bombas</h3>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">Bomba de 4</span> &lt;
+            <span class="mini-chip">Bomba de 5</span> &lt;
+            <span class="mini-chip red">🔥 Escalera de Color</span> &lt;
+            <span class="mini-chip">Bomba de 6+</span> &lt;
+            <span class="mini-chip gold">👑 Bomba Suprema (4 Jokers)</span>
+          </div>
+        </div>
+      `;
+    } else if (currentLang === 'zh-TW') {
+      container.innerHTML = `
+        <div class="rule-section">
+          <h3>🏆 1. 遊戲綜述與勝負目標</h3>
+          <p><strong>掼蛋</strong>採用兩副牌（共 108 張），4人參與，對家配合。核心目標為在隊友掩護下儘早出完手牌。</p>
+        </div>
+        <div class="rule-section">
+          <h3>⭐ 2. 級牌體系與「逢人配」萬能牌</h3>
+          <p>• <strong>級牌（本局打幾）</strong>：從打 2 升至打 A。<br>
+          • <strong>逢人配</strong>：兩張<strong>紅心級牌</strong>為萬能百搭牌（除大小王外）。<br>
+          • <strong>大小順序</strong>：<span class="mini-chip red">大王</span> ＞ <span class="mini-chip">小王</span> ＞ <span class="mini-chip red">紅心逢人配</span> ＞ <span class="mini-chip blue">級牌</span> ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
+        </div>
+        <div class="rule-section">
+          <h3>💣 3. 牌型圖譜與炸彈威力天梯</h3>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">四張炸彈</span> &lt;
+            <span class="mini-chip">五張炸彈</span> &lt;
+            <span class="mini-chip red">🔥 同花順 (5張)</span> &lt;
+            <span class="mini-chip">六張炸彈</span> &lt;
+            <span class="mini-chip">七張炸彈</span> &lt;
+            <span class="mini-chip">八張炸彈</span> &lt;
+            <span class="mini-chip gold">👑 四大天王 (天王炸)</span>
+          </div>
+        </div>
+        <div class="rule-section">
+          <h3>💡 4. 實戰進階：掼蛋核心戰術思路與控局哲學</h3>
+          <div class="strategy-box gold-edge">
+            <p><strong>一、配火第一，絕不湊零（逢人配的黃金法則）</strong><br>
+            逢人配萬萬不可隨便拿去湊三帶二或單順。它的<strong>最優價值永遠是「配炸」或「配同花順」</strong>。多一個炸彈，整手牌防守與進攻能力質變。</p>
+          </div>
+          <div class="strategy-box green-edge">
+            <p><strong>二、隊友同心，角色分工（一主一副打法）</strong><br>
+            手牌強、炸彈多主動當<strong>「主攻手」</strong>衝刺頭遊；手牌散、小牌多甘願當<strong>「掩護手」</strong>，頂大牌卡位，把牌權留給隊友。</p>
+          </div>
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div class="rule-section">
+          <h3>🏆 1. 游戏综述与胜负目标</h3>
+          <p><strong>掼蛋</strong>源自江苏淮安，采用<strong>两副牌（共 108 张）</strong>，4人参与，对家两人为一组配合。核心目标是在队友战术掩护下，尽早将手中的 27 张牌全部出完（第一名出完者称为“头游”）。</p>
+        </div>
+        <div class="rule-section">
+          <h3>⭐ 2. 级牌体系与“逢人配”万能牌</h3>
+          <p>• <strong>级牌（本局打几）</strong>：从打 2 开始升至打 A。当前打几，对应点数权重拔高，大于 A 且仅次于小王。<br>
+          • <strong>逢人配（红心级牌）</strong>：两张<strong>红心级牌</strong>为万能百搭牌（除大小王外），可替代任意点数和花色凑成同花顺、顺子、炸弹等。<br>
+          • <strong>大小顺序</strong>：<span class="mini-chip red">大王</span> ＞ <span class="mini-chip">小王</span> ＞ <span class="mini-chip red">红心逢人配</span> ＞ <span class="mini-chip blue">级牌</span> ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
+        </div>
+        <div class="rule-section">
+          <h3>💣 3. 牌型图谱与炸弹威力天梯</h3>
+          <div class="rule-card-preview-row">
+            <span class="mini-chip">四张炸弹</span> &lt;
+            <span class="mini-chip">五张炸弹</span> &lt;
+            <span class="mini-chip red">🔥 同花顺 (5张同花连续)</span> &lt;
+            <span class="mini-chip">六张炸弹</span> &lt;
+            <span class="mini-chip">七张炸弹</span> &lt;
+            <span class="mini-chip">八张炸弹</span> &lt;
+            <span class="mini-chip gold">👑 四大天王 (天王炸)</span>
+          </div>
+          <p style="font-size:var(--font-modal-small); color:#94a3b8; margin-top:6px;">* 关键规则：同花顺威力大于五张炸弹，但小于六张炸弹！天王炸（4张大小王）为全场最大神牌。</p>
+        </div>
+        <div class="rule-section">
+          <h3>💡 4. 实战进阶：掼蛋核心战术思路与控局哲学</h3>
+          <div class="strategy-box gold-edge">
+            <p><strong>一、配火第一，绝不凑零（逢人配的黄金法则）</strong><br>
+            逢人配万万不可随便拿去凑普通三带二或单顺。它的<strong>最优价值永远是“配炸”或“配同花顺”</strong>。多一个炸弹，整手牌的防守反击与控局能力将迎来质的飞跃。</p>
+          </div>
+          <div class="strategy-box green-edge">
+            <p><strong>二、队友同心，角色分工（一主一副打法）</strong><br>
+            掼蛋是双人默契运动：摸完牌后迅速评估牌力。牌力强、炸弹多，主动当<strong>“主攻手”</strong>冲刺头游；牌力零散、小牌多，甘愿当<strong>“掩护手”</strong>，负责顶对手大牌、拆炸弹卡位，把顺畅出牌路数留给队友。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>三、三带二带小对，保全大对牌权</strong><br>
+            理牌时切忌用 222 去带 AA、KK！大对子在单对较量中是核心牌权，三条应<strong>优先消耗小对子（如带 33、44）</strong>，把大对子独立留存争夺主导权。</p>
+          </div>
+          <div class="strategy-box">
+            <p><strong>四、基础算牌基线（知己知彼）</strong><br>
+            不需要背下全部 108 张牌，重点关注三条线：① 四张王牌出了几张？② 双方级牌出完没有？③ 对手手牌小于 6 张时，随时防范其一击走脱！</p>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  function updateHelpDrawerContent() {
+    const grid = document.getElementById('helpGridContent');
+    if (!grid) return;
+    grid.innerHTML = '';
+    const items = I18N[currentLang]?.help || I18N['zh-CN'].help;
+    items.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'help-item';
+      el.innerHTML = `<h4>${item.title}</h4><p>${item.desc}</p>`;
+      grid.appendChild(el);
+    });
+  }
+
+  function applyLanguage() {
+    setSafeText('dealBtn', t('deal'));
+    setSafeText('customHandBtn', t('customHand'));
+    setSafeText('compareSchemesBtn', t('compare'));
+    setSafeText('aiRecommendBtn', t('aiRecommend'));
+    setSafeText('rulesBtn', t('rulesBtn'));
+    setSafeText('saveArchiveBtn', t('saveArchive'));
+    setSafeText('openArchiveBtn', t('openArchive'));
+    setSafeText('undoBtn', t('undo'));
+    setSafeText('redoBtn', t('redo'));
+    setSafeText('resetBtn', t('resetSort'));
+    setSafeText('toggleHelpBtn', t('toggleHelp'));
+
+    setSafeText('compareModalTitle', t('compareTitle'));
+    setSafeText('rulesModalTitle', t('rulesTitle'));
+    setSafeText('archiveModalTitle', t('archiveTitle'));
+    setSafeText('customModalTitle', t('customTitle'));
+    setSafeText('customSelectedLabel', t('customSelected'));
+    setSafeText('customCardUnit', t('cardUnit'));
+    setSafeText('customLevelSetLabel', t('customSetLevel'));
+    setSafeText('clearAllModalBtn', t('clearAll'));
+    setSafeText('cancelModalBtn', t('cancel'));
+    setSafeText('confirmModalBtn', t('confirmApply'));
+
+    setSafeText('mainViewFullBtn', t('viewFull'));
+    setSafeText('mainViewCompactBtn', t('viewCompact'));
+    setSafeText('viewFullBtn', t('viewFull'));
+    setSafeText('viewCompactBtn', t('viewCompact'));
+
+    const fontOpts = I18N[currentLang]?.fontOptions || I18N['zh-CN'].fontOptions;
+    const fontSelect = document.getElementById('fontSizeSelect');
+    if (fontSelect && fontSelect.options.length >= 4) {
+      fontSelect.options[0].text = fontOpts.small;
+      fontSelect.options[1].text = fontOpts.medium;
+      fontSelect.options[2].text = fontOpts.large;
+      fontSelect.options[3].text = fontOpts.xlarge;
+    }
+
+    setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
+    updateTotalCount();
+    updateButtonStates();
+    updateHelpDrawerContent();
+    renderRulesModalContent();
+    renderSchemesNav();
+    renderBoard();
+  }
+
+  function applyFontSize(size) {
+    document.body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large', 'font-size-xlarge');
+    document.body.classList.add(`font-size-${size}`);
+    currentFontSize = size;
+    localStorage.setItem('GUANDAN_FONT_SIZE', size);
+    const fontSelect = document.getElementById('fontSizeSelect');
+    if (fontSelect) fontSelect.value = size;
+  }
+
+  document.getElementById('fontSizeSelect').addEventListener('change', (e) => {
+    applyFontSize(e.target.value);
+  });
+
+  const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+  const SUITS = [
+    { name: '♥', color: 'red', isHeart: true },
+    { name: '♦', color: 'red', isHeart: false },
+    { name: '♠', color: 'black', isHeart: false },
+    { name: '♣', color: 'black', isHeart: false }
+  ];
+
+  let currentLevel = '2';
+  let initialCards = [];
+  let schemes = [];
+  let currentSchemeIndex = 0;
+
+  function getCurrentScheme() {
+    if (!schemes || schemes.length === 0) return null;
+    if (currentSchemeIndex >= schemes.length) currentSchemeIndex = 0;
+    return schemes[currentSchemeIndex];
+  }
+
+  const selectedIds = new Set();
+  let lastAnchorCardId = null;
+  let interactionMode = null;
+  let startX = 0, startY = 0;
+  let currentClientX = 0, currentClientY = 0;
+  let clickedCardId = null;
+  let clickedCardInitialSelected = false;
+  let hasMovedEnough = false;
+  let mousePressedWithShiftOrCmd = false;
+
+  let dropTarget = null;
+  let draggedRowIndex = null;
+  let rowTargetDrop = null;
+  let modalSelectionMap = {};
+
+  let autoScrollAnimationId = null;
+  let autoScrollSpeedY = 0;
+  autoScrollSpeedX = 0;
+
+  let draggedSchemeIndex = null;
+  let isTabDraggingPointer = false;
+  let tabDragStartX = 0;
+
+  function pickRandomLevel() {
+    return RANKS[Math.floor(Math.random() * RANKS.length)];
+  }
+
+  function buildDoubleDeck() {
+    const deck = [];
+    let idCounter = 1;
+    for (let d = 0; d < 2; d++) {
+      for (let r of RANKS) {
+        for (let s of SUITS) {
+          deck.push({ id: idCounter++, rank: r, suit: s.name, color: s.color, isHeart: s.isHeart, isJoker: false });
+        }
+      }
+      deck.push({ id: idCounter++, rank: '小王', suit: '★', color: 'black', isHeart: false, isJoker: true, jokerType: 'small' });
+      deck.push({ id: idCounter++, rank: '大王', suit: '★', color: 'red', isHeart: false, isJoker: true, jokerType: 'big' });
+    }
+    return deck;
+  }
+
+  function dealHand() {
+    const deck = buildDoubleDeck();
+    for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+    return deck.slice(0, 27);
+  }
+
+  function getCardWeight(card, level) {
+    if (card.isJoker) return card.jokerType === 'big' ? 1000 : 900;
+    if (card.rank === level && card.isHeart) return 800;
+    if (card.rank === level) return 700;
+    const idx = RANKS.indexOf(card.rank);
+    return idx >= 0 ? idx + 10 : 0;
+  }
+
+  function sortCards(cards, level) {
+    return [...cards].sort((a, b) => {
+      const wA = getCardWeight(a, level);
+      const wB = getCardWeight(b, level);
+      if (wA !== wB) return wB - wA;
+      const suitPriority = { '♠': 4, '♥': 3, '♣': 2, '♦': 1, '★': 0 };
+      return (suitPriority[b.suit] || 0) - (suitPriority[a.suit] || 0);
+    });
+  }
+
+  function pushState() {
+    const cur = getCurrentScheme();
+    if (!cur) return;
+    if (!cur.historyStack) cur.historyStack = [];
+    const snapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
+    cur.historyStack.push(snapshot);
+    cur.redoStack = [];
+    updateButtonStates();
+  }
+
+  function updateButtonStates() {
+    const cur = getCurrentScheme();
+    const undoEl = document.getElementById('undoBtn');
+    const redoEl = document.getElementById('redoBtn');
+    const delBtn = document.getElementById('deleteBtn');
+    if (undoEl) undoEl.disabled = !cur || !cur.historyStack || cur.historyStack.length === 0;
+    if (redoEl) redoEl.disabled = !cur || !cur.redoStack || cur.redoStack.length === 0;
+    if (delBtn) {
+      delBtn.disabled = selectedIds.size === 0;
+      delBtn.textContent = `🗑️ ${t('deleteSelected', { count: selectedIds.size }).replace('🗑️ ', '')}`;
+    }
+  }
+
+  function updateTotalCount() {
+    const cur = getCurrentScheme();
+    const total = cur && cur.rows ? cur.rows.reduce((acc, r) => acc + (r ? r.length : 0), 0) : 0;
+    setSafeText('totalCountInfo', t('cardsCount', { count: total }));
+  }
+
+  function getCardDisplayRank(card) {
+    if (card.isJoker) {
+      return card.jokerType === 'big' ? t('bigJoker') : t('smallJoker');
+    }
+    return card.rank;
+  }
+
+  function buildCardHTML(card) {
+    const isWild = (card.rank === currentLevel && card.isHeart);
+    return `
+      <div class="card-top">
+        <div class="card-val">${getCardDisplayRank(card)}</div>
+        <div class="card-suit">${card.suit}</div>
+        ${isWild ? `<div class="wild-badge-corner">${t('wildTag')}</div>` : ''}
+      </div>
+    `;
+  }
+
+  function getDefaultSchemeName(targetIndex) {
+    const num = targetIndex + 1;
+    if (currentLang === 'en') return `Idea ${num}`;
+    if (currentLang === 'es') return `Idea ${num}`;
+    return `思路 ${num}`;
+  }
+
+  // ---------------- 智能启发式理牌算法引擎（带小对消耗优化） ----------------
+  function generateAIRecommendedRows(cardsPool, level) {
+    let pool = sortCards([...cardsPool], level);
+    const rows = [];
+
+    function takeCardsByIds(ids) {
+      const set = new Set(ids);
+      const taken = pool.filter(c => set.has(c.id));
+      pool = pool.filter(c => !set.has(c.id));
+      return taken;
+    }
+
+    // 1. 天王炸 (4王)
+    const jokers = pool.filter(c => c.isJoker);
+    if (jokers.length === 4) {
+      rows.push(sortCards(takeCardsByIds(jokers.map(c => c.id)), level));
+    }
+
+    // 2. 8炸、7炸、6炸
+    const rankBuckets = {};
+    pool.forEach(c => {
+      if (!c.isJoker) {
+        rankBuckets[c.rank] = rankBuckets[c.rank] || [];
+        rankBuckets[c.rank].push(c);
+      }
+    });
+
+    [8, 7, 6].forEach(count => {
+      Object.keys(rankBuckets).forEach(r => {
+        if (rankBuckets[r] && rankBuckets[r].length === count) {
+          rows.push(sortCards(takeCardsByIds(rankBuckets[r].map(c => c.id)), level));
+          delete rankBuckets[r];
+        }
+      });
+    });
+
+    // 3. 同花顺
+    const wildCards = pool.filter(c => c.rank === level && c.isHeart);
+    const standardOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
+    const suits = ['♥', '♦', '♠', '♣'];
+
+    for (let s of suits) {
+      const suitCards = pool.filter(c => c.suit === s && !(c.rank === level && c.isHeart) && !c.isJoker);
+
+      for (let i = 0; i <= standardOrder.length - 5; i++) {
+        const windowRanks = standardOrder.slice(i, i + 5);
+        let missing = [];
+        let matched = [];
+
+        windowRanks.forEach(wr => {
+          const matchCard = suitCards.find(c => c.rank === wr && !matched.some(m => m.id === c.id));
+          if (matchCard) matched.push(matchCard);
+          else missing.push(wr);
+        });
+
+        if (missing.length > 0 && missing.length <= wildCards.length && (matched.length + missing.length === 5)) {
+          const usedWilds = wildCards.splice(0, missing.length);
+          const comboIds = [...matched.map(c => c.id), ...usedWilds.map(c => c.id)];
+          rows.push(sortCards(takeCardsByIds(comboIds), level));
+          break;
+        }
+      }
+    }
+
+    // 4. 五炸
+    Object.keys(rankBuckets).forEach(r => {
+      if (rankBuckets[r] && rankBuckets[r].length === 5) {
+        rows.push(sortCards(takeCardsByIds(rankBuckets[r].map(c => c.id)), level));
+        delete rankBuckets[r];
+      }
+    });
+    if (wildCards.length > 0) {
+      const curBuckets = {};
+      pool.forEach(c => {
+        if (!c.isJoker && !(c.rank === level && c.isHeart)) {
+          curBuckets[c.rank] = curBuckets[c.rank] || [];
+          curBuckets[c.rank].push(c);
+        }
+      });
+      for (let [r, group] of Object.entries(curBuckets)) {
+        if (group.length === 4 && wildCards.length > 0) {
+          const wildToUse = wildCards.pop();
+          rows.push(sortCards(takeCardsByIds([...group.map(c => c.id), wildToUse.id]), level));
+        }
+      }
+    }
+
+    // 5. 四炸
+    const curBuckets4 = {};
+    pool.forEach(c => {
+      if (!c.isJoker && !(c.rank === level && c.isHeart)) {
+        curBuckets4[c.rank] = curBuckets4[c.rank] || [];
+        curBuckets4[c.rank].push(c);
+      }
+    });
+    Object.keys(curBuckets4).forEach(r => {
+      if (curBuckets4[r].length === 4) {
+        rows.push(sortCards(takeCardsByIds(curBuckets4[r].map(c => c.id)), level));
+      }
+    });
+    if (wildCards.length > 0) {
+      const curBuckets3 = {};
+      pool.forEach(c => {
+        if (!c.isJoker && !(c.rank === level && c.isHeart)) {
+          curBuckets3[c.rank] = curBuckets3[c.rank] || [];
+          curBuckets3[c.rank].push(c);
+        }
+      });
+      for (let [r, group] of Object.entries(curBuckets3)) {
+        if (group.length === 3 && wildCards.length > 0) {
+          const wildToUse = wildCards.pop();
+          rows.push(sortCards(takeCardsByIds([...group.map(c => c.id), wildToUse.id]), level));
+        }
+      }
+    }
+
+    // 6. 木板（三连对）与钢板（两连三张）
+    // 钢板判定 (两连三张，如 333444)
+    const normTripsMap = {};
+    pool.forEach(c => {
+      if (!c.isJoker) {
+        normTripsMap[c.rank] = normTripsMap[c.rank] || [];
+        normTripsMap[c.rank].push(c);
+      }
+    });
+    const orderRanksSeq = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
+    for (let i = 0; i <= orderRanksSeq.length - 2; i++) {
+      const r1 = orderRanksSeq[i], r2 = orderRanksSeq[i+1];
+      if (normTripsMap[r1]?.length >= 3 && normTripsMap[r2]?.length >= 3) {
+        const p1 = normTripsMap[r1].splice(0, 3);
+        const p2 = normTripsMap[r2].splice(0, 3);
+        rows.push(sortCards(takeCardsByIds([...p1.map(c=>c.id), ...p2.map(c=>c.id)]), level));
+      }
+    }
+
+    // 木板判定 (三连对，如 334455)
+    for (let i = 0; i <= orderRanksSeq.length - 3; i++) {
+      const r1 = orderRanksSeq[i], r2 = orderRanksSeq[i+1], r3 = orderRanksSeq[i+2];
+      const p1 = pool.filter(c => c.rank === r1 && !c.isJoker);
+      const p2 = pool.filter(c => c.rank === r2 && !c.isJoker);
+      const p3 = pool.filter(c => c.rank === r3 && !c.isJoker);
+      if (p1.length >= 2 && p2.length >= 2 && p3.length >= 2) {
+        const useIds = [p1[0].id, p1[1].id, p2[0].id, p2[1].id, p3[0].id, p3[1].id];
+        rows.push(sortCards(takeCardsByIds(useIds), level));
+      }
+    }
+
+    // 7. 5 连常规单顺 (从大到小排列)
+    for (let i = 0; i <= orderRanksSeq.length - 5; i++) {
+      const windowRanks = orderRanksSeq.slice(i, i + 5);
+      const candidateCombo = [];
+      let canForm = true;
+
+      for (let wr of windowRanks) {
+        const found = pool.find(c => c.rank === wr && !c.isJoker && !candidateCombo.some(item => item.id === c.id));
+        if (found) {
+          candidateCombo.push(found);
+        } else {
+          canForm = false;
+          break;
+        }
+      }
+
+      if (canForm && candidateCombo.length === 5) {
+        // 顺子内部严格自左向右自大到小排列
+        rows.push(sortCards(takeCardsByIds(candidateCombo.map(c => c.id)), level));
+      }
+    }
+
+    // 8. 三带二（战术优化：三条从大到小，对子从最小开始配对消耗！）
+    const countsMap = {};
+    pool.forEach(c => {
+      if (!c.isJoker) {
+        countsMap[c.rank] = countsMap[c.rank] || [];
+        countsMap[c.rank].push(c);
+      }
+    });
+
+    const trips = [];
+    const pairs = [];
+    Object.keys(countsMap).forEach(r => {
+      const g = countsMap[r];
+      if (g.length >= 3) {
+        trips.push(g.slice(0, 3));
+      } else if (g.length === 2) {
+        pairs.push(g.slice(0, 2));
+      }
+    });
+
+    // 三条按点数权重从大到小排序
+    trips.sort((a, b) => getCardWeight(b[0], level) - getCardWeight(a[0], level));
+    // 对子按点数权重从小到大排序（优先带走小对，留下大对争牌权）
+    pairs.sort((a, b) => getCardWeight(a[0], level) - getCardWeight(b[0], level));
+
+    while (trips.length > 0 && pairs.length > 0) {
+      const tGroup = trips.shift(); // 最大的三条
+      const pGroup = pairs.shift(); // 最小的对子
+      // 严格排列：三张主体在左，对子在右（如 AAAJJ，杜绝 JJAAA）
+      const comboCards = [...sortCards(tGroup, level), ...sortCards(pGroup, level)];
+      rows.push(takeCardsByIds(comboCards.map(c => c.id)));
+    }
+
+    // 9. 纯三条（未带出对子的三张）
+    while (trips.length > 0) {
+      const tGroup = trips.shift();
+      rows.push(sortCards(takeCardsByIds(tGroup.map(c => c.id)), level));
+    }
+
+    // 10. 剩余对子（标准视角：每一对独立成层，从大到小）
+    const remainBuckets = {};
+    pool.forEach(c => {
+      remainBuckets[c.rank] = remainBuckets[c.rank] || [];
+      remainBuckets[c.rank].push(c);
+    });
+
+    const remainPairsList = [];
+    Object.keys(remainBuckets).forEach(r => {
+      while (remainBuckets[r] && remainBuckets[r].length >= 2) {
+        const pCards = remainBuckets[r].splice(0, 2);
+        remainPairsList.push(sortCards(pCards, level));
+      }
+    });
+    // 对子从大到小排布
+    remainPairsList.sort((a, b) => getCardWeight(b[0], level) - getCardWeight(a[0], level));
+    remainPairsList.forEach(p => {
+      rows.push(takeCardsByIds(p.map(c => c.id)));
+    });
+
+    // 11. 杂单（从大到小）
+    if (pool.length > 0) {
+      rows.push(sortCards(takeCardsByIds(pool.map(c => c.id)), level));
+    }
+
+    return rows.filter(r => r.length > 0);
+  }
+
+  // 紧凑分层归类算法（严格牌型隔离，结构自律排列）
+  function buildCompactRows(rowsList, level) {
+    const compactBuckets = {
+      kingBomb: [],
+      bomb8: [],
+      bomb7: [],
+      bomb6: [],
+      straightFlush: [],
+      bomb5: [],
+      bomb4: [],
+      plates: [],
+      tubes: [],
+      straights: [],
+      fullHouses: [],
+      trips: [],
+      pairs: [],
+      singles: []
+    };
+
+    rowsList.forEach(row => {
+      if (!row || row.length === 0) return;
+      if (row.length === 4 && row.every(c => c.isJoker)) {
+        compactBuckets.kingBomb.push(row);
+      } else if (row.length === 5 && isStraightFlushRow(row, level)) {
+        compactBuckets.straightFlush.push(row);
+      } else if (row.length >= 4 && isBombRow(row, level)) {
+        if (row.length >= 8) compactBuckets.bomb8.push(row);
+        else if (row.length === 7) compactBuckets.bomb7.push(row);
+        else if (row.length === 6) compactBuckets.bomb6.push(row);
+        else if (row.length === 5) compactBuckets.bomb5.push(row);
+        else if (row.length === 4) compactBuckets.bomb4.push(row);
+      } else if (row.length === 6 && isPlatesRow(row, level)) {
+        compactBuckets.plates.push(row);
+      } else if (row.length === 6 && isTubesRow(row, level)) {
+        compactBuckets.tubes.push(row);
+      } else if (row.length === 5 && isStraightRow(row, level)) {
+        compactBuckets.straights.push(row);
+      } else if (row.length === 5 && isFullHouseRow(row, level)) {
+        compactBuckets.fullHouses.push(row);
+      } else if (row.length === 3 && isTripRow(row, level)) {
+        compactBuckets.trips.push(row);
+      } else if (row.length === 2 && isPairRow(row, level)) {
+        compactBuckets.pairs.push(row);
+      } else {
+        compactBuckets.singles.push(row);
+      }
+    });
+
+    const result = [];
+    const keys = ['kingBomb', 'bomb8', 'bomb7', 'bomb6', 'straightFlush', 'bomb5', 'bomb4', 'plates', 'tubes', 'straights', 'fullHouses', 'trips', 'pairs', 'singles'];
+    
+    keys.forEach(k => {
+      const groups = compactBuckets[k];
+      if (groups.length > 0) {
+        // 对组本身从大到小排序
+        groups.sort((gA, gB) => getCardWeight(gB[0], level) - getCardWeight(gA[0], level));
+        const mergedCards = [];
+        groups.forEach(g => {
+          if (k === 'fullHouses') {
+            // 三带二保持“三张在左、对子在右”
+            const nonWild = g.filter(c => !(c.rank === level && c.isHeart));
+            const rCounts = {};
+            nonWild.forEach(c => rCounts[c.rank] = (rCounts[c.rank] || 0) + 1);
+            let tripRank = Object.keys(rCounts).find(r => rCounts[r] >= 2) || g[0].rank;
+            const tripPart = g.filter(c => c.rank === tripRank);
+            const pairPart = g.filter(c => c.rank !== tripRank);
+            mergedCards.push(...sortCards(tripPart, level), ...sortCards(pairPart, level));
+          } else {
+            mergedCards.push(...g);
+          }
+        });
+        result.push(mergedCards);
+      }
+    });
+
+    return result;
+  }
+
+  function isBombRow(cards, level) {
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    if (nonWild.length === 0) return true;
+    const base = nonWild[0].rank;
+    return nonWild.every(c => c.rank === base);
+  }
+
+  function isStraightFlushRow(cards, level) {
+    if (cards.length !== 5) return false;
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    if (nonWild.length === 0) return true;
+    const baseSuit = nonWild[0].suit;
+    if (!nonWild.every(c => c.suit === baseSuit)) return false;
+    return isStraightRow(cards, level);
+  }
+
+  function isStraightRow(cards, level) {
+    if (cards.length !== 5) return false;
+    const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    const ranks = nonWild.map(c => c.rank);
+    for (let i = 0; i <= normOrder.length - 5; i++) {
+      const slice = normOrder.slice(i, i + 5);
+      if (ranks.every(r => slice.includes(r))) return true;
+    }
+    return false;
+  }
+
+  function isFullHouseRow(cards, level) {
+    if (cards.length !== 5) return false;
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    const counts = {};
+    nonWild.forEach(c => counts[c.rank] = (counts[c.rank] || 0) + 1);
+    const vals = Object.values(counts);
+    return vals.includes(3) || vals.length === 2;
+  }
+
+  function isTripRow(cards, level) {
+    if (cards.length !== 3) return false;
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    if (nonWild.length === 0) return true;
+    const base = nonWild[0].rank;
+    return nonWild.every(c => c.rank === base);
+  }
+
+  function isPairRow(cards, level) {
+    if (cards.length !== 2) return false;
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    if (nonWild.length <= 1) return true;
+    return nonWild[0].rank === nonWild[1].rank;
+  }
+
+  function isTubesRow(cards, level) { 
+    return cards.length === 6 && isStraightRow(cards.slice(0,5), level) === false; 
+  }
+  function isPlatesRow(cards, level) { 
+    return cards.length === 6; 
+  }
+
+  // ---------------- 智能语义对齐与容错差异检测 ----------------
+  function analyzeSemanticMatch(userRows, standardRecRows, compactRecRows, level) {
+    const cleanUser = userRows.filter(r => r && r.length > 0);
+    const cleanStd = standardRecRows.filter(r => r && r.length > 0);
+    const cleanCpt = compactRecRows.filter(r => r && r.length > 0);
+
+    function getSortedIds(row) {
+      return row.map(c => c.id).sort((a,b)=>a-b).join(',');
+    }
+
+    const userSignatures = cleanUser.map(getSortedIds);
+    const stdSignatures = cleanStd.map(getSortedIds);
+    const cptSignatures = cleanCpt.map(getSortedIds);
+
+    const isStdMatch = (userSignatures.slice().sort().join('|') === stdSignatures.slice().sort().join('|'));
+    const isCptMatch = (userSignatures.slice().sort().join('|') === cptSignatures.slice().sort().join('|'));
+
+    let isSemanticPureMatch = isStdMatch || isCptMatch;
+    if (!isSemanticPureMatch) {
+      const userCompact = buildCompactRows(cleanUser, level);
+      const userCompactSigs = userCompact.map(getSortedIds).sort().join('|');
+      const targetCompactSigs = cleanCpt.map(getSortedIds).sort().join('|');
+      if (userCompactSigs === targetCompactSigs) {
+        isSemanticPureMatch = true;
+      }
+    }
+
+    const validStdSet = new Set(stdSignatures);
+    const validCptSet = new Set(cptSignatures);
+
+    const diffRowIndices = new Set();
+    cleanUser.forEach((row, idx) => {
+      const sig = getSortedIds(row);
+      let isRowLegit = validStdSet.has(sig) || validCptSet.has(sig);
+      if (!isRowLegit) {
+        // 智能兼容：如果用户把所有对子集中在同一层（无论内部前后顺序如何）
+        if (row.length % 2 === 0 && row.every((_, i, arr) => i % 2 !== 0 || isPairRow([arr[i], arr[i+1]], level))) {
+          const recPairs = cleanStd.filter(r => r.length === 2 && isPairRow(r, level)).map(getSortedIds);
+          let allSubPairsInRec = true;
+          for (let p = 0; p < row.length; p += 2) {
+            const pairSig = [row[p].id, row[p+1].id].sort((a,b)=>a-b).join(',');
+            if (!recPairs.includes(pairSig)) { allSubPairsInRec = false; break; }
+          }
+          if (allSubPairsInRec) isRowLegit = true;
+        }
+      }
+      if (!isRowLegit) {
+        diffRowIndices.add(idx);
+      }
+    });
+
+    return {
+      isExactMatch: isSemanticPureMatch,
+      diffRowIndices
+    };
+  }
+
+  // ---------------- 推荐思路与主桌面视图切换 ----------------
+  function handleGenerateAIRecommend() {
+    const allCards = getFlattenedCards();
+    if (!allCards || allCards.length === 0) return;
+
+    const baseRecRows = generateAIRecommendedRows(allCards, currentLevel);
+    const displayRows = mainDeskCompactMode ? buildCompactRows(baseRecRows, currentLevel) : baseRecRows;
+    const recSchemeName = currentLang === 'en' ? 'Recommend Idea' : (currentLang === 'es' ? 'Idea Recomendada' : '推荐思路');
+
+    schemes.push({
+      name: recSchemeName,
+      customName: recSchemeName,
+      isRecommended: true,
+      rows: displayRows,
+      historyStack: [],
+      redoStack: []
+    });
+
+    switchScheme(schemes.length - 1);
+  }
+
+  document.getElementById('aiRecommendBtn').addEventListener('click', handleGenerateAIRecommend);
+
+  document.getElementById('mainViewFullBtn').addEventListener('click', () => {
+    setMainDeskViewMode(false);
+  });
+  document.getElementById('mainViewCompactBtn').addEventListener('click', () => {
+    setMainDeskViewMode(true);
+  });
+
+  function setMainDeskViewMode(compact) {
+    mainDeskCompactMode = compact;
+    const cur = getCurrentScheme();
+    if (cur && cur.isRecommended) {
+      pushState();
+      const allCards = getFlattenedCards();
+      const baseRecRows = generateAIRecommendedRows(allCards, currentLevel);
+      cur.rows = compact ? buildCompactRows(baseRecRows, currentLevel) : baseRecRows;
+    }
+    updateMainTogglePillState();
+    renderBoard();
+  }
+
+  function updateMainTogglePillState() {
+    const cur = getCurrentScheme();
+    const pill = document.getElementById('mainViewTogglePill');
+    if (!pill) return;
+    const isRec = cur && cur.isRecommended;
+    pill.classList.toggle('visible', !!isRec);
+    const fullBtn = document.getElementById('mainViewFullBtn');
+    const compactBtn = document.getElementById('mainViewCompactBtn');
+    if (fullBtn) fullBtn.classList.toggle('active', !mainDeskCompactMode);
+    if (compactBtn) compactBtn.classList.toggle('active', mainDeskCompactMode);
+  }
+
+  function renderSchemesNav() {
+    const nav = document.getElementById('schemesNav');
+    if (!nav) return;
+    nav.innerHTML = '';
+
+    schemes.forEach((s, idx) => {
+      const tab = document.createElement('div');
+      tab.className = 'scheme-tab' + (idx === currentSchemeIndex ? ' active' : '');
+      tab.dataset.schemeIdx = idx;
+
+      const prefixEmoji = s.isRecommended ? '💡' : '📌';
+      const displayName = s.customName || s.name || getDefaultSchemeName(idx);
+
+      tab.innerHTML = `
+        <span class="tab-icon-prefix" title="点击重命名">${prefixEmoji}</span>
+        <span class="tab-title-text" title="双击重命名">${displayName}</span>
+        ${schemes.length > 1 ? `<span class="tab-del" title="删除该思路">✕</span>` : ''}
+      `;
+
+      tab.addEventListener('pointerdown', (e) => {
+        if (e.target.classList.contains('tab-del') || e.target.classList.contains('tab-icon-prefix')) return;
+        draggedSchemeIndex = idx;
+        isTabDraggingPointer = false;
+        tabDragStartX = e.clientX;
+        try { tab.setPointerCapture(e.pointerId); } catch(err) {}
+      });
+
+      tab.addEventListener('pointermove', (e) => {
+        if (draggedSchemeIndex === null) return;
+        if (Math.abs(e.clientX - tabDragStartX) > 8) {
+          isTabDraggingPointer = true;
+          tab.classList.add('is-tab-dragging');
+        }
+        if (isTabDraggingPointer) {
+          const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
+          const targetTab = elemBelow ? elemBelow.closest('.scheme-tab') : null;
+          document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
+          if (targetTab && targetTab !== tab) {
+            targetTab.classList.add('drag-over');
+          }
+        }
+      });
+
+      tab.addEventListener('pointerup', (e) => {
+        if (draggedSchemeIndex === null) return;
+        tab.classList.remove('is-tab-dragging');
+        document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
+
+        if (isTabDraggingPointer) {
+          const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
+          const targetTab = elemBelow ? elemBelow.closest('.scheme-tab') : null;
+          if (targetTab && targetTab !== tab) {
+            const toIdx = parseInt(targetTab.dataset.schemeIdx);
+            reorderSchemes(draggedSchemeIndex, toIdx);
+          }
+        } else {
+          switchScheme(idx);
+        }
+        draggedSchemeIndex = null;
+        isTabDraggingPointer = false;
+      });
+
+      tab.addEventListener('pointercancel', () => {
+        tab.classList.remove('is-tab-dragging');
+        document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
+        draggedSchemeIndex = null;
+        isTabDraggingPointer = false;
+      });
+
+      tab.addEventListener('click', (e) => {
+        if (e.target.classList.contains('tab-del')) {
+          e.stopPropagation();
+          deleteScheme(idx);
+          return;
+        }
+        if (e.target.classList.contains('tab-icon-prefix')) {
+          e.stopPropagation();
+          promptRenameScheme(idx);
+        }
+      });
+
+      tab.addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        promptRenameScheme(idx);
+      });
+
+      nav.appendChild(tab);
+    });
+
+    const addBtn = document.createElement('button');
+    addBtn.style.padding = '6px 12px';
+    addBtn.innerHTML = t('newSchemeBtn');
+    addBtn.addEventListener('click', addNewScheme);
+    nav.appendChild(addBtn);
+
+    updateMainTogglePillState();
+  }
+
+  function reorderSchemes(fromIdx, toIdx) {
+    const activeSchemeObj = schemes[currentSchemeIndex];
+    const [moved] = schemes.splice(fromIdx, 1);
+    schemes.splice(toIdx, 0, moved);
+    currentSchemeIndex = schemes.indexOf(activeSchemeObj);
+    renderSchemesNav();
+    renderBoard();
+  }
+
+  function promptRenameScheme(idx) {
+    const currentName = schemes[idx].customName || schemes[idx].name || getDefaultSchemeName(idx);
+    const newName = prompt(t('renamePrompt'), currentName);
+    if (newName && newName.trim() !== '') {
+      schemes[idx].customName = newName.trim();
+      schemes[idx].name = newName.trim();
+      renderSchemesNav();
+    }
+  }
+
+  function switchScheme(idx) {
+    currentSchemeIndex = idx;
+    selectedIds.clear();
+    lastAnchorCardId = null;
+    mainDeskCompactMode = false;
+    renderSchemesNav();
+    renderBoard();
+  }
+
+  function addNewScheme() {
+    const newIndex = schemes.length;
+    const defaultName = getDefaultSchemeName(newIndex);
+    const clonedCards = getFlattenedCards();
+    schemes.push({
+      name: defaultName,
+      customName: defaultName,
+      isRecommended: false,
+      rows: [sortCards(clonedCards, currentLevel)],
+      historyStack: [],
+      redoStack: []
+    });
+    switchScheme(schemes.length - 1);
+  }
+
+  function deleteScheme(idx) {
+    if (schemes.length <= 1) return;
+    schemes.splice(idx, 1);
+    if (currentSchemeIndex >= schemes.length) currentSchemeIndex = schemes.length - 1;
+    switchScheme(currentSchemeIndex);
+  }
+
+  function renderBoard() {
+    const board = document.getElementById('board');
+    if (!board) return;
+    board.innerHTML = '';
+
+    const cur = getCurrentScheme();
+    if (!cur) return;
+
+    cur.rows = (cur.rows || []).filter(r => r && r.length > 0);
+    cur.rows.push([]);
+
+    cur.rows.forEach((rowCards, rIndex) => {
+      const rowEl = document.createElement('div');
+      const isEmpty = !rowCards || rowCards.length === 0;
+      rowEl.className = 'card-row' + (isEmpty ? ' empty-row' : '');
+      rowEl.dataset.rowIndex = rIndex;
+      rowEl.setAttribute('data-placeholder', t('rowPlaceholder'));
+
+      if (!isEmpty) {
+        const handle = document.createElement('div');
+        handle.className = 'row-handle';
+        handle.dataset.rowIndex = rIndex;
+        // 严格统一显示第几层
+        handle.innerHTML = `
+          <div class="handle-icon">≡</div>
+          <div class="handle-label">${t('rowLayer', { idx: rIndex + 1 })}</div>
+          <div class="handle-count">${rowCards.length} ${t('cardUnit')}</div>
+        `;
+        rowEl.appendChild(handle);
+      }
+
+      const cardsWrapper = document.createElement('div');
+      cardsWrapper.className = 'cards-wrapper';
+
+      if (rowCards) {
+        rowCards.forEach((card, cIndex) => {
+          const cardEl = document.createElement('div');
+          const isSelected = selectedIds.has(card.id);
+          cardEl.className = `card ${card.color}` + (isSelected ? ' selected' : '');
+          cardEl.dataset.id = card.id;
+          cardEl.dataset.rowIndex = rIndex;
+          cardEl.dataset.cardIndex = cIndex;
+          cardEl.style.zIndex = (cIndex + 10);
+          cardEl.innerHTML = buildCardHTML(card);
+
+          cardsWrapper.appendChild(cardEl);
+        });
+      }
+
+      rowEl.appendChild(cardsWrapper);
+      board.appendChild(rowEl);
+    });
+
+    updateTotalCount();
+    updateButtonStates();
+  }
+
+  function getFlattenedCards() {
+    const cur = getCurrentScheme();
+    if (!cur || !cur.rows) return [];
+    const list = [];
+    cur.rows.forEach(r => {
+      if (r && Array.isArray(r)) {
+        r.forEach(c => list.push(c));
+      }
+    });
+    return list;
+  }
+
+  function checkEdgeAutoScroll(clientX, clientY) {
+    const vpW = window.innerWidth;
+    const vpH = window.innerHeight;
+    const edgeX = 90;
+    const edgeY = 80;
+    const maxSpd = 16;
+
+    if (clientY > vpH - edgeY) {
+      const ratio = (clientY - (vpH - edgeY)) / edgeY;
+      autoScrollSpeedY = Math.min(maxSpd, Math.max(3, ratio * maxSpd));
+    } else if (clientY < edgeY) {
+      const ratio = (edgeY - clientY) / edgeY;
+      autoScrollSpeedY = -Math.min(maxSpd, Math.max(3, ratio * maxSpd));
+    } else {
+      autoScrollSpeedY = 0;
+    }
+
+    if (clientX > vpW - edgeX) {
+      const ratio = (clientX - (vpW - edgeX)) / edgeX;
+      autoScrollSpeedX = Math.min(maxSpd, Math.max(4, ratio * maxSpd));
+    } else if (clientX < edgeX) {
+      const ratio = (edgeX - clientX) / edgeX;
+      autoScrollSpeedX = -Math.min(maxSpd, Math.max(4, ratio * maxSpd));
+    } else {
+      autoScrollSpeedX = 0;
+    }
+
+    if (autoScrollSpeedX !== 0 || autoScrollSpeedY !== 0) {
+      startAutoScrollLoop();
+    } else {
+      stopAutoScrollLoop();
+    }
+  }
+
+  function startAutoScrollLoop() {
+    if (autoScrollAnimationId) return;
+    function loop() {
+      if ((autoScrollSpeedX !== 0 || autoScrollSpeedY !== 0) && (interactionMode === 'dragging' || interactionMode === 'row-reorder')) {
+        window.scrollBy(autoScrollSpeedX, autoScrollSpeedY);
+        document.documentElement.scrollLeft += autoScrollSpeedX;
+        document.body.scrollLeft += autoScrollSpeedX;
+
+        if (interactionMode === 'dragging') {
+          updateDropCaret(currentClientX, currentClientY);
+        } else if (interactionMode === 'row-reorder') {
+          updateRowReorderIndicator(currentClientX, currentClientY);
+        }
+
+        autoScrollAnimationId = requestAnimationFrame(loop);
+      } else {
+        stopAutoScrollLoop();
+      }
+    }
+    autoScrollAnimationId = requestAnimationFrame(loop);
+  }
+
+  function stopAutoScrollLoop() {
+    if (autoScrollAnimationId) {
+      cancelAnimationFrame(autoScrollAnimationId);
+      autoScrollAnimationId = null;
+    }
+    autoScrollSpeedX = 0;
+    autoScrollSpeedY = 0;
+  }
+
+  // ---------------- 全局指针交互（支持滑动连选） ----------------
+  document.addEventListener('pointerdown', (e) => {
+    if (e.button && e.button !== 0) return;
+    startX = e.clientX;
+    startY = e.clientY;
+    currentClientX = e.clientX;
+    currentClientY = e.clientY;
+    hasMovedEnough = false;
+
+    const isShift = e.shiftKey;
+    const isCmdOrCtrl = e.metaKey || e.ctrlKey;
+    mousePressedWithShiftOrCmd = (isShift || isCmdOrCtrl);
+
+    const handleEl = e.target.closest('.row-handle');
+    if (handleEl) {
+      draggedRowIndex = parseInt(handleEl.dataset.rowIndex);
+      interactionMode = 'row-reorder';
+      return;
+    }
+
+    const cardEl = e.target.closest('.card');
+    if (!cardEl) {
+      if (!e.target.closest('.header-container') && !e.target.closest('.modal-content') && !e.target.closest('.schemes-nav-wrap') && !e.target.closest('.help-drawer')) {
+        if (selectedIds.size > 0) {
+          selectedIds.clear();
+          lastAnchorCardId = null;
+          document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
+          updateButtonStates();
+        }
+      }
+      interactionMode = null;
+      return;
+    }
+
+    if (cardEl.closest('#compareModal')) return;
+
+    const cardId = parseInt(cardEl.dataset.id);
+    clickedCardId = cardId;
+    clickedCardInitialSelected = selectedIds.has(cardId);
+
+    if (!clickedCardInitialSelected && isShift && lastAnchorCardId !== null) {
+      const flat = getFlattenedCards();
+      const idx1 = flat.findIndex(c => c.id === lastAnchorCardId);
+      const idx2 = flat.findIndex(c => c.id === cardId);
+
+      if (idx1 !== -1 && idx2 !== -1) {
+        const minIdx = Math.min(idx1, idx2);
+        const maxIdx = Math.max(idx1, idx2);
+        for (let i = minIdx; i <= maxIdx; i++) {
+          selectedIds.add(flat[i].id);
+          const el = document.querySelector(`.card[data-id="${flat[i].id}"]`);
+          if (el) el.classList.add('selected');
+        }
+      }
+      interactionMode = 'dragging';
+      updateButtonStates();
+      return;
+    }
+
+    if (clickedCardInitialSelected) {
+      interactionMode = 'dragging';
+    } else {
+      selectedIds.add(cardId);
+      lastAnchorCardId = cardId;
+      cardEl.classList.add('selected');
+      interactionMode = 'swiping';
+      updateButtonStates();
+    }
+  });
+
+  document.addEventListener('pointermove', (e) => {
+    if (!interactionMode) return;
+    const cur = getCurrentScheme();
+    if (!cur) return;
+
+    currentClientX = e.clientX;
+    currentClientY = e.clientY;
+
+    const dx = Math.abs(e.clientX - startX);
+    const dy = Math.abs(e.clientY - startY);
+    if (dx > 6 || dy > 6) hasMovedEnough = true;
+
+    if (interactionMode === 'dragging' || interactionMode === 'row-reorder') {
+      if (hasMovedEnough) checkEdgeAutoScroll(e.clientX, e.clientY);
+    }
+
+    if (interactionMode === 'row-reorder') {
+      if (!hasMovedEnough) return;
+      document.body.classList.add('is-dragging');
+
+      const badge = document.getElementById('rowDragBadge');
+      badge.style.display = 'block';
+      badge.textContent = `${t('rowLayer', { idx: draggedRowIndex + 1 })} (${cur.rows[draggedRowIndex]?.length || 0})`;
+      badge.style.left = `${e.clientX}px`;
+      badge.style.top = `${e.clientY}px`;
+
+      updateRowReorderIndicator(e.clientX, e.clientY);
+      return;
+    }
+
+    if (interactionMode === 'swiping') {
+      const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
+      const targetCard = elemBelow ? elemBelow.closest('.card') : null;
+      if (targetCard && !targetCard.closest('#compareModal')) {
+        const id = parseInt(targetCard.dataset.id);
+        if (!selectedIds.has(id)) {
+          selectedIds.add(id);
+          lastAnchorCardId = id;
+          targetCard.classList.add('selected');
+          updateButtonStates();
+        }
+      }
+    }
+
+    if (interactionMode === 'dragging') {
+      if (!hasMovedEnough) return;
+      document.body.classList.add('is-dragging');
+
+      const proxy = document.getElementById('dragProxy');
+      if (proxy.style.display !== 'flex') {
+        proxy.style.display = 'flex';
+        proxy.innerHTML = '';
+
+        const sortedSelectedCards = [];
+        cur.rows.forEach(r => {
+          if (r && Array.isArray(r)) {
+            r.forEach(c => {
+              if (selectedIds.has(c.id)) sortedSelectedCards.push(c);
+            });
+          }
+        });
+
+        sortedSelectedCards.forEach(c => {
+          const ghostCard = document.createElement('div');
+          ghostCard.className = `card ${c.color}`;
+          ghostCard.innerHTML = buildCardHTML(c);
+          proxy.appendChild(ghostCard);
+        });
+
+        document.querySelectorAll('.card').forEach(el => {
+          if (selectedIds.has(parseInt(el.dataset.id))) el.classList.add('ghost');
+        });
+      }
+
+      proxy.style.left = `${e.clientX}px`;
+      proxy.style.top = `${e.clientY}px`;
+      updateDropCaret(e.clientX, e.clientY);
+    }
+  });
+
+  document.addEventListener('pointerup', (e) => {
+    stopAutoScrollLoop();
+    if (!interactionMode) return;
+
+    if (interactionMode === 'row-reorder') {
+      if (hasMovedEnough && rowTargetDrop) {
+        executeRowReorder();
+      }
+      document.getElementById('rowDragBadge').style.display = 'none';
+      clearRowIndicators();
+      draggedRowIndex = null;
+      rowTargetDrop = null;
+    }
+
+    if (interactionMode === 'dragging' && !hasMovedEnough && clickedCardId !== null) {
+      if (clickedCardInitialSelected) {
+        const isShift = e.shiftKey || mousePressedWithShiftOrCmd;
+        const isCmdOrCtrl = e.metaKey || e.ctrlKey || mousePressedWithShiftOrCmd;
+
+        if (isShift || isCmdOrCtrl) {
+          selectedIds.clear();
+          lastAnchorCardId = null;
+          document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
+          updateButtonStates();
+        } else {
+          selectedIds.delete(clickedCardId);
+          const el = document.querySelector(`.card[data-id="${clickedCardId}"]`);
+          if (el) el.classList.remove('selected');
+          if (lastAnchorCardId === clickedCardId) lastAnchorCardId = null;
+          updateButtonStates();
+        }
+      }
+    }
+
+    if (interactionMode === 'dragging' && hasMovedEnough) {
+      executeBatchPlacement();
+    }
+
+    interactionMode = null;
+    clickedCardId = null;
+    mousePressedWithShiftOrCmd = false;
+    document.body.classList.remove('is-dragging');
+    const proxy = document.getElementById('dragProxy');
+    proxy.style.display = 'none';
+    proxy.innerHTML = '';
+    hideDropCaret();
+  });
+
+  document.addEventListener('pointercancel', () => {
+    stopAutoScrollLoop();
+    interactionMode = null;
+    document.body.classList.remove('is-dragging');
+    const proxy = document.getElementById('dragProxy');
+    if (proxy) proxy.style.display = 'none';
+    hideDropCaret();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    const isModalOpen = document.getElementById('customModal')?.style.display.includes('flex') ||
+                        document.getElementById('compareModal')?.style.display.includes('flex') ||
+                        document.getElementById('rulesModal')?.style.display.includes('flex') ||
+                        document.getElementById('archiveModal')?.style.display.includes('flex');
+    if (isModalOpen) return;
+
+    const isCmdOrCtrl = e.metaKey || e.ctrlKey;
+
+    if (isCmdOrCtrl && !e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
+      e.preventDefault();
+      undo();
+      return;
+    }
+
+    if ((isCmdOrCtrl && e.shiftKey && (e.key === 'z' || e.key === 'Z')) || (isCmdOrCtrl && (e.key === 'y' || e.key === 'Y'))) {
+      e.preventDefault();
+      redo();
+      return;
+    }
+
+    if (isCmdOrCtrl && (e.key === 's' || e.key === 'S')) {
+      e.preventDefault();
+      document.getElementById('saveArchiveBtn').click();
+      return;
+    }
+
+    if (!isCmdOrCtrl && (e.key === 'r' || e.key === 'R')) {
+      e.preventDefault();
+      resetSort();
+      return;
+    }
+
+    if (!isCmdOrCtrl && (e.code === 'Space' || e.key === 'n' || e.key === 'N')) {
+      e.preventDefault();
+      startNewGame();
+      return;
+    }
+
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+      deleteSelectedCards();
+    }
+  });
+
+  function updateRowReorderIndicator(x, y) {
+    clearRowIndicators();
+    rowTargetDrop = null;
+
+    const badge = document.getElementById('rowDragBadge');
+    badge.style.display = 'none';
+    const elemBelow = document.elementFromPoint(x, y);
+    badge.style.display = 'block';
+
+    if (!elemBelow) return;
+    const targetRowEl = elemBelow.closest('.card-row');
+    if (!targetRowEl) return;
+
+    const targetRowIndex = parseInt(targetRowEl.dataset.rowIndex);
+    const rect = targetRowEl.getBoundingClientRect();
+    const isTop = (y - rect.top) < (rect.height / 2);
+
+    targetRowEl.classList.toggle('row-indicator-top', isTop);
+    targetRowEl.classList.toggle('row-indicator-bottom', !isTop);
+
+    rowTargetDrop = { targetRowIndex, isTop };
+  }
+
+  function clearRowIndicators() {
+    document.querySelectorAll('.card-row').forEach(r => {
+      r.classList.remove('row-indicator-top', 'row-indicator-bottom');
+    });
+  }
+
+  function executeRowReorder() {
+    if (!rowTargetDrop || draggedRowIndex === null) return;
+    const cur = getCurrentScheme();
+    const { targetRowIndex, isTop } = rowTargetDrop;
+
+    let destinationIndex = isTop ? targetRowIndex : targetRowIndex + 1;
+    if (draggedRowIndex === targetRowIndex) return;
+
+    pushState();
+
+    const [movedRow] = cur.rows.splice(draggedRowIndex, 1);
+    if (draggedRowIndex < destinationIndex) destinationIndex--;
+
+    cur.rows.splice(destinationIndex, 0, movedRow);
+    renderBoard();
+  }
+
+  function updateDropCaret(x, y) {
+    const caret = document.getElementById('dropCaret');
+    const proxy = document.getElementById('dragProxy');
+    const cur = getCurrentScheme();
+
+    proxy.style.display = 'none';
+    const elemBelow = document.elementFromPoint(x, y);
+    proxy.style.display = 'flex';
+
+    if (!elemBelow) { hideDropCaret(); return; }
+    const rowEl = elemBelow.closest('.card-row');
+    if (!rowEl) { hideDropCaret(); return; }
+
+    const targetRowIndex = parseInt(rowEl.dataset.rowIndex);
+    const validCards = Array.from(rowEl.querySelectorAll('.card:not(.ghost)'));
+
+    if (validCards.length === 0) {
+      const rowRect = rowEl.getBoundingClientRect();
+      caret.style.display = 'block';
+      caret.style.left = `${rowRect.left + 30 + window.scrollX}px`;
+      caret.style.top = `${rowRect.top + 48 + window.scrollY}px`;
+      rowEl.classList.add('drop-highlight');
+      dropTarget = { rowIndex: targetRowIndex, insertIndex: 0 };
+      return;
+    }
+
+    const lastCard = validCards[validCards.length - 1];
+    const lastRect = lastCard.getBoundingClientRect();
+
+    if (x >= lastRect.right - 10) {
+      caret.style.display = 'block';
+      caret.style.left = `${lastRect.right + 6 + window.scrollX}px`;
+      caret.style.top = `${lastRect.top + window.scrollY}px`;
+      rowEl.classList.add('drop-highlight');
+      dropTarget = { rowIndex: targetRowIndex, insertIndex: cur.rows[targetRowIndex]?.length || 0 };
+      return;
+    }
+
+    let chosenIndex = 0;
+    let caretX = 0;
+    let caretY = 0;
+
+    const firstRect = validCards[0].getBoundingClientRect();
+    if (x < firstRect.left + firstRect.width * 0.4) {
+      chosenIndex = 0;
+      caretX = firstRect.left - 4;
+      caretY = firstRect.top;
+    } else {
+      let matched = false;
+      for (let i = 0; i < validCards.length; i++) {
+        const rect = validCards[i].getBoundingClientRect();
+        const nextRect = validCards[i + 1] ? validCards[i + 1].getBoundingClientRect() : null;
+
+        if (nextRect) {
+          const midX = (rect.right + nextRect.left) / 2;
+          if (x >= rect.left && x < midX + 16) {
+            chosenIndex = i + 1;
+            caretX = nextRect.left - 4;
+            caretY = nextRect.top;
+            matched = true;
+            break;
+          }
+        } else {
+          if (x >= rect.left + rect.width * 0.4) {
+            chosenIndex = validCards.length;
+            caretX = rect.right + 6;
+            caretY = rect.top;
+            matched = true;
+            break;
+          }
+        }
+      }
+      if (!matched) {
+        chosenIndex = validCards.length;
+        caretX = lastRect.right + 6;
+        caretY = lastRect.top;
+      }
+    }
+
+    let realInsertIndex = 0;
+    if (chosenIndex < validCards.length) {
+      const targetCardId = parseInt(validCards[chosenIndex].dataset.id);
+      realInsertIndex = cur.rows[targetRowIndex].findIndex(c => c.id === targetCardId);
+    } else {
+      realInsertIndex = cur.rows[targetRowIndex]?.length || 0;
+    }
+
+    caret.style.display = 'block';
+    caret.style.left = `${caretX + window.scrollX}px`;
+    caret.style.top = `${caretY + window.scrollY}px`;
+    rowEl.classList.add('drop-highlight');
+
+    dropTarget = { rowIndex: targetRowIndex, insertIndex: realInsertIndex };
+  }
+
+  function hideDropCaret() {
+    document.getElementById('dropCaret').style.display = 'none';
+    document.querySelectorAll('.card-row').forEach(r => r.classList.remove('drop-highlight'));
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('ghost'));
+    dropTarget = null;
+  }
+
+  function executeBatchPlacement() {
+    if (!dropTarget || selectedIds.size === 0) return;
+    const cur = getCurrentScheme();
+
+    pushState();
+
+    const movingCards = [];
+    cur.rows.forEach(r => {
+      if (r && Array.isArray(r)) {
+        r.forEach(c => {
+          if (selectedIds.has(c.id)) movingCards.push(c);
+        });
+      }
+    });
+
+    cur.rows = cur.rows.map(r => r ? r.filter(c => !selectedIds.has(c.id)) : []);
+
+    const targetRow = cur.rows[dropTarget.rowIndex] || [];
+    let ins = Math.min(dropTarget.insertIndex, targetRow.length);
+    targetRow.splice(ins, 0, ...movingCards);
+
+    selectedIds.clear();
+    lastAnchorCardId = null;
+    renderBoard();
+  }
+
+  function deleteSelectedCards() {
+    if (selectedIds.size === 0) return;
+    const cur = getCurrentScheme();
+    pushState();
+    cur.rows = cur.rows.map(r => r ? r.filter(c => !selectedIds.has(c.id)) : []);
+    selectedIds.clear();
+    lastAnchorCardId = null;
+    renderBoard();
+  }
+
+  document.getElementById('deleteBtn').addEventListener('click', deleteSelectedCards);
 
   // ---------------- 保证规则弹窗与使用指南百分之百可靠触发 ----------------
   const rulesModal = document.getElementById('rulesModal');
@@ -1753,6 +3596,7 @@
     applyLanguage();
   });
 
+  // ---------------- 撤销与重做安全回滚 ----------------
   function undo() {
     const cur = getCurrentScheme();
     if (!cur || !cur.historyStack || cur.historyStack.length === 0) return;
@@ -1793,7 +3637,7 @@
     }
   }
 
-  // 重置排序：处于推荐思路方案时，刷新重置为算法推荐的默认顺序
+  // 重置排序：处于推荐思路方案时，重置为该方案对应的默认推荐顺序
   function resetSort() {
     const cur = getCurrentScheme();
     if (!cur) return;
