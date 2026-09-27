@@ -205,7 +205,7 @@
     }
   }
 
-  /* 消除背景与露底问题 */
+  /* 彻底消除 iOS 顶部白色毛玻璃与横向变黑的背景隔离方案 */
   html {
     background-color: #07120e;
     width: 100%;
@@ -438,7 +438,9 @@
     background: rgba(246, 197, 89, 0.2) !important;
     transform: scale(1.04);
   }
-  .scheme-tab.is-tab-dragging { opacity: 0.45; }
+  .scheme-tab.is-tab-dragging {
+    opacity: 0.45;
+  }
   .tab-icon-prefix {
     font-size: calc(var(--font-scheme) * 1.05);
     line-height: 1;
@@ -446,7 +448,9 @@
     cursor: pointer;
     transition: transform 0.12s ease;
   }
-  .tab-icon-prefix:hover { transform: scale(1.2); }
+  .tab-icon-prefix:hover {
+    transform: scale(1.2);
+  }
   .scheme-tab .tab-del {
     color: #94a3b8;
     font-size: calc(var(--font-scheme) * 0.95);
@@ -454,7 +458,10 @@
     padding: 0 3px;
     cursor: pointer;
   }
-  .scheme-tab .tab-del:hover { color: #ef4444; background: rgba(255, 255, 255, 0.1); }
+  .scheme-tab .tab-del:hover {
+    color: #ef4444;
+    background: rgba(255, 255, 255, 0.1);
+  }
 
   .main-view-toggle-pill {
     background: rgba(0, 0, 0, 0.4);
@@ -465,7 +472,9 @@
     gap: 2px;
     flex-shrink: 0;
   }
-  .main-view-toggle-pill.visible { display: inline-flex; }
+  .main-view-toggle-pill.visible {
+    display: inline-flex;
+  }
   .main-view-toggle-btn {
     background: transparent;
     border: none;
@@ -743,41 +752,6 @@
     margin: 0 2px;
   }
 
-  /* 规则与高亮标注系统 */
-  .rule-highlight-gold {
-    color: #f6c559;
-    font-weight: 700;
-    text-shadow: 0 0 10px rgba(246, 197, 89, 0.3);
-  }
-  .rule-highlight-red {
-    color: #fb7185;
-    font-weight: 700;
-  }
-  .rule-highlight-blue {
-    color: #38bdf8;
-    font-weight: 700;
-  }
-  .rule-badge-chip {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 700;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    margin: 0 2px;
-  }
-  .rule-badge-chip.fire {
-    background: rgba(225, 29, 72, 0.2);
-    border-color: rgba(225, 29, 72, 0.45);
-    color: #fda4af;
-  }
-  .rule-badge-chip.gold {
-    background: rgba(246, 197, 89, 0.18);
-    border-color: rgba(246, 197, 89, 0.45);
-    color: #fef08a;
-  }
-
   .modal-backdrop {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -859,8 +833,39 @@
     align-items: center;
     gap: 6px;
   }
+  .rule-card-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0;
+    flex-wrap: wrap;
+  }
+  .mini-chip {
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: var(--font-modal-small);
+    font-weight: 600;
+  }
+  .mini-chip.red { color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
+  .mini-chip.gold { color: var(--gold); border-color: rgba(246, 197, 89, 0.4); }
 
-  /* 思路比较弹窗防遮挡与全屏适配 */
+  /* 战略要点高光体系 */
+  .strategy-box {
+    background: rgba(56, 189, 248, 0.06);
+    border-left: 4px solid #38bdf8;
+    padding: 12px 16px;
+    margin-top: 10px;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  .strategy-box strong { color: #7dd3fc; font-weight: 700; }
+  .highlight-gold { color: #f6c559; font-weight: 700; text-shadow: 0 0 8px rgba(246, 197, 89, 0.3); }
+  .highlight-red { color: #fb7185; font-weight: 700; }
+  .highlight-blue { color: #38bdf8; font-weight: 700; }
+
+  /* 思路比较弹窗样式与防遮挡结构 */
   .compare-modal-content {
     background: #0f172a;
     border: 1px solid #334155;
@@ -1019,6 +1024,7 @@
     overflow: visible;
   }
   
+  /* 思路比较中彻底固定卡牌，禁止选中与浮动 */
   .scheme-mini-row .card {
     width: 48px;
     height: 74px;
@@ -1030,10 +1036,22 @@
     box-shadow: -1px 1px 4px rgba(0,0,0,0.4);
     flex-shrink: 0;
   }
-  .scheme-mini-row .card:first-child { margin-left: 0 !important; }
-  .scheme-mini-row .card .card-val { font-size: 13.5px; font-weight: 800; }
-  .scheme-mini-row .card .card-suit { font-size: 11px; margin-top: 1px; }
-  .scheme-mini-row .wild-badge-corner { font-size: 7.5px; padding: 1px 2px; margin-top: 2px; }
+  .scheme-mini-row .card:first-child {
+    margin-left: 0 !important;
+  }
+  .scheme-mini-row .card .card-val { 
+    font-size: 13.5px; 
+    font-weight: 800;
+  }
+  .scheme-mini-row .card .card-suit { 
+    font-size: 11px; 
+    margin-top: 1px; 
+  }
+  .scheme-mini-row .wild-badge-corner {
+    font-size: 7.5px;
+    padding: 1px 2px;
+    margin-top: 2px;
+  }
 
   .saves-list {
     display: flex;
@@ -1194,7 +1212,7 @@
     </div>
   </div>
 
-  <!-- 第 5 层：整理工具组（彻底删除批量连选） -->
+  <!-- 第 5 层：整理工具组（已删除冗余的批量连选按钮） -->
   <div class="header-tier-row">
     <div class="control-island">
       <button id="deleteBtn" disabled>🗑️ 删除选中 (0)</button>
@@ -1312,132 +1330,1534 @@
 
   localStorage.removeItem('GUANDAN_CARD_THEME');
 
-  // 全局事件与核心功能直接自执行初始化绑定，防止任何后续代码异常阻断
-  function initBaseEventListeners() {
-    const rulesBtn = document.getElementById('rulesBtn');
-    const closeRulesBtn = document.getElementById('closeRulesBtn');
-    const rulesModal = document.getElementById('rulesModal');
-    if (rulesBtn && rulesModal) {
-      rulesBtn.onclick = () => {
-        renderRulesModalContent();
-        rulesModal.style.display = 'flex';
-      };
-    }
-    if (closeRulesBtn && rulesModal) {
-      closeRulesBtn.onclick = () => {
-        rulesModal.style.display = 'none';
-      };
-    }
+  let compareViewMode = 'full';
+  let mainDeskCompactMode = false;
 
-    const toggleHelpBtn = document.getElementById('toggleHelpBtn');
-    const helpDrawer = document.getElementById('helpDrawer');
-    if (toggleHelpBtn && helpDrawer) {
-      toggleHelpBtn.onclick = () => {
-        const isShown = (helpDrawer.style.display === 'block');
-        if (!isShown) {
-          updateHelpDrawerContent();
-          helpDrawer.style.display = 'block';
-        } else {
-          helpDrawer.style.display = 'none';
+  const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+  const SUITS = [
+    { name: '♥', color: 'red', isHeart: true },
+    { name: '♦', color: 'red', isHeart: false },
+    { name: '♠', color: 'black', isHeart: false },
+    { name: '♣', color: 'black', isHeart: false }
+  ];
+
+  let currentLevel = '2';
+  let initialCards = [];
+  let schemes = [];
+  let currentSchemeIndex = 0;
+
+  function getCurrentScheme() {
+    if (!schemes || schemes.length === 0) return null;
+    if (currentSchemeIndex >= schemes.length) currentSchemeIndex = 0;
+    return schemes[currentSchemeIndex];
+  }
+
+  const selectedIds = new Set();
+  let lastAnchorCardId = null;
+  let interactionMode = null;
+  let startX = 0, startY = 0;
+  let currentClientX = 0, currentClientY = 0;
+  let clickedCardId = null;
+  let clickedCardInitialSelected = false;
+  let hasMovedEnough = false;
+  let mousePressedWithShiftOrCmd = false;
+  let touchMultiSelectActive = false;
+
+  let dropTarget = null;
+  let draggedRowIndex = null;
+  let rowTargetDrop = null;
+  let modalSelectionMap = {};
+
+  let autoScrollAnimationId = null;
+  let autoScrollSpeedY = 0;
+  let autoScrollSpeedX = 0;
+
+  let draggedSchemeIndex = null;
+  let isTabDraggingPointer = false;
+  let tabDragStartX = 0;
+
+  function pickRandomLevel() {
+    return RANKS[Math.floor(Math.random() * RANKS.length)];
+  }
+
+  function buildDoubleDeck() {
+    const deck = [];
+    let idCounter = 1;
+    for (let d = 0; d < 2; d++) {
+      for (let r of RANKS) {
+        for (let s of SUITS) {
+          deck.push({ id: idCounter++, rank: r, suit: s.name, color: s.color, isHeart: s.isHeart, isJoker: false });
         }
-      };
+      }
+      deck.push({ id: idCounter++, rank: '小王', suit: '★', color: 'black', isHeart: false, isJoker: true, jokerType: 'small' });
+      deck.push({ id: idCounter++, rank: '大王', suit: '★', color: 'red', isHeart: false, isJoker: true, jokerType: 'big' });
+    }
+    return deck;
+  }
+
+  function dealHand() {
+    const deck = buildDoubleDeck();
+    for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+    return deck.slice(0, 27);
+  }
+
+  function getCardWeight(card, level) {
+    if (card.isJoker) return card.jokerType === 'big' ? 1000 : 900;
+    if (card.rank === level && card.isHeart) return 800;
+    if (card.rank === level) return 700;
+    const idx = RANKS.indexOf(card.rank);
+    return idx >= 0 ? idx + 10 : 0;
+  }
+
+  function sortCards(cards, level) {
+    return [...cards].sort((a, b) => {
+      const wA = getCardWeight(a, level);
+      const wB = getCardWeight(b, level);
+      if (wA !== wB) return wB - wA;
+      const suitPriority = { '♠': 4, '♥': 3, '♣': 2, '♦': 1, '★': 0 };
+      return (suitPriority[b.suit] || 0) - (suitPriority[a.suit] || 0);
+    });
+  }
+
+  // 严格从大到小对卡牌数组排序
+  function sortCardsDesc(cards, level) {
+    return sortCards(cards, level);
+  }
+
+  // 牌型内部智能排序：例如三带二三条排左边、对子排右边；顺子从大到小；木板从大到小
+  function formatComboOrder(cards, level) {
+    if (!cards || cards.length === 0) return [];
+    
+    // 三带二特殊结构：三张放左边主位，对子放右边辅位 (例如 AAAJJ, 88855)
+    if (cards.length === 5 && isFullHouseRow(cards, level)) {
+      const rankCounts = {};
+      cards.forEach(c => rankCounts[c.rank] = (rankCounts[c.rank] || 0) + 1);
+      const tripRank = Object.keys(rankCounts).find(r => rankCounts[r] === 3);
+      if (tripRank) {
+        const trips = cards.filter(c => c.rank === tripRank);
+        const pair = cards.filter(c => c.rank !== tripRank);
+        return [...sortCardsDesc(trips, level), ...sortCardsDesc(pair, level)];
+      }
     }
 
-    const dealBtn = document.getElementById('dealBtn');
-    if (dealBtn) dealBtn.onclick = startNewGame;
+    // 默认均按点数降序从大到小
+    return sortCardsDesc(cards, level);
+  }
 
-    const undoBtn = document.getElementById('undoBtn');
-    if (undoBtn) undoBtn.onclick = undo;
+  function pushState() {
+    const cur = getCurrentScheme();
+    if (!cur) return;
+    if (!cur.historyStack) cur.historyStack = [];
+    const snapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
+    cur.historyStack.push(snapshot);
+    cur.redoStack = [];
+    updateButtonStates();
+  }
 
-    const redoBtn = document.getElementById('redoBtn');
-    if (redoBtn) redoBtn.onclick = redo;
+  function updateButtonStates() {
+    const cur = getCurrentScheme();
+    const undoEl = document.getElementById('undoBtn');
+    const redoEl = document.getElementById('redoBtn');
+    const delBtn = document.getElementById('deleteBtn');
+    if (undoEl) undoEl.disabled = !cur || !cur.historyStack || cur.historyStack.length === 0;
+    if (redoEl) redoEl.disabled = !cur || !cur.redoStack || cur.redoStack.length === 0;
+    if (delBtn) {
+      delBtn.disabled = selectedIds.size === 0;
+      delBtn.textContent = `🗑️ ${t('deleteSelected', { count: selectedIds.size }).replace('🗑️ ', '')}`;
+    }
+  }
 
-    const resetBtn = document.getElementById('resetBtn');
-    if (resetBtn) resetBtn.onclick = resetSort;
+  function updateTotalCount() {
+    const cur = getCurrentScheme();
+    const total = cur && cur.rows ? cur.rows.reduce((acc, r) => acc + (r ? r.length : 0), 0) : 0;
+    setSafeText('totalCountInfo', t('cardsCount', { count: total }));
+  }
 
-    const deleteBtn = document.getElementById('deleteBtn');
-    if (deleteBtn) deleteBtn.onclick = deleteSelectedCards;
+  function getCardDisplayRank(card) {
+    if (card.isJoker) {
+      return card.jokerType === 'big' ? t('bigJoker') : t('smallJoker');
+    }
+    return card.rank;
+  }
 
-    const aiRecommendBtn = document.getElementById('aiRecommendBtn');
-    if (aiRecommendBtn) aiRecommendBtn.onclick = handleGenerateAIRecommend;
+  function buildCardHTML(card) {
+    const isWild = (card.rank === currentLevel && card.isHeart);
+    return `
+      <div class="card-top">
+        <div class="card-val">${getCardDisplayRank(card)}</div>
+        <div class="card-suit">${card.suit}</div>
+        ${isWild ? `<div class="wild-badge-corner">${t('wildTag')}</div>` : ''}
+      </div>
+    `;
+  }
 
-    const compareSchemesBtn = document.getElementById('compareSchemesBtn');
-    if (compareSchemesBtn) compareSchemesBtn.onclick = openCompareModal;
+  function getDefaultSchemeName(targetIndex) {
+    const num = targetIndex + 1;
+    if (currentLang === 'en') return `Idea ${num}`;
+    if (currentLang === 'es') return `Idea ${num}`;
+    return `思路 ${num}`;
+  }
 
-    const closeCompareBtn = document.getElementById('closeCompareBtn');
-    if (closeCompareBtn) closeCompareBtn.onclick = () => {
-      const modal = document.getElementById('compareModal');
-      if (modal) modal.style.display = 'none';
+  // ---------------- 智能启发式理牌算法引擎（重构升级：小对带出、大对留权） ----------------
+  function generateAIRecommendedRows(cardsPool, level) {
+    let pool = sortCardsDesc([...cardsPool], level);
+    const rows = [];
+
+    function takeCardsByIds(ids) {
+      const set = new Set(ids);
+      const taken = pool.filter(c => set.has(c.id));
+      pool = pool.filter(c => !set.has(c.id));
+      return taken;
+    }
+
+    // 1. 天王炸 (四大天王)
+    const jokers = pool.filter(c => c.isJoker);
+    if (jokers.length === 4) {
+      rows.push(formatComboOrder(takeCardsByIds(jokers.map(c => c.id)), level));
+    }
+
+    // 2. 8炸、7炸、6炸
+    const rankBuckets = {};
+    pool.forEach(c => {
+      if (!c.isJoker) {
+        rankBuckets[c.rank] = rankBuckets[c.rank] || [];
+        rankBuckets[c.rank].push(c);
+      }
+    });
+
+    [8, 7, 6].forEach(count => {
+      Object.keys(rankBuckets).forEach(r => {
+        if (rankBuckets[r] && rankBuckets[r].length === count) {
+          rows.push(formatComboOrder(takeCardsByIds(rankBuckets[r].map(c => c.id)), level));
+          delete rankBuckets[r];
+        }
+      });
+    });
+
+    // 3. 同花顺
+    const wildCards = pool.filter(c => c.rank === level && c.isHeart);
+    const standardOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
+    const suits = ['♥', '♦', '♠', '♣'];
+
+    for (let s of suits) {
+      const suitCards = pool.filter(c => c.suit === s && !(c.rank === level && c.isHeart) && !c.isJoker);
+
+      for (let i = 0; i <= standardOrder.length - 5; i++) {
+        const windowRanks = standardOrder.slice(i, i + 5);
+        let missing = [];
+        let matched = [];
+
+        windowRanks.forEach(wr => {
+          const matchCard = suitCards.find(c => c.rank === wr && !matched.some(m => m.id === c.id));
+          if (matchCard) matched.push(matchCard);
+          else missing.push(wr);
+        });
+
+        if (missing.length > 0 && missing.length <= wildCards.length && (matched.length + missing.length === 5)) {
+          const usedWilds = wildCards.splice(0, missing.length);
+          const comboIds = [...matched.map(c => c.id), ...usedWilds.map(c => c.id)];
+          rows.push(formatComboOrder(takeCardsByIds(comboIds), level));
+          break;
+        }
+      }
+    }
+
+    // 4. 五炸
+    Object.keys(rankBuckets).forEach(r => {
+      if (rankBuckets[r] && rankBuckets[r].length === 5) {
+        rows.push(formatComboOrder(takeCardsByIds(rankBuckets[r].map(c => c.id)), level));
+        delete rankBuckets[r];
+      }
+    });
+    if (wildCards.length > 0) {
+      const curBuckets = {};
+      pool.forEach(c => {
+        if (!c.isJoker && !(c.rank === level && c.isHeart)) {
+          curBuckets[c.rank] = curBuckets[c.rank] || [];
+          curBuckets[c.rank].push(c);
+        }
+      });
+      for (let [r, group] of Object.entries(curBuckets)) {
+        if (group.length === 4 && wildCards.length > 0) {
+          const wildToUse = wildCards.pop();
+          rows.push(formatComboOrder(takeCardsByIds([...group.map(c => c.id), wildToUse.id]), level));
+        }
+      }
+    }
+
+    // 5. 四炸
+    const curBuckets4 = {};
+    pool.forEach(c => {
+      if (!c.isJoker && !(c.rank === level && c.isHeart)) {
+        curBuckets4[c.rank] = curBuckets4[c.rank] || [];
+        curBuckets4[c.rank].push(c);
+      }
+    });
+    Object.keys(curBuckets4).forEach(r => {
+      if (curBuckets4[r].length === 4) {
+        rows.push(formatComboOrder(takeCardsByIds(curBuckets4[r].map(c => c.id)), level));
+      }
+    });
+    if (wildCards.length > 0) {
+      const curBuckets3 = {};
+      pool.forEach(c => {
+        if (!c.isJoker && !(c.rank === level && c.isHeart)) {
+          curBuckets3[c.rank] = curBuckets3[c.rank] || [];
+          curBuckets3[c.rank].push(c);
+        }
+      });
+      for (let [r, group] of Object.entries(curBuckets3)) {
+        if (group.length === 3 && wildCards.length > 0) {
+          const wildToUse = wildCards.pop();
+          rows.push(formatComboOrder(takeCardsByIds([...group.map(c => c.id), wildToUse.id]), level));
+        }
+      }
+    }
+
+    // 6. 钢板 (双飞：两连三张 6张) 与 木板 (三连对 6张)
+    // 优先提取钢板
+    const countsMap = {};
+    pool.forEach(c => {
+      if (!c.isJoker && !(c.rank === level && c.isHeart)) {
+        countsMap[c.rank] = countsMap[c.rank] || [];
+        countsMap[c.rank].push(c);
+      }
+    });
+
+    const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
+    // 钢板两连三张
+    for (let i = 0; i <= normOrder.length - 2; i++) {
+      const r1 = normOrder[i], r2 = normOrder[i+1];
+      if (countsMap[r1] && countsMap[r1].length >= 3 && countsMap[r2] && countsMap[r2].length >= 3) {
+        const c1 = countsMap[r1].splice(0, 3);
+        const c2 = countsMap[r2].splice(0, 3);
+        rows.push(formatComboOrder(takeCardsByIds([...c1.map(c=>c.id), ...c2.map(c=>c.id)]), level));
+      }
+    }
+
+    // 木板三连对
+    for (let i = 0; i <= normOrder.length - 3; i++) {
+      const r1 = normOrder[i], r2 = normOrder[i+1], r3 = normOrder[i+2];
+      if (countsMap[r1] && countsMap[r1].length >= 2 && countsMap[r2] && countsMap[r2].length >= 2 && countsMap[r3] && countsMap[r3].length >= 2) {
+        const p1 = countsMap[r1].splice(0, 2);
+        const p2 = countsMap[r2].splice(0, 2);
+        const p3 = countsMap[r3].splice(0, 2);
+        rows.push(formatComboOrder(takeCardsByIds([...p1.map(c=>c.id), ...p2.map(c=>c.id), ...p3.map(c=>c.id)]), level));
+      }
+    }
+
+    // 7. 5 连常规单顺
+    for (let i = 0; i <= normOrder.length - 5; i++) {
+      const windowRanks = normOrder.slice(i, i + 5);
+      const candidateCombo = [];
+      let canForm = true;
+
+      for (let wr of windowRanks) {
+        const found = pool.find(c => c.rank === wr && !c.isJoker && !candidateCombo.some(item => item.id === c.id));
+        if (found) {
+          candidateCombo.push(found);
+        } else {
+          canForm = false;
+          break;
+        }
+      }
+
+      if (canForm && candidateCombo.length === 5) {
+        rows.push(formatComboOrder(takeCardsByIds(candidateCombo.map(c => c.id)), level));
+      }
+    }
+
+    // 8. 智能三带二配对：小对优先带出消耗，大对完好保留控制权！
+    const currentCounts = {};
+    pool.forEach(c => {
+      if (!c.isJoker && !(c.rank === level && c.isHeart)) {
+        currentCounts[c.rank] = currentCounts[c.rank] || [];
+        currentCounts[c.rank].push(c);
+      }
+    });
+
+    const trips = [];
+    const pairs = [];
+    Object.keys(currentCounts).forEach(r => {
+      const g = currentCounts[r];
+      if (g.length === 3) trips.push(g);
+      else if (g.length === 2) pairs.push(g);
+    });
+
+    // 将三条按权重从大到小排，而对子按权重“从小到大”排，确保小对优先被三条带出！
+    trips.sort((a, b) => getCardWeight(b[0], level) - getCardWeight(a[0], level));
+    pairs.sort((a, b) => getCardWeight(a[0], level) - getCardWeight(b[0], level));
+
+    while (trips.length > 0 && pairs.length > 0) {
+      const tGroup = trips.shift(); // 最大的三条
+      const pGroup = pairs.shift(); // 最小的对子！优先带出小对，大对留在后面控场
+      rows.push(formatComboOrder(takeCardsByIds([...tGroup.map(c => c.id), ...pGroup.map(c => c.id)]), level));
+    }
+
+    // 若还有没配对的三条，作为独立三张展示
+    while (trips.length > 0) {
+      const tGroup = trips.shift();
+      rows.push(formatComboOrder(takeCardsByIds(tGroup.map(c => c.id)), level));
+    }
+
+    // 9. 剩余对子（每一对独立成层，按点数从大到小展示）
+    const remainBuckets = {};
+    pool.forEach(c => {
+      remainBuckets[c.rank] = remainBuckets[c.rank] || [];
+      remainBuckets[c.rank].push(c);
+    });
+
+    // 收集所有对子，按大到小排列放入
+    const pairGroups = [];
+    Object.keys(remainBuckets).forEach(r => {
+      while (remainBuckets[r] && remainBuckets[r].length >= 2) {
+        const pCards = remainBuckets[r].splice(0, 2);
+        pairGroups.push(pCards);
+      }
+    });
+    pairGroups.sort((a, b) => getCardWeight(b[0], level) - getCardWeight(a[0], level));
+    pairGroups.forEach(pg => {
+      rows.push(formatComboOrder(takeCardsByIds(pg.map(c => c.id)), level));
+    });
+
+    // 10. 杂单（按大到小排布）
+    if (pool.length > 0) {
+      rows.push(sortCardsDesc(takeCardsByIds(pool.map(c => c.id)), level));
+    }
+
+    return rows.filter(r => r.length > 0);
+  }
+
+  // 纯正同类同构牌型紧凑归并算法（顺子、三带二、对子严格分层；同一类内部从大到小排）
+  function buildCompactRows(rowsList, level) {
+    const compactBuckets = {
+      kingBomb: [],
+      bomb8: [],
+      bomb7: [],
+      bomb6: [],
+      straightFlush: [],
+      bomb5: [],
+      bomb4: [],
+      plates: [],        // 钢板独立
+      tubes: [],         // 木板独立
+      straights: [],     // 顺子独立
+      fullHouses: [],    // 三带二独立
+      trips: [],         // 纯三张独立
+      pairs: [],         // 对子独立
+      singles: []        // 散牌独立
     };
 
-    const mainViewFullBtn = document.getElementById('mainViewFullBtn');
-    if (mainViewFullBtn) mainViewFullBtn.onclick = () => setMainDeskViewMode(false);
+    rowsList.forEach(row => {
+      if (!row || row.length === 0) return;
+      if (row.length === 4 && row.every(c => c.isJoker)) {
+        compactBuckets.kingBomb.push(row);
+      } else if (row.length === 5 && isStraightFlushRow(row, level)) {
+        compactBuckets.straightFlush.push(row);
+      } else if (row.length >= 4 && isBombRow(row, level)) {
+        if (row.length >= 8) compactBuckets.bomb8.push(row);
+        else if (row.length === 7) compactBuckets.bomb7.push(row);
+        else if (row.length === 6) compactBuckets.bomb6.push(row);
+        else if (row.length === 5) compactBuckets.bomb5.push(row);
+        else if (row.length === 4) compactBuckets.bomb4.push(row);
+      } else if (row.length === 6 && isPlatesRow(row, level)) {
+        compactBuckets.plates.push(row);
+      } else if (row.length === 6 && isTubesRow(row, level)) {
+        compactBuckets.tubes.push(row);
+      } else if (row.length === 5 && isStraightRow(row, level)) {
+        compactBuckets.straights.push(row);
+      } else if (row.length === 5 && isFullHouseRow(row, level)) {
+        compactBuckets.fullHouses.push(row);
+      } else if (row.length === 3 && isTripRow(row, level)) {
+        compactBuckets.trips.push(row);
+      } else if (row.length === 2 && isPairRow(row, level)) {
+        compactBuckets.pairs.push(row);
+      } else {
+        compactBuckets.singles.push(row);
+      }
+    });
 
-    const mainViewCompactBtn = document.getElementById('mainViewCompactBtn');
-    if (mainViewCompactBtn) mainViewCompactBtn.onclick = () => setMainDeskViewMode(true);
+    const result = [];
+    const keys = ['kingBomb', 'bomb8', 'bomb7', 'bomb6', 'straightFlush', 'bomb5', 'bomb4', 'plates', 'tubes', 'straights', 'fullHouses', 'trips', 'pairs', 'singles'];
+    
+    keys.forEach(k => {
+      const groupList = compactBuckets[k];
+      if (groupList.length > 0) {
+        // 同类牌组之间按最大权重降序排列
+        groupList.sort((a, b) => {
+          return getCardWeight(b[0], level) - getCardWeight(a[0], level);
+        });
+        // 拼接成单层，每组内部保持格式化顺序 (如对子 AA KK 88 66 33; 三带二 AAAJJ 88855)
+        const mergedRow = [];
+        groupList.forEach(comb => {
+          mergedRow.push(...formatComboOrder(comb, level));
+        });
+        result.push(mergedRow);
+      }
+    });
 
-    const viewFullBtn = document.getElementById('viewFullBtn');
-    if (viewFullBtn) viewFullBtn.onclick = () => {
-      compareViewMode = 'full';
-      viewFullBtn.classList.add('active');
-      const cpt = document.getElementById('viewCompactBtn');
-      if (cpt) cpt.classList.remove('active');
-      renderCompareContent();
-    };
+    return result;
+  }
 
-    const viewCompactBtn = document.getElementById('viewCompactBtn');
-    if (viewCompactBtn) viewCompactBtn.onclick = () => {
-      compareViewMode = 'compact';
-      viewCompactBtn.classList.add('active');
-      const ful = document.getElementById('viewFullBtn');
-      if (ful) ful.classList.remove('active');
-      renderCompareContent();
-    };
+  function isBombRow(cards, level) {
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    if (nonWild.length === 0) return true;
+    const base = nonWild[0].rank;
+    return nonWild.every(c => c.rank === base);
+  }
 
-    const saveArchiveBtn = document.getElementById('saveArchiveBtn');
-    if (saveArchiveBtn) saveArchiveBtn.onclick = handleSaveArchive;
+  function isStraightFlushRow(cards, level) {
+    if (cards.length !== 5) return false;
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    if (nonWild.length === 0) return true;
+    const baseSuit = nonWild[0].suit;
+    if (!nonWild.every(c => c.suit === baseSuit)) return false;
+    return isStraightRow(cards, level);
+  }
 
-    const openArchiveBtn = document.getElementById('openArchiveBtn');
-    if (openArchiveBtn) openArchiveBtn.onclick = () => {
-      renderArchiveList();
-      const modal = document.getElementById('archiveModal');
-      if (modal) modal.style.display = 'flex';
-    };
+  function isStraightRow(cards, level) {
+    if (cards.length !== 5) return false;
+    const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    const ranks = nonWild.map(c => c.rank);
+    for (let i = 0; i <= normOrder.length - 5; i++) {
+      const slice = normOrder.slice(i, i + 5);
+      if (ranks.every(r => slice.includes(r))) return true;
+    }
+    return false;
+  }
 
-    const closeArchiveBtn = document.getElementById('closeArchiveBtn');
-    if (closeArchiveBtn) closeArchiveBtn.onclick = () => {
-      const modal = document.getElementById('archiveModal');
-      if (modal) modal.style.display = 'none';
-    };
+  function isFullHouseRow(cards, level) {
+    if (cards.length !== 5) return false;
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    const counts = {};
+    nonWild.forEach(c => counts[c.rank] = (counts[c.rank] || 0) + 1);
+    const vals = Object.values(counts);
+    return vals.includes(3) || vals.length === 2;
+  }
 
-    const customHandBtn = document.getElementById('customHandBtn');
-    if (customHandBtn) customHandBtn.onclick = openCustomModal;
+  function isTripRow(cards, level) {
+    if (cards.length !== 3) return false;
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    if (nonWild.length <= 1) return true;
+    return nonWild.every(c => c.rank === nonWild[0].rank);
+  }
 
-    const cancelModalBtn = document.getElementById('cancelModalBtn');
-    if (cancelModalBtn) cancelModalBtn.onclick = closeCustomModal;
+  function isPairRow(cards, level) {
+    if (cards.length !== 2) return false;
+    const nonWild = cards.filter(c => !(c.rank === level && c.isHeart));
+    if (nonWild.length <= 1) return true;
+    return nonWild[0].rank === nonWild[1].rank;
+  }
 
-    const clearAllModalBtn = document.getElementById('clearAllModalBtn');
-    if (clearAllModalBtn) clearAllModalBtn.onclick = () => {
-      modalSelectionMap = {};
-      renderModalCards();
-    };
+  function isTubesRow(cards, level) { return cards.length === 6 && !isPlatesRow(cards, level); }
+  function isPlatesRow(cards, level) {
+    if (cards.length !== 6) return false;
+    const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
+    const counts = {};
+    cards.forEach(c => counts[c.rank] = (counts[c.rank] || 0) + 1);
+    const ranks = Object.keys(counts);
+    return ranks.length === 2 && counts[ranks[0]] === 3 && counts[ranks[1]] === 3;
+  }
 
-    const confirmModalBtn = document.getElementById('confirmModalBtn');
-    if (confirmModalBtn) confirmModalBtn.onclick = handleConfirmCustomModal;
+  // 智能语义对齐与差异检测算法
+  function analyzeSemanticMatch(userRows, standardRecRows, compactRecRows, level) {
+    const cleanUser = userRows.filter(r => r && r.length > 0);
+    const cleanStd = standardRecRows.filter(r => r && r.length > 0);
+    const cleanCpt = compactRecRows.filter(r => r && r.length > 0);
 
-    const langSelect = document.getElementById('langSelect');
-    if (langSelect) langSelect.onchange = (e) => {
-      currentLang = e.target.value;
-      applyLanguage();
-    };
+    function getSortedIds(row) {
+      return row.map(c => c.id).sort((a,b)=>a-b).join(',');
+    }
 
-    const fontSizeSelect = document.getElementById('fontSizeSelect');
-    if (fontSizeSelect) fontSizeSelect.onchange = (e) => {
-      applyFontSize(e.target.value);
+    const userSignatures = cleanUser.map(getSortedIds);
+    const stdSignatures = cleanStd.map(getSortedIds);
+    const cptSignatures = cleanCpt.map(getSortedIds);
+
+    const isStdMatch = (userSignatures.slice().sort().join('|') === stdSignatures.slice().sort().join('|'));
+    const isCptMatch = (userSignatures.slice().sort().join('|') === cptSignatures.slice().sort().join('|'));
+
+    let isSemanticPureMatch = isStdMatch || isCptMatch;
+    if (!isSemanticPureMatch) {
+      const userCompact = buildCompactRows(cleanUser, level);
+      const userCompactSigs = userCompact.map(getSortedIds).sort().join('|');
+      const targetCompactSigs = cleanCpt.map(getSortedIds).sort().join('|');
+      if (userCompactSigs === targetCompactSigs) {
+        isSemanticPureMatch = true;
+      }
+    }
+
+    const validStdSet = new Set(stdSignatures);
+    const validCptSet = new Set(cptSignatures);
+
+    const diffRowIndices = new Set();
+    cleanUser.forEach((row, idx) => {
+      const sig = getSortedIds(row);
+      let isRowLegit = validStdSet.has(sig) || validCptSet.has(sig);
+      if (!isRowLegit) {
+        // 如果这层全部是由推荐思路里存在的对子合并而成的集合，判定为本质同构
+        if (row.length % 2 === 0 && row.every((_, i, arr) => i % 2 !== 0 || isPairRow([arr[i], arr[i+1]], level))) {
+          const recPairs = cleanStd.filter(r => r.length === 2 && isPairRow(r, level)).map(getSortedIds);
+          let allSubPairsInRec = true;
+          for (let p = 0; p < row.length; p += 2) {
+            const pairSig = [row[p].id, row[p+1].id].sort((a,b)=>a-b).join(',');
+            if (!recPairs.includes(pairSig)) { allSubPairsInRec = false; break; }
+          }
+          if (allSubPairsInRec) isRowLegit = true;
+        }
+      }
+      if (!isRowLegit) {
+        diffRowIndices.add(idx);
+      }
+    });
+
+    return {
+      isExactMatch: isSemanticPureMatch,
+      diffRowIndices
     };
   }
 
-  function handleSaveArchive() {
+  // 点击“💡 推荐思路”
+  function handleGenerateAIRecommend() {
+    const allCards = getFlattenedCards();
+    if (!allCards || allCards.length === 0) return;
+
+    const baseRecRows = generateAIRecommendedRows(allCards, currentLevel);
+    const displayRows = mainDeskCompactMode ? buildCompactRows(baseRecRows, currentLevel) : baseRecRows;
+
+    const recSchemeName = currentLang === 'en' ? 'Recommend Idea' : (currentLang === 'es' ? 'Idea Recomendada' : '推荐思路');
+
+    schemes.push({
+      name: recSchemeName,
+      customName: recSchemeName,
+      isRecommended: true,
+      rows: displayRows,
+      historyStack: [],
+      redoStack: []
+    });
+
+    switchScheme(schemes.length - 1);
+  }
+
+  document.getElementById('aiRecommendBtn').addEventListener('click', handleGenerateAIRecommend);
+
+  // 主桌面标准 / 紧凑切换
+  document.getElementById('mainViewFullBtn').addEventListener('click', () => {
+    setMainDeskViewMode(false);
+  });
+  document.getElementById('mainViewCompactBtn').addEventListener('click', () => {
+    setMainDeskViewMode(true);
+  });
+
+  function setMainDeskViewMode(compact) {
+    mainDeskCompactMode = compact;
+    const cur = getCurrentScheme();
+    if (cur && cur.isRecommended) {
+      pushState();
+      const allCards = getFlattenedCards();
+      const baseRecRows = generateAIRecommendedRows(allCards, currentLevel);
+      cur.rows = compact ? buildCompactRows(baseRecRows, currentLevel) : baseRecRows;
+    }
+    updateMainTogglePillState();
+    renderBoard();
+  }
+
+  function updateMainTogglePillState() {
+    const cur = getCurrentScheme();
+    const pill = document.getElementById('mainViewTogglePill');
+    if (!pill) return;
+    const isRec = cur && cur.isRecommended;
+    pill.classList.toggle('visible', !!isRec);
+    const fullBtn = document.getElementById('mainViewFullBtn');
+    const compactBtn = document.getElementById('mainViewCompactBtn');
+    if (fullBtn) fullBtn.classList.toggle('active', !mainDeskCompactMode);
+    if (compactBtn) compactBtn.classList.toggle('active', mainDeskCompactMode);
+  }
+
+  function renderSchemesNav() {
+    const nav = document.getElementById('schemesNav');
+    if (!nav) return;
+    nav.innerHTML = '';
+
+    schemes.forEach((s, idx) => {
+      const tab = document.createElement('div');
+      tab.className = 'scheme-tab' + (idx === currentSchemeIndex ? ' active' : '');
+      tab.dataset.schemeIdx = idx;
+
+      const prefixEmoji = s.isRecommended ? '💡' : '📌';
+      const displayName = s.customName || s.name || getDefaultSchemeName(idx);
+
+      tab.innerHTML = `
+        <span class="tab-icon-prefix" title="点击重命名">${prefixEmoji}</span>
+        <span class="tab-title-text" title="双击重命名">${displayName}</span>
+        ${schemes.length > 1 ? `<span class="tab-del" title="删除该思路">✕</span>` : ''}
+      `;
+
+      tab.addEventListener('pointerdown', (e) => {
+        if (e.target.classList.contains('tab-del') || e.target.classList.contains('tab-icon-prefix')) return;
+        draggedSchemeIndex = idx;
+        isTabDraggingPointer = false;
+        tabDragStartX = e.clientX;
+        try { tab.setPointerCapture(e.pointerId); } catch(err) {}
+      });
+
+      tab.addEventListener('pointermove', (e) => {
+        if (draggedSchemeIndex === null) return;
+        if (Math.abs(e.clientX - tabDragStartX) > 8) {
+          isTabDraggingPointer = true;
+          tab.classList.add('is-tab-dragging');
+        }
+        if (isTabDraggingPointer) {
+          const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
+          const targetTab = elemBelow ? elemBelow.closest('.scheme-tab') : null;
+          document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
+          if (targetTab && targetTab !== tab) {
+            targetTab.classList.add('drag-over');
+          }
+        }
+      });
+
+      tab.addEventListener('pointerup', (e) => {
+        if (draggedSchemeIndex === null) return;
+        tab.classList.remove('is-tab-dragging');
+        document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
+
+        if (isTabDraggingPointer) {
+          const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
+          const targetTab = elemBelow ? elemBelow.closest('.scheme-tab') : null;
+          if (targetTab && targetTab !== tab) {
+            const toIdx = parseInt(targetTab.dataset.schemeIdx);
+            reorderSchemes(draggedSchemeIndex, toIdx);
+          }
+        } else {
+          switchScheme(idx);
+        }
+        draggedSchemeIndex = null;
+        isTabDraggingPointer = false;
+      });
+
+      tab.addEventListener('pointercancel', () => {
+        tab.classList.remove('is-tab-dragging');
+        document.querySelectorAll('.scheme-tab').forEach(tEl => tEl.classList.remove('drag-over'));
+        draggedSchemeIndex = null;
+        isTabDraggingPointer = false;
+      });
+
+      tab.addEventListener('click', (e) => {
+        if (e.target.classList.contains('tab-del')) {
+          e.stopPropagation();
+          deleteScheme(idx);
+          return;
+        }
+        if (e.target.classList.contains('tab-icon-prefix')) {
+          e.stopPropagation();
+          promptRenameScheme(idx);
+        }
+      });
+
+      tab.addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        promptRenameScheme(idx);
+      });
+
+      nav.appendChild(tab);
+    });
+
+    const addBtn = document.createElement('button');
+    addBtn.style.padding = '6px 12px';
+    addBtn.innerHTML = t('newSchemeBtn');
+    addBtn.addEventListener('click', addNewScheme);
+    nav.appendChild(addBtn);
+
+    updateMainTogglePillState();
+  }
+
+  function reorderSchemes(fromIdx, toIdx) {
+    const activeSchemeObj = schemes[currentSchemeIndex];
+    const [moved] = schemes.splice(fromIdx, 1);
+    schemes.splice(toIdx, 0, moved);
+    currentSchemeIndex = schemes.indexOf(activeSchemeObj);
+    renderSchemesNav();
+    renderBoard();
+  }
+
+  function promptRenameScheme(idx) {
+    const currentName = schemes[idx].customName || schemes[idx].name || getDefaultSchemeName(idx);
+    const newName = prompt(t('renamePrompt'), currentName);
+    if (newName && newName.trim() !== '') {
+      schemes[idx].customName = newName.trim();
+      schemes[idx].name = newName.trim();
+      renderSchemesNav();
+    }
+  }
+
+  function switchScheme(idx) {
+    currentSchemeIndex = idx;
+    selectedIds.clear();
+    lastAnchorCardId = null;
+    mainDeskCompactMode = false;
+    renderSchemesNav();
+    renderBoard();
+  }
+
+  function addNewScheme() {
+    const newIndex = schemes.length;
+    const defaultName = getDefaultSchemeName(newIndex);
+    const clonedCards = getFlattenedCards();
+    schemes.push({
+      name: defaultName,
+      customName: defaultName,
+      isRecommended: false,
+      rows: [sortCards(clonedCards, currentLevel)],
+      historyStack: [],
+      redoStack: []
+    });
+    switchScheme(schemes.length - 1);
+  }
+
+  function deleteScheme(idx) {
+    if (schemes.length <= 1) return;
+    schemes.splice(idx, 1);
+    if (currentSchemeIndex >= schemes.length) currentSchemeIndex = schemes.length - 1;
+    switchScheme(currentSchemeIndex);
+  }
+
+  function renderBoard() {
+    const board = document.getElementById('board');
+    if (!board) return;
+    board.innerHTML = '';
+
+    const cur = getCurrentScheme();
+    if (!cur) return;
+
+    cur.rows = (cur.rows || []).filter(r => r && r.length > 0);
+    cur.rows.push([]);
+
+    cur.rows.forEach((rowCards, rIndex) => {
+      const rowEl = document.createElement('div');
+      const isEmpty = !rowCards || rowCards.length === 0;
+      rowEl.className = 'card-row' + (isEmpty ? ' empty-row' : '');
+      rowEl.dataset.rowIndex = rIndex;
+      rowEl.setAttribute('data-placeholder', t('rowPlaceholder'));
+
+      if (!isEmpty) {
+        const handle = document.createElement('div');
+        handle.className = 'row-handle';
+        handle.dataset.rowIndex = rIndex;
+        // 严格统一显示第几层
+        handle.innerHTML = `
+          <div class="handle-icon">≡</div>
+          <div class="handle-label">${t('rowLayer', { idx: rIndex + 1 })}</div>
+          <div class="handle-count">${rowCards.length} ${t('cardUnit')}</div>
+        `;
+        rowEl.appendChild(handle);
+      }
+
+      const cardsWrapper = document.createElement('div');
+      cardsWrapper.className = 'cards-wrapper';
+
+      if (rowCards) {
+        rowCards.forEach((card, cIndex) => {
+          const cardEl = document.createElement('div');
+          const isSelected = selectedIds.has(card.id);
+          cardEl.className = `card ${card.color}` + (isSelected ? ' selected' : '');
+          cardEl.dataset.id = card.id;
+          cardEl.dataset.rowIndex = rIndex;
+          cardEl.dataset.cardIndex = cIndex;
+          cardEl.style.zIndex = (cIndex + 10);
+          cardEl.innerHTML = buildCardHTML(card);
+
+          cardsWrapper.appendChild(cardEl);
+        });
+      }
+
+      rowEl.appendChild(cardsWrapper);
+      board.appendChild(rowEl);
+    });
+
+    updateTotalCount();
+    updateButtonStates();
+  }
+
+  function getFlattenedCards() {
+    const cur = getCurrentScheme();
+    if (!cur || !cur.rows) return [];
+    const list = [];
+    cur.rows.forEach(r => {
+      if (r && Array.isArray(r)) {
+        r.forEach(c => list.push(c));
+      }
+    });
+    return list;
+  }
+
+  function checkEdgeAutoScroll(clientX, clientY) {
+    const vpW = window.innerWidth;
+    const vpH = window.innerHeight;
+    const edgeX = 90;
+    const edgeY = 80;
+    const maxSpd = 16;
+
+    if (clientY > vpH - edgeY) {
+      const ratio = (clientY - (vpH - edgeY)) / edgeY;
+      autoScrollSpeedY = Math.min(maxSpd, Math.max(3, ratio * maxSpd));
+    } else if (clientY < edgeY) {
+      const ratio = (edgeY - clientY) / edgeY;
+      autoScrollSpeedY = -Math.min(maxSpd, Math.max(3, ratio * maxSpd));
+    } else {
+      autoScrollSpeedY = 0;
+    }
+
+    if (clientX > vpW - edgeX) {
+      const ratio = (clientX - (vpW - edgeX)) / edgeX;
+      autoScrollSpeedX = Math.min(maxSpd, Math.max(4, ratio * maxSpd));
+    } else if (clientX < edgeX) {
+      const ratio = (edgeX - clientX) / edgeX;
+      autoScrollSpeedX = -Math.min(maxSpd, Math.max(4, ratio * maxSpd));
+    } else {
+      autoScrollSpeedX = 0;
+    }
+
+    if (autoScrollSpeedX !== 0 || autoScrollSpeedY !== 0) {
+      startAutoScrollLoop();
+    } else {
+      stopAutoScrollLoop();
+    }
+  }
+
+  function startAutoScrollLoop() {
+    if (autoScrollAnimationId) return;
+    function loop() {
+      if ((autoScrollSpeedX !== 0 || autoScrollSpeedY !== 0) && (interactionMode === 'dragging' || interactionMode === 'row-reorder')) {
+        window.scrollBy(autoScrollSpeedX, autoScrollSpeedY);
+        document.documentElement.scrollLeft += autoScrollSpeedX;
+        document.body.scrollLeft += autoScrollSpeedX;
+
+        if (interactionMode === 'dragging') {
+          updateDropCaret(currentClientX, currentClientY);
+        } else if (interactionMode === 'row-reorder') {
+          updateRowReorderIndicator(currentClientX, currentClientY);
+        }
+
+        autoScrollAnimationId = requestAnimationFrame(loop);
+      } else {
+        stopAutoScrollLoop();
+      }
+    }
+    autoScrollAnimationId = requestAnimationFrame(loop);
+  }
+
+  function stopAutoScrollLoop() {
+    if (autoScrollAnimationId) {
+      cancelAnimationFrame(autoScrollAnimationId);
+      autoScrollAnimationId = null;
+    }
+    autoScrollSpeedX = 0;
+    autoScrollSpeedY = 0;
+  }
+
+  document.addEventListener('pointerdown', (e) => {
+    if (e.button && e.button !== 0) return;
+    startX = e.clientX;
+    startY = e.clientY;
+    currentClientX = e.clientX;
+    currentClientY = e.clientY;
+    hasMovedEnough = false;
+
+    const isShift = e.shiftKey || touchMultiSelectActive;
+    const isCmdOrCtrl = e.metaKey || e.ctrlKey || touchMultiSelectActive;
+    mousePressedWithShiftOrCmd = (isShift || isCmdOrCtrl);
+
+    const handleEl = e.target.closest('.row-handle');
+    if (handleEl) {
+      draggedRowIndex = parseInt(handleEl.dataset.rowIndex);
+      interactionMode = 'row-reorder';
+      return;
+    }
+
+    const cardEl = e.target.closest('.card');
+    if (!cardEl) {
+      if (!e.target.closest('.header-container') && !e.target.closest('.modal-content') && !e.target.closest('.schemes-nav-wrap') && !e.target.closest('.help-drawer')) {
+        if (selectedIds.size > 0) {
+          selectedIds.clear();
+          lastAnchorCardId = null;
+          document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
+          updateButtonStates();
+        }
+      }
+      interactionMode = null;
+      return;
+    }
+
+    if (cardEl.closest('#compareModal')) return;
+
+    const cardId = parseInt(cardEl.dataset.id);
+    clickedCardId = cardId;
+    clickedCardInitialSelected = selectedIds.has(cardId);
+
+    if (!clickedCardInitialSelected && isShift && lastAnchorCardId !== null) {
+      const flat = getFlattenedCards();
+      const idx1 = flat.findIndex(c => c.id === lastAnchorCardId);
+      const idx2 = flat.findIndex(c => c.id === cardId);
+
+      if (idx1 !== -1 && idx2 !== -1) {
+        const minIdx = Math.min(idx1, idx2);
+        const maxIdx = Math.max(idx1, idx2);
+        for (let i = minIdx; i <= maxIdx; i++) {
+          selectedIds.add(flat[i].id);
+          const el = document.querySelector(`.card[data-id="${flat[i].id}"]`);
+          if (el) el.classList.add('selected');
+        }
+      }
+      interactionMode = 'dragging';
+      updateButtonStates();
+      return;
+    }
+
+    if (clickedCardInitialSelected) {
+      interactionMode = 'dragging';
+    } else {
+      selectedIds.add(cardId);
+      lastAnchorCardId = cardId;
+      cardEl.classList.add('selected');
+      interactionMode = 'swiping';
+      updateButtonStates();
+    }
+  });
+
+  document.addEventListener('pointermove', (e) => {
+    if (!interactionMode) return;
+    const cur = getCurrentScheme();
+    if (!cur) return;
+
+    currentClientX = e.clientX;
+    currentClientY = e.clientY;
+
+    const dx = Math.abs(e.clientX - startX);
+    const dy = Math.abs(e.clientY - startY);
+    if (dx > 6 || dy > 6) hasMovedEnough = true;
+
+    if (interactionMode === 'dragging' || interactionMode === 'row-reorder') {
+      if (hasMovedEnough) checkEdgeAutoScroll(e.clientX, e.clientY);
+    }
+
+    if (interactionMode === 'row-reorder') {
+      if (!hasMovedEnough) return;
+      document.body.classList.add('is-dragging');
+
+      const badge = document.getElementById('rowDragBadge');
+      badge.style.display = 'block';
+      badge.textContent = `${t('rowLayer', { idx: draggedRowIndex + 1 })} (${cur.rows[draggedRowIndex]?.length || 0})`;
+      badge.style.left = `${e.clientX}px`;
+      badge.style.top = `${e.clientY}px`;
+
+      updateRowReorderIndicator(e.clientX, e.clientY);
+      return;
+    }
+
+    if (interactionMode === 'swiping') {
+      const elemBelow = document.elementFromPoint(e.clientX, e.clientY);
+      const targetCard = elemBelow ? elemBelow.closest('.card') : null;
+      if (targetCard && !targetCard.closest('#compareModal')) {
+        const id = parseInt(targetCard.dataset.id);
+        if (!selectedIds.has(id)) {
+          selectedIds.add(id);
+          lastAnchorCardId = id;
+          targetCard.classList.add('selected');
+          updateButtonStates();
+        }
+      }
+    }
+
+    if (interactionMode === 'dragging') {
+      if (!hasMovedEnough) return;
+      document.body.classList.add('is-dragging');
+
+      const proxy = document.getElementById('dragProxy');
+      if (proxy.style.display !== 'flex') {
+        proxy.style.display = 'flex';
+        proxy.innerHTML = '';
+
+        const sortedSelectedCards = [];
+        cur.rows.forEach(r => {
+          if (r && Array.isArray(r)) {
+            r.forEach(c => {
+              if (selectedIds.has(c.id)) sortedSelectedCards.push(c);
+            });
+          }
+        });
+
+        sortedSelectedCards.forEach(c => {
+          const ghostCard = document.createElement('div');
+          ghostCard.className = `card ${c.color}`;
+          ghostCard.innerHTML = buildCardHTML(c);
+          proxy.appendChild(ghostCard);
+        });
+
+        document.querySelectorAll('.card').forEach(el => {
+          if (selectedIds.has(parseInt(el.dataset.id))) el.classList.add('ghost');
+        });
+      }
+
+      proxy.style.left = `${e.clientX}px`;
+      proxy.style.top = `${e.clientY}px`;
+      updateDropCaret(e.clientX, e.clientY);
+    }
+  });
+
+  document.addEventListener('pointerup', (e) => {
+    stopAutoScrollLoop();
+    if (!interactionMode) return;
+
+    if (interactionMode === 'row-reorder') {
+      if (hasMovedEnough && rowTargetDrop) {
+        executeRowReorder();
+      }
+      document.getElementById('rowDragBadge').style.display = 'none';
+      clearRowIndicators();
+      draggedRowIndex = null;
+      rowTargetDrop = null;
+    }
+
+    if (interactionMode === 'dragging' && !hasMovedEnough && clickedCardId !== null) {
+      if (clickedCardInitialSelected) {
+        const isShift = e.shiftKey || mousePressedWithShiftOrCmd;
+        const isCmdOrCtrl = e.metaKey || e.ctrlKey || mousePressedWithShiftOrCmd;
+
+        if (isShift || isCmdOrCtrl) {
+          selectedIds.clear();
+          lastAnchorCardId = null;
+          document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
+          updateButtonStates();
+        } else {
+          selectedIds.delete(clickedCardId);
+          const el = document.querySelector(`.card[data-id="${clickedCardId}"]`);
+          if (el) el.classList.remove('selected');
+          if (lastAnchorCardId === clickedCardId) lastAnchorCardId = null;
+          updateButtonStates();
+        }
+      }
+    }
+
+    if (interactionMode === 'dragging' && hasMovedEnough) {
+      executeBatchPlacement();
+    }
+
+    interactionMode = null;
+    clickedCardId = null;
+    mousePressedWithShiftOrCmd = false;
+    document.body.classList.remove('is-dragging');
+    const proxy = document.getElementById('dragProxy');
+    proxy.style.display = 'none';
+    proxy.innerHTML = '';
+    hideDropCaret();
+  });
+
+  document.addEventListener('pointercancel', () => {
+    stopAutoScrollLoop();
+    interactionMode = null;
+    document.body.classList.remove('is-dragging');
+    const proxy = document.getElementById('dragProxy');
+    if (proxy) proxy.style.display = 'none';
+    hideDropCaret();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    const isModalOpen = document.getElementById('customModal')?.style.display.includes('flex') ||
+                        document.getElementById('compareModal')?.style.display.includes('flex') ||
+                        document.getElementById('rulesModal')?.style.display.includes('flex') ||
+                        document.getElementById('archiveModal')?.style.display.includes('flex');
+    if (isModalOpen) return;
+
+    const isCmdOrCtrl = e.metaKey || e.ctrlKey;
+
+    if (isCmdOrCtrl && !e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
+      e.preventDefault();
+      undo();
+      return;
+    }
+
+    if ((isCmdOrCtrl && e.shiftKey && (e.key === 'z' || e.key === 'Z')) || (isCmdOrCtrl && (e.key === 'y' || e.key === 'Y'))) {
+      e.preventDefault();
+      redo();
+      return;
+    }
+
+    if (isCmdOrCtrl && (e.key === 's' || e.key === 'S')) {
+      e.preventDefault();
+      document.getElementById('saveArchiveBtn').click();
+      return;
+    }
+
+    if (!isCmdOrCtrl && (e.key === 'r' || e.key === 'R')) {
+      e.preventDefault();
+      resetSort();
+      return;
+    }
+
+    if (!isCmdOrCtrl && (e.code === 'Space' || e.key === 'n' || e.key === 'N')) {
+      e.preventDefault();
+      startNewGame();
+      return;
+    }
+
+    if (e.key === 'Delete' || e.key === 'Backspace') {
+      deleteSelectedCards();
+    }
+  });
+
+  function updateRowReorderIndicator(x, y) {
+    clearRowIndicators();
+    rowTargetDrop = null;
+
+    const badge = document.getElementById('rowDragBadge');
+    badge.style.display = 'none';
+    const elemBelow = document.elementFromPoint(x, y);
+    badge.style.display = 'block';
+
+    if (!elemBelow) return;
+    const targetRowEl = elemBelow.closest('.card-row');
+    if (!targetRowEl) return;
+
+    const targetRowIndex = parseInt(targetRowEl.dataset.rowIndex);
+    const rect = targetRowEl.getBoundingClientRect();
+    const isTop = (y - rect.top) < (rect.height / 2);
+
+    targetRowEl.classList.toggle('row-indicator-top', isTop);
+    targetRowEl.classList.toggle('row-indicator-bottom', !isTop);
+
+    rowTargetDrop = { targetRowIndex, isTop };
+  }
+
+  function clearRowIndicators() {
+    document.querySelectorAll('.card-row').forEach(r => {
+      r.classList.remove('row-indicator-top', 'row-indicator-bottom');
+    });
+  }
+
+  function executeRowReorder() {
+    if (!rowTargetDrop || draggedRowIndex === null) return;
+    const cur = getCurrentScheme();
+    const { targetRowIndex, isTop } = rowTargetDrop;
+
+    let destinationIndex = isTop ? targetRowIndex : targetRowIndex + 1;
+    if (draggedRowIndex === targetRowIndex) return;
+
+    pushState();
+
+    const [movedRow] = cur.rows.splice(draggedRowIndex, 1);
+    if (draggedRowIndex < destinationIndex) destinationIndex--;
+
+    cur.rows.splice(destinationIndex, 0, movedRow);
+    renderBoard();
+  }
+
+  function updateDropCaret(x, y) {
+    const caret = document.getElementById('dropCaret');
+    const proxy = document.getElementById('dragProxy');
+    const cur = getCurrentScheme();
+
+    proxy.style.display = 'none';
+    const elemBelow = document.elementFromPoint(x, y);
+    proxy.style.display = 'flex';
+
+    if (!elemBelow) { hideDropCaret(); return; }
+    const rowEl = elemBelow.closest('.card-row');
+    if (!rowEl) { hideDropCaret(); return; }
+
+    const targetRowIndex = parseInt(rowEl.dataset.rowIndex);
+    const validCards = Array.from(rowEl.querySelectorAll('.card:not(.ghost)'));
+
+    if (validCards.length === 0) {
+      const rowRect = rowEl.getBoundingClientRect();
+      caret.style.display = 'block';
+      caret.style.left = `${rowRect.left + 30 + window.scrollX}px`;
+      caret.style.top = `${rowRect.top + 48 + window.scrollY}px`;
+      rowEl.classList.add('drop-highlight');
+      dropTarget = { rowIndex: targetRowIndex, insertIndex: 0 };
+      return;
+    }
+
+    const lastCard = validCards[validCards.length - 1];
+    const lastRect = lastCard.getBoundingClientRect();
+
+    if (x >= lastRect.right - 10) {
+      caret.style.display = 'block';
+      caret.style.left = `${lastRect.right + 6 + window.scrollX}px`;
+      caret.style.top = `${lastRect.top + window.scrollY}px`;
+      rowEl.classList.add('drop-highlight');
+      dropTarget = { rowIndex: targetRowIndex, insertIndex: cur.rows[targetRowIndex]?.length || 0 };
+      return;
+    }
+
+    let chosenIndex = 0;
+    let caretX = 0;
+    let caretY = 0;
+
+    const firstRect = validCards[0].getBoundingClientRect();
+    if (x < firstRect.left + firstRect.width * 0.4) {
+      chosenIndex = 0;
+      caretX = firstRect.left - 4;
+      caretY = firstRect.top;
+    } else {
+      let matched = false;
+      for (let i = 0; i < validCards.length; i++) {
+        const rect = validCards[i].getBoundingClientRect();
+        const nextRect = validCards[i + 1] ? validCards[i + 1].getBoundingClientRect() : null;
+
+        if (nextRect) {
+          const midX = (rect.right + nextRect.left) / 2;
+          if (x >= rect.left && x < midX + 16) {
+            chosenIndex = i + 1;
+            caretX = nextRect.left - 4;
+            caretY = nextRect.top;
+            matched = true;
+            break;
+          }
+        } else {
+          if (x >= rect.left + rect.width * 0.4) {
+            chosenIndex = validCards.length;
+            caretX = rect.right + 6;
+            caretY = rect.top;
+            matched = true;
+            break;
+          }
+        }
+      }
+      if (!matched) {
+        chosenIndex = validCards.length;
+        caretX = lastRect.right + 6;
+        caretY = lastRect.top;
+      }
+    }
+
+    let realInsertIndex = 0;
+    if (chosenIndex < validCards.length) {
+      const targetCardId = parseInt(validCards[chosenIndex].dataset.id);
+      realInsertIndex = cur.rows[targetRowIndex].findIndex(c => c.id === targetCardId);
+    } else {
+      realInsertIndex = cur.rows[targetRowIndex]?.length || 0;
+    }
+
+    caret.style.display = 'block';
+    caret.style.left = `${caretX + window.scrollX}px`;
+    caret.style.top = `${caretY + window.scrollY}px`;
+    rowEl.classList.add('drop-highlight');
+
+    dropTarget = { rowIndex: targetRowIndex, insertIndex: realInsertIndex };
+  }
+
+  function hideDropCaret() {
+    document.getElementById('dropCaret').style.display = 'none';
+    document.querySelectorAll('.card-row').forEach(r => r.classList.remove('drop-highlight'));
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('ghost'));
+    dropTarget = null;
+  }
+
+  function executeBatchPlacement() {
+    if (!dropTarget || selectedIds.size === 0) return;
+    const cur = getCurrentScheme();
+
+    pushState();
+
+    const movingCards = [];
+    cur.rows.forEach(r => {
+      if (r && Array.isArray(r)) {
+        r.forEach(c => {
+          if (selectedIds.has(c.id)) movingCards.push(c);
+        });
+      }
+    });
+
+    cur.rows = cur.rows.map(r => r ? r.filter(c => !selectedIds.has(c.id)) : []);
+
+    const targetRow = cur.rows[dropTarget.rowIndex] || [];
+    let ins = Math.min(dropTarget.insertIndex, targetRow.length);
+    targetRow.splice(ins, 0, ...movingCards);
+
+    selectedIds.clear();
+    lastAnchorCardId = null;
+    renderBoard();
+  }
+
+  function deleteSelectedCards() {
+    if (selectedIds.size === 0) return;
+    const cur = getCurrentScheme();
+    pushState();
+    cur.rows = cur.rows.map(r => r ? r.filter(c => !selectedIds.has(c.id)) : []);
+    selectedIds.clear();
+    lastAnchorCardId = null;
+    renderBoard();
+  }
+
+  document.getElementById('deleteBtn').addEventListener('click', deleteSelectedCards);
+
+  // ---------------- 保证规则弹窗与使用指南百分之百可靠触发 ----------------
+  const rulesModal = document.getElementById('rulesModal');
+  const rulesBtn = document.getElementById('rulesBtn');
+  const closeRulesBtn = document.getElementById('closeRulesBtn');
+
+  if (rulesBtn) {
+    rulesBtn.addEventListener('click', () => {
+      renderRulesModalContent();
+      if (rulesModal) rulesModal.style.display = 'flex';
+    });
+  }
+  if (closeRulesBtn) {
+    closeRulesBtn.addEventListener('click', () => {
+      if (rulesModal) rulesModal.style.display = 'none';
+    });
+  }
+
+  const toggleHelpBtn = document.getElementById('toggleHelpBtn');
+  const helpDrawer = document.getElementById('helpDrawer');
+  if (toggleHelpBtn && helpDrawer) {
+    toggleHelpBtn.addEventListener('click', () => {
+      const isVisible = (helpDrawer.style.display === 'block');
+      if (!isVisible) {
+        updateHelpDrawerContent();
+        helpDrawer.style.display = 'block';
+      } else {
+        helpDrawer.style.display = 'none';
+      }
+    });
+  }
+
+  // ---------------- 思路比较弹窗 ----------------
+  const compareModal = document.getElementById('compareModal');
+  const compareContainer = document.getElementById('compareContainer');
+
+  document.getElementById('viewFullBtn').addEventListener('click', () => {
+    compareViewMode = 'full';
+    document.getElementById('viewFullBtn').classList.add('active');
+    document.getElementById('viewCompactBtn').classList.remove('active');
+    renderCompareContent();
+  });
+
+  document.getElementById('viewCompactBtn').addEventListener('click', () => {
+    compareViewMode = 'compact';
+    document.getElementById('viewCompactBtn').classList.add('active');
+    document.getElementById('viewFullBtn').classList.remove('active');
+    renderCompareContent();
+  });
+
+  function renderCompareContent() {
+    compareContainer.innerHTML = '';
+
+    const allCards = getFlattenedCards();
+    const benchmarkStdRows = generateAIRecommendedRows(allCards, currentLevel);
+    const benchmarkCptRows = buildCompactRows(benchmarkStdRows, currentLevel);
+
+    schemes.forEach((s, idx) => {
+      const col = document.createElement('div');
+      col.className = 'scheme-column';
+
+      const validRows = (s.rows || []).filter(r => r && r.length > 0);
+      const totalCount = validRows.reduce((acc, r) => acc + r.length, 0);
+
+      const prefixEmoji = s.isRecommended ? '💡' : '📌';
+      const displayName = `${prefixEmoji} ${s.customName || s.name || getDefaultSchemeName(idx)}`;
+
+      // 智能语义比对
+      const analysis = analyzeSemanticMatch(validRows, benchmarkStdRows, benchmarkCptRows, currentLevel);
+
+      if (analysis.isExactMatch && !s.isRecommended) {
+        col.classList.add('is-exact-match');
+      }
+
+      const summaryText = t('compareSummary', { tiers: validRows.length, cards: totalCount });
+
+      col.innerHTML = `
+        <div class="scheme-col-header">
+          <div>
+            <div class="scheme-col-title">${displayName}</div>
+            <div style="font-size: var(--font-modal-small); color: #94a3b8; margin-top: 2px;">
+              ${summaryText}
+            </div>
+            ${analysis.isExactMatch && !s.isRecommended ? `<div class="match-badge">🎯 与推荐思路完全一致</div>` : ''}
+            ${s.isRecommended ? `<div style="font-size:11px; color:#c084fc; font-weight:bold; margin-top:2px;">★ 标准答案基线</div>` : ''}
+          </div>
+          ${idx !== currentSchemeIndex ? `<button class="action-lead-btn" style="padding: 4px 10px; font-size: 12px;" onclick="switchSchemeAndClose(${idx})">${t('applyScheme')}</button>` : `<span style="font-size: 12px; color: #4ade80; font-weight: bold;">${t('usingCurrent')}</span>`}
+        </div>
+      `;
+
+      let displayRows = validRows;
+      if (compareViewMode === 'compact' && s.isRecommended) {
+        displayRows = benchmarkCptRows;
+      }
+
+      displayRows.forEach((r, rIdx) => {
+        const miniRow = document.createElement('div');
+        miniRow.className = 'scheme-mini-row';
+
+        const isDiffRow = !s.isRecommended && !analysis.isExactMatch && analysis.diffRowIndices.has(rIdx);
+        if (isDiffRow) {
+          miniRow.classList.add('is-diff-row');
+        }
+
+        const rowBadge = document.createElement('div');
+        rowBadge.className = 'scheme-mini-row-badge';
+        rowBadge.innerHTML = `${t('rowLayer', { idx: rIdx + 1 })} (${r.length}):${isDiffRow ? '<span class="diff-indicator-tag">⚡差异</span>' : ''}`;
+        miniRow.appendChild(rowBadge);
+
+        const cardsWrap = document.createElement('div');
+        cardsWrap.className = 'scheme-mini-cards-wrap';
+
+        r.forEach((c, cIdx) => {
+          const miniCard = document.createElement('div');
+          miniCard.className = `card ${c.color}`;
+          miniCard.style.zIndex = cIdx + 5;
+          miniCard.innerHTML = buildCardHTML(c);
+          cardsWrap.appendChild(miniCard);
+        });
+
+        miniRow.appendChild(cardsWrap);
+        col.appendChild(miniRow);
+      });
+
+      compareContainer.appendChild(col);
+    });
+  }
+
+  function openCompareModal() {
+    renderCompareContent();
+    compareModal.style.display = 'flex';
+  }
+
+  function varToCss(varName) {
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  }
+
+  window.switchSchemeAndClose = function(idx) {
+    switchScheme(idx);
+    compareModal.style.display = 'none';
+  };
+
+  document.getElementById('compareSchemesBtn').addEventListener('click', openCompareModal);
+  document.getElementById('closeCompareBtn').addEventListener('click', () => {
+    compareModal.style.display = 'none';
+  });
+
+  const STORAGE_KEY = 'GUANDAN_SAVED_ARCHIVES';
+  const archiveModal = document.getElementById('archiveModal');
+  const archiveListContainer = document.getElementById('archiveListContainer');
+
+  function getSavedArchives() {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function setSavedArchives(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  document.getElementById('saveArchiveBtn').addEventListener('click', () => {
     const defaultName = `${t('saveDefault', { level: currentLevel })} (${new Date().toLocaleDateString()})`;
     const customName = prompt(t('savePrompt'), defaultName);
     if (!customName) return;
@@ -1456,14 +2876,187 @@
     archives.unshift(newRecord);
     setSavedArchives(archives);
     alert(t('saveSuccess'));
+  });
+
+  document.getElementById('openArchiveBtn').addEventListener('click', () => {
+    renderArchiveList();
+    archiveModal.style.display = 'flex';
+  });
+
+  document.getElementById('closeArchiveBtn').addEventListener('click', () => {
+    archiveModal.style.display = 'none';
+  });
+
+  function renderArchiveList() {
+    archiveListContainer.innerHTML = '';
+    const archives = getSavedArchives();
+
+    if (archives.length === 0) {
+      archiveListContainer.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 24px 0;">${t('noArchives')}</div>`;
+      return;
+    }
+
+    archives.forEach((item) => {
+      const cardEl = document.createElement('div');
+      cardEl.className = 'save-card-item';
+
+      const totalCards = item.initialCards ? item.initialCards.length : (item.schemes[0]?.rows.reduce((acc, r) => acc + (r ? r.length : 0), 0) || 0);
+
+      cardEl.innerHTML = `
+        <div style="flex-grow: 1;">
+          <div class="save-info-title">${item.name}</div>
+          <div class="save-info-meta">
+            ${t('levelPrefix', { level: item.currentLevel })} · ${totalCards} ${t('cardUnit')} · ${item.schemes.length} 个思路 · ${item.date}
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="action-lead-btn" style="padding: 5px 12px;" onclick="loadArchive('${item.id}')">${t('load')}</button>
+          <button class="btn-danger" style="padding: 5px 10px;" onclick="deleteArchive('${item.id}')">${t('delete')}</button>
+        </div>
+      `;
+      archiveListContainer.appendChild(cardEl);
+    });
   }
 
-  function handleConfirmCustomModal() {
-    const modalLevelSelect = document.getElementById('modalLevelSelect');
-    if (modalLevelSelect) {
-      currentLevel = modalLevelSelect.value;
-      setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
-    }
+  window.loadArchive = function(id) {
+    const archives = getSavedArchives();
+    const target = archives.find(a => a.id === id);
+    if (!target) return;
+
+    currentLevel = target.currentLevel;
+    setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
+
+    initialCards = JSON.parse(JSON.stringify(target.initialCards || []));
+    schemes = JSON.parse(JSON.stringify(target.schemes || []));
+    currentSchemeIndex = target.currentSchemeIndex || 0;
+
+    selectedIds.clear();
+    lastAnchorCardId = null;
+
+    archiveModal.style.display = 'none';
+    renderSchemesNav();
+    renderBoard();
+  };
+
+  window.deleteArchive = function(id) {
+    if (!confirm(t('confirmDelArchive'))) return;
+    let archives = getSavedArchives();
+    archives = archives.filter(a => a.id !== id);
+    setSavedArchives(archives);
+    renderArchiveList();
+  };
+
+  const modalBackdrop = document.getElementById('customModal');
+  const modalCardsList = document.getElementById('modalCardsList');
+  const modalLevelSelect = document.getElementById('modalLevelSelect');
+  const modalSelectedCount = document.getElementById('modalSelectedCount');
+
+  function renderLevelSelectOptions() {
+    modalLevelSelect.innerHTML = '';
+    RANKS.forEach(r => {
+      const opt = document.createElement('option');
+      opt.value = r;
+      opt.textContent = `${t('levelPrefix', { level: r })}`;
+      modalLevelSelect.appendChild(opt);
+    });
+  }
+
+  function openCustomModal() {
+    modalSelectionMap = {};
+    renderLevelSelectOptions();
+    modalLevelSelect.value = currentLevel;
+
+    const flat = getFlattenedCards();
+    flat.forEach(c => {
+      const key = `${c.rank}_${c.suit}`;
+      modalSelectionMap[key] = (modalSelectionMap[key] || 0) + 1;
+    });
+
+    renderModalCards();
+    modalBackdrop.style.display = 'flex';
+  }
+
+  function closeCustomModal() {
+    modalBackdrop.style.display = 'none';
+  }
+
+  function renderModalCards() {
+    modalCardsList.innerHTML = '';
+    let totalSelected = 0;
+
+    const jokerRow = document.createElement('div');
+    jokerRow.className = 'picker-row';
+    jokerRow.innerHTML = `<div class="picker-label">${t('suits')['joker']}</div><div class="picker-cards-grid"></div>`;
+    const jokerGrid = jokerRow.querySelector('.picker-cards-grid');
+
+    [
+      { rank: '大王', suit: '★', color: 'red' },
+      { rank: '小王', suit: '★', color: 'black' }
+    ].forEach(j => {
+      const key = `${j.rank}_${j.suit}`;
+      const count = modalSelectionMap[key] || 0;
+      totalSelected += count;
+      jokerGrid.appendChild(createPickerCardEl(j, count, key));
+    });
+    modalCardsList.appendChild(jokerRow);
+
+    SUITS.forEach(s => {
+      const row = document.createElement('div');
+      row.className = 'picker-row';
+      const suitLabel = t('suits')[s.name] || s.name;
+      row.innerHTML = `<div class="picker-label ${s.color}">${suitLabel}</div><div class="picker-cards-grid"></div>`;
+      const grid = row.querySelector('.picker-cards-grid');
+
+      [...RANKS].reverse().forEach(r => {
+        const key = `${r}_${s.name}`;
+        const count = modalSelectionMap[key] || 0;
+        totalSelected += count;
+        grid.appendChild(createPickerCardEl({ rank: r, suit: s.name, color: s.color }, count, key));
+      });
+      modalCardsList.appendChild(row);
+    });
+
+    modalSelectedCount.textContent = totalSelected;
+  }
+
+  function createPickerCardEl(item, count, key) {
+    const el = document.createElement('div');
+    el.className = `picker-card-btn ${item.color}` + (count > 0 ? ' has-selected' : '');
+    const displayRank = (item.rank === '大王' ? t('bigJoker') : (item.rank === '小王' ? t('smallJoker') : item.rank));
+    el.innerHTML = `
+      <div class="card-val">${displayRank}</div>
+      <div class="card-suit">${item.suit}</div>
+      <div class="picker-count-badge">${count}</div>
+    `;
+
+    el.addEventListener('click', () => {
+      const current = modalSelectionMap[key] || 0;
+      modalSelectionMap[key] = current >= 2 ? 0 : current + 1;
+      renderModalCards();
+    });
+
+    el.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      const current = modalSelectionMap[key] || 0;
+      if (current > 0) {
+        modalSelectionMap[key] = current - 1;
+        renderModalCards();
+      }
+    });
+
+    return el;
+  }
+
+  document.getElementById('customHandBtn').addEventListener('click', openCustomModal);
+  document.getElementById('cancelModalBtn').addEventListener('click', closeCustomModal);
+  document.getElementById('clearAllModalBtn').addEventListener('click', () => {
+    modalSelectionMap = {};
+    renderModalCards();
+  });
+
+  document.getElementById('confirmModalBtn').addEventListener('click', () => {
+    currentLevel = modalLevelSelect.value;
+    setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
 
     const newCards = [];
     let idGen = 1000;
@@ -1508,19 +3101,111 @@
     closeCustomModal();
     renderSchemesNav();
     renderBoard();
+  });
+
+  const langSelect = document.getElementById('langSelect');
+  langSelect.addEventListener('change', (e) => {
+    currentLang = e.target.value;
+    applyLanguage();
+  });
+
+  // ---------------- 撤销与重做安全回滚 ----------------
+  function undo() {
+    const cur = getCurrentScheme();
+    if (!cur || !cur.historyStack || cur.historyStack.length === 0) return;
+    
+    try {
+      const currentSnapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
+      if (!cur.redoStack) cur.redoStack = [];
+      cur.redoStack.push(currentSnapshot);
+
+      const prevSnapshot = cur.historyStack.pop();
+      cur.rows = JSON.parse(prevSnapshot);
+
+      selectedIds.clear();
+      lastAnchorCardId = null;
+      renderBoard();
+    } catch (err) {
+      console.error('Undo failed:', err);
+    }
   }
 
-  // 严格安全的脚本启动
-  window.addEventListener('DOMContentLoaded', () => {
+  function redo() {
+    const cur = getCurrentScheme();
+    if (!cur || !cur.redoStack || cur.redoStack.length === 0) return;
+
     try {
-      initBaseEventListeners();
-      applyFontSize(currentFontSize);
-      startNewGame();
-      applyLanguage();
+      const currentSnapshot = JSON.stringify(cur.rows.filter(r => r && r.length > 0));
+      if (!cur.historyStack) cur.historyStack = [];
+      cur.historyStack.push(currentSnapshot);
+
+      const nextSnapshot = cur.redoStack.pop();
+      cur.rows = JSON.parse(nextSnapshot);
+
+      selectedIds.clear();
+      lastAnchorCardId = null;
+      renderBoard();
     } catch (err) {
-      console.error('Fatal init error:', err);
+      console.error('Redo failed:', err);
     }
-  });
+  }
+
+  // 重置排序：若当前处于推荐思路方案，重置为推荐算法推荐的默认顺序，而非完全乱序
+  function resetSort() {
+    const cur = getCurrentScheme();
+    if (!cur) return;
+    pushState();
+    selectedIds.clear();
+    lastAnchorCardId = null;
+    const allCurrentCards = getFlattenedCards();
+
+    if (cur.isRecommended) {
+      const baseRecRows = generateAIRecommendedRows(allCurrentCards, currentLevel);
+      cur.rows = mainDeskCompactMode ? buildCompactRows(baseRecRows, currentLevel) : baseRecRows;
+    } else {
+      cur.rows = [sortCards(allCurrentCards, currentLevel)];
+    }
+
+    renderBoard();
+  }
+
+  function startNewGame() {
+    currentLevel = pickRandomLevel();
+    setSafeText('levelInfo', t('levelPrefix', { level: currentLevel }));
+
+    const rawHand = dealHand();
+    initialCards = [...rawHand];
+
+    schemes = [
+      {
+        name: getDefaultSchemeName(0),
+        customName: getDefaultSchemeName(0),
+        isRecommended: false,
+        rows: [sortCards(rawHand, currentLevel)],
+        historyStack: [],
+        redoStack: []
+      }
+    ];
+    currentSchemeIndex = 0;
+
+    selectedIds.clear();
+    lastAnchorCardId = null;
+    mainDeskCompactMode = false;
+
+    renderSchemesNav();
+    renderBoard();
+  }
+
+  document.getElementById('dealBtn').addEventListener('click', startNewGame);
+  document.getElementById('undoBtn').addEventListener('click', undo);
+  document.getElementById('redoBtn').addEventListener('click', redo);
+  document.getElementById('resetBtn').addEventListener('click', resetSort);
+
+  window.onload = () => {
+    applyFontSize(currentFontSize);
+    startNewGame();
+    applyLanguage();
+  };
 </script>
 </body>
 </html>
