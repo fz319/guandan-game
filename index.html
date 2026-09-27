@@ -208,7 +208,7 @@
     }
   }
 
-  /* 彻底消除 iOS 顶部白色毛玻璃与横向变黑 */
+  /* 消除 iOS 顶部白色毛玻璃与横向变黑 */
   html {
     background-color: #07120e;
     width: 100%;
@@ -1218,7 +1218,7 @@
     </div>
   </div>
 
-  <!-- 第 5 层：整理工具组 -->
+  <!-- 第 5 层：整理工具组（无连选冗余按钮） -->
   <div class="header-tier-row">
     <div class="control-island">
       <button id="deleteBtn" disabled>🗑️ 删除选中 (0)</button>
@@ -1338,10 +1338,6 @@
 
   let compareViewMode = 'full';
   let mainDeskCompactMode = false;
-
-  function renderRulesModalContentWrapper() {
-    renderRulesModalContent();
-  }
 
   // ---------------- 保证规则弹窗与使用指南百分之百可靠触发 ----------------
   const rulesModal = document.getElementById('rulesModal');
@@ -1476,10 +1472,6 @@
   function openCompareModal() {
     renderCompareContent();
     compareModal.style.display = 'flex';
-  }
-
-  function varToCss(varName) {
-    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
   }
 
   window.switchSchemeAndClose = function(idx) {
@@ -1761,7 +1753,6 @@
     applyLanguage();
   });
 
-  // ---------------- 撤销与重做安全回滚 ----------------
   function undo() {
     const cur = getCurrentScheme();
     if (!cur || !cur.historyStack || cur.historyStack.length === 0) return;
@@ -1802,7 +1793,7 @@
     }
   }
 
-  // 重置排序：若当前处于推荐思路方案，按要求重置为内置算法推荐的策略，而非乱序
+  // 重置排序：处于推荐思路方案时，刷新重置为算法推荐的默认顺序
   function resetSort() {
     const cur = getCurrentScheme();
     if (!cur) return;
