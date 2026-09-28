@@ -677,29 +677,33 @@
     width: 100%;
     min-width: min-content;
     max-width: 1380px;
-    background: rgba(15, 23, 42, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(15, 23, 42, 0.96);
+    border: 1px solid rgba(56, 189, 248, 0.28);
     border-radius: 12px;
-    padding: 16px 20px;
+    padding: 18px 20px;
     margin-bottom: 14px;
     box-sizing: border-box;
     display: none;
     backdrop-filter: blur(14px);
     animation: fadeIn 0.2s ease-out;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
   }
   .help-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
     gap: 14px;
   }
   .help-item {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.035);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    padding: 12px 14px;
+    border-radius: 9px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
   .help-item h4 {
-    margin: 0 0 8px 0;
+    margin: 0 0 10px 0;
     color: var(--gold);
     font-size: var(--font-modal-sec-title);
     display: flex;
@@ -710,18 +714,19 @@
     margin: 0;
     font-size: var(--font-modal-body);
     color: #cbd5e1;
-    line-height: 1.6;
+    line-height: 1.65;
   }
   .help-pill {
     display: inline-block;
-    padding: 1px 6px;
+    padding: 1.5px 7px;
     border-radius: 4px;
-    background: rgba(56, 189, 248, 0.15);
+    background: rgba(56, 189, 248, 0.16);
     color: #7dd3fc;
-    border: 1px solid rgba(56, 189, 248, 0.3);
+    border: 1px solid rgba(56, 189, 248, 0.32);
     font-weight: 700;
     font-size: var(--font-modal-small);
     margin: 0 2px;
+    white-space: nowrap;
   }
 
   .modal-backdrop {
@@ -768,8 +773,8 @@
   }
 
   .rules-modal-content {
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #0b151f;
+    border: 1px solid #24354c;
     border-radius: 14px;
     width: 95%;
     max-width: 1100px;
@@ -788,49 +793,72 @@
     flex-direction: column;
     gap: 18px;
     color: #e2e8f0;
-    line-height: 1.6;
+    line-height: 1.65;
     font-size: var(--font-modal-body);
   }
   .rule-section {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    padding: 16px;
+    border-radius: 10px;
+    padding: 18px;
   }
   .rule-section h3 {
-    margin: 0 0 8px 0;
+    margin: 0 0 10px 0;
     color: var(--gold);
     font-size: var(--font-modal-sec-title);
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    padding-bottom: 8px;
   }
   .rule-card-preview-row {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin: 8px 0;
+    gap: 8px;
+    margin: 10px 0;
     flex-wrap: wrap;
   }
   .mini-chip {
-    padding: 3px 8px;
-    border-radius: 5px;
+    padding: 4px 10px;
+    border-radius: 6px;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
     font-size: var(--font-modal-small);
-    font-weight: 600;
+    font-weight: 700;
   }
-  .mini-chip.red { color: #f87171; border-color: rgba(248, 113, 113, 0.3); background: rgba(239, 68, 68, 0.1); }
-  .mini-chip.gold { color: var(--gold); border-color: rgba(246, 197, 89, 0.4); background: rgba(246, 197, 89, 0.1); }
+  .mini-chip.red { color: #f87171; border-color: rgba(248, 113, 113, 0.4); background: rgba(239, 68, 68, 0.12); }
+  .mini-chip.gold { color: var(--gold); border-color: rgba(246, 197, 89, 0.45); background: rgba(246, 197, 89, 0.12); }
 
   .strategy-box {
     background: rgba(56, 189, 248, 0.05);
     border-left: 3px solid #38bdf8;
-    padding: 12px 14px;
+    padding: 12px 16px;
     margin-top: 10px;
     border-radius: 0 8px 8px 0;
   }
   .strategy-box strong { color: #7dd3fc; }
+
+  .ladder-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: var(--font-modal-body);
+  }
+  .ladder-table th, .ladder-table td {
+    padding: 9px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: left;
+    vertical-align: middle;
+  }
+  .ladder-table th {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .ladder-table tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+  }
 
   .highlight-gold {
     color: var(--gold);
@@ -1032,7 +1060,6 @@
   .save-info-title { font-size: var(--font-modal-sec-title); font-weight: bold; color: var(--gold); margin-bottom: 4px; }
   .save-info-meta { font-size: var(--font-modal-small); color: #94a3b8; }
 
-  /* ---------------- 重构后的自定义调牌界面样式 ---------------- */
   .custom-palette-modal {
     max-width: 1040px;
     width: 95%;
@@ -1393,7 +1420,7 @@
 <div class="modal-backdrop" id="rulesModal">
   <div class="rules-modal-content">
     <div class="modal-header">
-      <div class="modal-title" id="rulesModalTitle">📖 掼蛋规则</div>
+      <div class="modal-title" id="rulesModalTitle">📖 掼蛋实战规则与进阶宝典</div>
       <button class="action-lead-btn" id="closeRulesBtn" style="padding: 6px 14px;">关闭规则</button>
     </div>
     <div class="rules-scroll-body" id="rulesContentBody"></div>
@@ -1412,7 +1439,7 @@
   </div>
 </div>
 
-<!-- 重构后的自定义调牌弹窗 -->
+<!-- 自定义调牌弹窗 -->
 <div class="modal-backdrop" id="customModal">
   <div class="custom-palette-modal">
     <div class="custom-modal-header">
@@ -1467,6 +1494,7 @@
 
   localStorage.removeItem('GUANDAN_CARD_THEME');
 
+  /* ---------------- 多语言文案与指南 ---------------- */
   const I18N = {
     'zh-CN': {
       levelPrefix: '打：【 {level} 】',
@@ -1510,7 +1538,7 @@
       clearAll: '清空',
       cancel: '取消',
       confirmApply: '确认应用到手牌',
-      rulesTitle: '📖 掼蛋规则',
+      rulesTitle: '📖 掼蛋实战规则与进阶宝典',
       fontOptions: { small: '尺寸小号', medium: '尺寸中号', large: '尺寸大号', xlarge: '尺寸特大' },
       renamePrompt: '请输入此理牌的名称：',
       compareSummary: '共 {tiers} 层 · {cards} 张',
@@ -1518,20 +1546,20 @@
       customHint: '💡 提示：点击卡牌在 0 ➔ 1 ➔ 2 间切换，右键可直接 -1',
       help: [
         {
-          title: '🃏 选牌与放平',
-          desc: '• <span class="help-pill">单击</span> 任何一张牌即可立起选中。<br>• 再次点击这张牌本身即可放平。<br>• <strong>一键收回</strong>：点桌面空白处，所有立起的牌全员归位。<br>• <strong>连选多张</strong>：点第一张后按住 <span class="help-pill">Shift</span> 点另一张，中间整段全选；触屏端直接手指滑动划过连续多张牌即可快速连选。'
+          title: '1. 快速选牌与放平',
+          desc: '• <span class="help-pill">点击单张</span> 即可立起；再次点击放平。<br>• <strong>一键收回</strong>：点击桌面空白处，所有立起的牌全员归位。<br>• <strong>连续连选</strong>：按住 <span class="help-pill">Shift</span> 选起止两张即可全选区间；手机端直接用手指<strong>横向划过多张牌</strong>即可瞬间连选。'
         },
         {
-          title: '🎯 拖拽与智能分层',
-          desc: '• <strong>整组打包</strong>：立起几张牌后，拖动其中任意一张，整组牌一起移动。<br>• <strong>黄色光标指引</strong>：光标指示精确插牌空隙，松手即落位。<br>• <strong>无限分层</strong>：拖到底部虚线槽自动成立新一层；拖住层左侧 <span class="help-pill">≡</span> 手柄可上下调整整层顺序。'
+          title: '2. 自由拖拽与分层',
+          desc: '• <strong>成组打包</strong>：立起数张牌后，拖动其中任意一张，整组牌打包位移。<br>• <strong>黄色光标指引</strong>：移动至目标位置，黄色光标指示精准插空，松手即落位。<br>• <strong>无限分层</strong>：拖至底部虚线框松手，立即开辟全新一层；拖动左侧 <span class="help-pill">≡</span> 手柄可上下置换整层次序。'
         },
         {
-          title: '📱 手机与触屏手感',
-          desc: '• <strong>左右自由滑屏</strong>：竖屏查看第一层所有 27 张牌，直接用手指横向划屏查看。<br>• <strong>全向巡航滚屏</strong>：按住选中的牌往屏幕左侧或下边缘靠拢，页面会自动平滑回滚，轻松把最右侧的牌插进左边或第二层。'
+          title: '3. 触屏端流畅手感',
+          desc: '• <strong>左右自由滑屏</strong>：竖屏查看手牌过长时，直接横向划动屏幕即可顺畅浏览。<br>• <strong>边缘自动巡航</strong>：拖牌靠拢屏幕边缘时，页面自动平滑滚屏，轻松把尾部的牌搬移到首层或下一层。'
         },
         {
-          title: '⚖️ 对比复盘与差异高亮',
-          desc: '• 点击 <span class="help-pill">⚖️ 理牌比较</span>，系统会自动与内置最佳算法比对。<br>• 若思路与推荐一致，直接点亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span> 勋章；若有拆法出入，自动高亮标注差异层，助你快速找差反思！'
+          title: '4. 理牌对比与复盘',
+          desc: '• 点击 <span class="help-pill">💡 推荐理牌</span> 生成算法基准；点击 <span class="help-pill">⚖️ 理牌比较</span> 开启多方案同屏对照。<br>• 若思路吻合点亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span>；若有拆牌出入，系统精准高亮差异层，秒查拆法优劣！'
         }
       ]
     },
@@ -1577,7 +1605,7 @@
       clearAll: '清空',
       cancel: '取消',
       confirmApply: '確認應用到手牌',
-      rulesTitle: '📖 掼蛋規則',
+      rulesTitle: '📖 掼蛋實戰規則與進階寶典',
       fontOptions: { small: '尺寸小號', medium: '尺寸中號', large: '尺寸大號', xlarge: '尺寸特大' },
       renamePrompt: '請輸入此理牌的名稱：',
       compareSummary: '共 {tiers} 層 · {cards} 張',
@@ -1585,20 +1613,20 @@
       customHint: '💡 提示：點擊卡牌在 0 ➔ 1 ➔ 2 間切換，右鍵可直接 -1',
       help: [
         {
-          title: '🃏 選牌與放平',
-          desc: '• <span class="help-pill">單擊</span> 任何一張牌即可立起選取。<br>• 再次點擊這張牌本身即可放平。<br>• <strong>一鍵收回</strong>：點桌面空白處，所有立起的牌全員歸位。<br>• <strong>連選多張</strong>：點第一張後按住 <span class="help-pill">Shift</span> 點另一張，中間整段全選；觸屏端直接手指滑動划過連續多張牌即可快速連選。'
+          title: '1. 快速選牌與放平',
+          desc: '• <span class="help-pill">點擊單張</span> 即可立起；再次點擊放平。<br>• <strong>一鍵收回</strong>：點擊桌面空白處，所有立起的牌全員歸位。<br>• <strong>連續連選</strong>：按住 <span class="help-pill">Shift</span> 選起止兩張即可全選區間；手機端直接用手指<strong>橫向劃過多張牌</strong>即可瞬間連選。'
         },
         {
-          title: '🎯 拖曳與智慧分層',
-          desc: '• <strong>整組打包</strong>：立起幾張牌後，拖曳其中任意一張，整組牌一起移動。<br>• <strong>黃色游標指引</strong>：游標指示精確插牌空隙，鬆手即落位。<br>• <strong>無限分層</strong>：拖到底部虛線槽自動成立新一層；拖住層左側 <span class="help-pill">≡</span> 手柄可上下調整整層順序。'
+          title: '2. 自由拖曳與分層',
+          desc: '• <strong>成組打包</strong>：立起數張牌後，拖動其中任意一張，整組牌打包位移。<br>• <strong>黃色游標指引</strong>：移動至目標位置，黃色游標指示精準插空，鬆手即落位。<br>• <strong>無限分層</strong>：拖至底部虛線框鬆手，立即開闢全新一層；拖動左側 <span class="help-pill">≡</span> 手柄可上下置換整層次序。'
         },
         {
-          title: '📱 手機與觸控螢幕手感',
-          desc: '• <strong>左右自由滑屏</strong>：直屏查看第一層所有 27 張牌，直接用手指橫向劃屏查看。<br>• <strong>全向巡航滾屏</strong>：按住選取的牌往螢幕左側或下邊緣靠攏，頁面會自動平滑回滾，輕鬆把最右側的牌插進左邊或第二層。'
+          title: '3. 觸控端流暢手感',
+          desc: '• <strong>左右自由滑屏</strong>：直屏查看手牌過長時，直接橫向劃動屏幕即可順暢瀏覽。<br>• <strong>邊緣自動巡航</strong>：拖牌靠攏屏幕邊緣時，頁面自動平滑滾屏，輕鬆把尾部的牌搬移到首層或下一層。'
         },
         {
-          title: '⚖️ 對比復盤與差異高亮',
-          desc: '• 點擊 <span class="help-pill">⚖️ 理牌比較</span>，系統會自動與內置最佳算法比對。<br>• 若思路與推薦一致，直接點亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span> 勳章；若有拆法出入，自動高亮標註差異層！'
+          title: '4. 理牌對比與複盤',
+          desc: '• 點擊 <span class="help-pill">💡 推薦理牌</span> 生成算法基準；點擊 <span class="help-pill">⚖️ 理牌比較</span> 開啟多方案同屏對照。<br>• 思路吻合點亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span>；若有拆牌出入，系統精準高亮差異層，秒查拆法優劣！'
         }
       ]
     },
@@ -1644,7 +1672,7 @@
       clearAll: 'Clear',
       cancel: 'Cancel',
       confirmApply: 'Apply to Hand',
-      rulesTitle: '📖 Rules',
+      rulesTitle: '📖 Guandan Rules & Tactics Guide',
       fontOptions: { small: 'Small Size', medium: 'Medium Size', large: 'Large Size', xlarge: 'Extra Large' },
       renamePrompt: 'Enter new name for this layout:',
       compareSummary: 'Total {tiers} Tiers · {cards} Cards',
@@ -1652,20 +1680,20 @@
       customHint: '💡 Tip: Click card to toggle 0 ➔ 1 ➔ 2. Right-click to decrease.',
       help: [
         {
-          title: '🃏 Pick & Drop Cards',
-          desc: '• <span class="help-pill">Tap</span> any card to raise it up; tap again to drop it down.<br>• <strong>Instant Clear</strong>: Tap any empty table background to drop all raised cards.<br>• <strong>Interval Select</strong>: Tap the 1st card, hold <span class="help-pill">Shift</span> and tap another card to select the whole sequence; swipe across cards on touchscreens to batch select.'
+          title: '1. Fast Selection',
+          desc: '• <span class="help-pill">Tap single</span> to raise; tap again to lower.<br>• <strong>Instant Deselect</strong>: Tap empty board space to drop all cards.<br>• <strong>Range Select</strong>: Hold <span class="help-pill">Shift</span> across two cards; or swipe continuously across cards on touchscreens.'
         },
         {
-          title: '🎯 Smooth Drag & Auto Tiering',
-          desc: '• <strong>Group Drag</strong>: Once multiple cards are raised, drag any one card to move the entire combo together.<br>• <strong>Caret Sensor</strong>: Follow the luminous yellow caret for accurate insertion.<br>• <strong>New Tiers</strong>: Drop cards onto the bottom dashed box to open a new tier instantly. Drag the left <span class="help-pill">≡</span> handle to reorder rows.'
+          title: '2. Drag & Tiering',
+          desc: '• <strong>Group Move</strong>: Raise multiple cards and drag any one to move the full combo.<br>• <strong>Yellow Caret</strong>: Caret indicator shows precise insertion slot.<br>• <strong>Dynamic Tiers</strong>: Drop onto bottom dashed line to start a new row. Drag the left <span class="help-pill">≡</span> handle to reorder rows.'
         },
         {
-          title: '📱 Mobile Touch Navigation',
-          desc: '• <strong>Horizontal Pan</strong>: Swipe your finger horizontally anywhere to inspect all 27 cards in portrait mode.<br>• <strong>Edge Auto-Cruise</strong>: While dragging cards, move near screen edges to smoothly auto-scroll into previous tiers or rightward gaps.'
+          title: '3. Mobile Navigation',
+          desc: '• <strong>Horizontal Pan</strong>: Swipe left/right anywhere to inspect your 27 cards in portrait mode.<br>• <strong>Edge Auto-Cruise</strong>: Dragging near screen boundaries smoothly auto-scrolls the view.'
         },
         {
-          title: '⚖️ Comparison & Difference Highlighting',
-          desc: '• Click <span class="help-pill">⚖️ Compare Layouts</span> to audit your layout against the master algorithm.<br>• Differences are automatically highlighted for rapid reflection!'
+          title: '4. Layout Comparison',
+          desc: '• Click <span class="help-pill">💡 Recommend Layout</span> & <span class="help-pill">⚖️ Compare</span> to evaluate your sorting strategy against the engine.<br>• Mismatches are highlighted instantly!'
         }
       ]
     },
@@ -1711,7 +1739,7 @@
       clearAll: 'Limpiar',
       cancel: 'Cancelar',
       confirmApply: 'Aplicar a la Mano',
-      rulesTitle: '📖 Reglas',
+      rulesTitle: '📖 Guía Maestra de Guandan',
       fontOptions: { small: 'Tamaño Pequeño', medium: 'Tamaño Mediano', large: 'Tamaño Grande', xlarge: 'Tamaño Extra Grande' },
       renamePrompt: 'Introduce el nuevo nombre para este orden:',
       compareSummary: 'Total {tiers} Filas · {cards} Cartas',
@@ -1719,20 +1747,20 @@
       customHint: '💡 Consejo: Haz clic para cambiar 0 ➔ 1 ➔ 2. Clic derecho para restar.',
       help: [
         {
-          title: '🃏 Levantar y Bajar Cartas',
-          desc: '• <span class="help-pill">Toca</span> una carta para levantarla; toca de nuevo para bajarla.<br>• <strong>Bajar Todo Rápido</strong>: Toca el fondo vacío de la mesa para bajar todas las cartas seleccionadas.<br>• <strong>Selección en Bloque</strong>: Elige una carta, mantén <span class="help-pill">Shift</span> y toca otra para seleccionar el rango; desliza el dedo para seleccionar continuo.'
+          title: '1. Selección Rápida',
+          desc: '• <span class="help-pill">Toca</span> para levantar; toca de nuevo para bajar.<br>• <strong>Bajar Todo</strong>: Pulsa el tapete vacío para cancelar la selección.<br>• <strong>Selección Continua</strong>: Usa <span class="help-pill">Shift</span> o desliza tu dedo en pantalla táctil.'
         },
         {
-          title: '🎯 Arrastre Suave y Filas Nuevas',
-          desc: '• <strong>Mover en Grupo</strong>: Con cartas levantadas, arrastra una cualquiera para mover el combo entero.<br>• <strong>Cursor Luminoso</strong>: Suelta donde indique la flecha amarilla para insertar con precisión.<br>• <strong>Nuevas Filas</strong>: Suelta en el cajón de puntos abajo para crear otra fila. Arrastra el icono <span class="help-pill">≡</span> para reordenar filas.'
+          title: '2. Arrastre y Filas',
+          desc: '• <strong>Mover Grupo</strong>: Arrastra cualquier carta levantada para mover el combo completo.<br>• <strong>Cursor Luminoso</strong>: Suelta en el cursor amarillo para insertar con precisión.<br>• <strong>Nuevas Filas</strong>: Suelta en el recuadro punteado abajo para abrir otra fila.'
         },
         {
-          title: '📱 Pantalla Táctil y Móvil',
-          desc: '• <strong>Deslizamiento Libre</strong>: En móvil desliza horizontalmente con el dedo para ver todas las 27 cartas.<br>• <strong>Crucero en Bordes</strong>: Arrastra cartas cerca de los bordes para que la pantalla se desplace sola hacia atrás o adelante suavemente.'
+          title: '3. Pantalla Táctil',
+          desc: '• <strong>Deslizamiento</strong>: Desliza horizontalmente para ver toda la baraja.<br>• <strong>Auto-Desplazamiento</strong>: Mueve cartas hacia los bordes para desplazar la vista.'
         },
         {
-          title: '⚖️ Comparar y Resaltar Diferencias',
-          desc: '• Pulsa <span class="help-pill">⚖️ Comparar Orden</span> para auditar tu planteamiento con el algoritmo maestro.<br>• ¡Las diferencias se resaltan para que reflexiones en segundos!'
+          title: '4. Comparación',
+          desc: '• Pulsa <span class="help-pill">💡 Orden Óptimo</span> y <span class="help-pill">⚖️ Comparar</span> para comprobar tu planteamiento táctico.'
         }
       ]
     }
@@ -1756,148 +1784,303 @@
     if (el) el.textContent = text;
   }
 
+  /* ---------------- 彻底重构后的规则模块 ---------------- */
   function renderRulesModalContent() {
     const container = document.getElementById('rulesContentBody');
     if (!container) return;
+
     if (currentLang === 'en') {
       container.innerHTML = `
         <div class="rule-section">
-          <h3>🏆 1. Overview & Objectives</h3>
-          <p><strong>Guandan (掼蛋)</strong> is played with two 54-card decks (108 cards in total) by 4 players in fixed cross-table partnerships. The core objective is cooperating with your partner to shed all 27 cards before opponents.</p>
+          <h3>🏆 1. Game Setup & Core Progression</h3>
+          <p>• <strong>Players & Decks</strong>: 4 players in cross-table partnerships (2 vs 2), using 2 standard 54-card decks (108 cards total, 27 cards each).<br>
+          • <strong>The Ultimate Goal</strong>: Advance from Rank 2 up through Rank A. Winning team must fulfill the Rank A clearing condition to claim victory.</p>
         </div>
+
         <div class="rule-section">
-          <h3>⭐ 2. Rank & Wild Cards (<span class="highlight-gold">Feng Ren Pei</span>)</h3>
-          <p>• <span class="highlight-gold">Current Rank (级牌)</span>: Advances from 2 up to Ace. Current rank cards rank higher than Aces.<br>
-          • <span class="highlight-red">Heart Wild Card (红桃级牌·逢人配)</span>: The two Heart cards of current rank substitute any non-joker card.<br>
-          • <strong>Hierarchy</strong>: <span class="highlight-red">Red Joker</span> &gt; <span class="highlight-blue">Black Joker</span> &gt; <span class="highlight-gold">Heart Wild</span> &gt; Other Rank Cards &gt; A &gt; K &gt; Q &gt; J &gt; 10 &gt; 9 &gt; 8 &gt; 7 &gt; 6 &gt; 5 &gt; 4 &gt; 3 &gt; 2.</p>
+          <h3>📈 2. Finishes, Rank Upgrades & Tribute Integrated Table</h3>
+          <table class="ladder-table">
+            <thead>
+              <tr><th>Finishing Ranks</th><th>Evaluation</th><th>Upgrade</th><th>Tribute Rule</th><th>Anti-Tribute (抗贡)</th><th>Return Tribute</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="highlight-gold">1st & 2nd</span></td>
+                <td><span class="highlight-gold">Double Win (双下)</span></td>
+                <td><strong>+3 Ranks</strong></td>
+                <td>Opponents (3rd & 4th) each tribute their <span class="highlight-red">highest card</span> to 1st & 2nd.</td>
+                <td>Losing team holds <strong>both Red Jokers</strong> together.</td>
+                <td>1st & 2nd return any card ≤ 10.</td>
+              </tr>
+              <tr>
+                <td><span class="highlight-blue">1st & 3rd</span></td>
+                <td>Single Win</td>
+                <td><strong>+2 Ranks</strong></td>
+                <td>4th place tributes their <span class="highlight-red">highest card</span> to 1st place.</td>
+                <td>4th place alone holds <strong>both Red Jokers</strong>.</td>
+                <td>1st place returns any card ≤ 10.</td>
+              </tr>
+              <tr>
+                <td><strong>1st & 4th</strong></td>
+                <td>Narrow Win</td>
+                <td><strong>+1 Rank</strong></td>
+                <td>4th place tributes their <span class="highlight-red">highest card</span> to 1st place.</td>
+                <td>4th place alone holds <strong>both Red Jokers</strong>.</td>
+                <td>1st place returns any card ≤ 10.</td>
+              </tr>
+              <tr>
+                <td><span class="highlight-red">2+3 / 2+4 / 3+4</span></td>
+                <td>Loss</td>
+                <td><strong>+0 Ranks</strong></td>
+                <td>Must pay tribute next round according to opponents' win margin.</td>
+                <td>Check Red Joker conditions above.</td>
+                <td>Receive returned cards ≤ 10.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+
         <div class="rule-section">
-          <h3>💣 3. Bomb Power Ladder</h3>
-          <div class="rule-card-preview-row">
-            <span class="mini-chip">4-Bomb</span> &lt;
-            <span class="mini-chip">5-Bomb</span> &lt;
-            <span class="mini-chip red">Straight Flush (5 cards)</span> &lt;
-            <span class="mini-chip">6-Bomb</span> &lt;
-            <span class="mini-chip">7-Bomb</span> &lt;
-            <span class="mini-chip">8-Bomb</span> &lt;
-            <span class="mini-chip gold">👑 4-Joker Supreme Bomb</span>
-          </div>
-          <p style="font-size:var(--font-modal-small); color:#94a3b8;">* Key rule: Straight Flush beats 4-Bomb & 5-Bomb, but yields to 6-Bomb and above!</p>
+          <h3>👑 3. Passing Rank A: Final Match Victory</h3>
+          <p>• <strong>Strict Victory Condition</strong>: When reaching Rank A, your team must capture <strong>1st place (Head Lead)</strong>, and your partner <strong>CANNOT finish 4th (Last)</strong>.<br>
+          • <strong>Valid Clear</strong>: 1st & 2nd (+3) or 1st & 3rd (+2) immediately wins the entire match!<br>
+          • <strong>Stuck on A (打A不结)</strong>: Finishing 1st & 4th does not clear the match. Your team remains on Rank A for another round.</p>
         </div>
+
         <div class="rule-section">
-          <h3>💡 4. Master Tactics & Philosophy for Beginners</h3>
-          <div class="strategy-box">
-            <p><strong>1. "Wilds make Bombs" Priority</strong>: Never waste your Heart Wild cards on basic pairs or full houses. Always look to build a <em>Straight Flush</em> or 5/6-card Bomb first. Turning a single into an explosive bomb is the single highest-value play in Guandan.</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>2. Partner Synergy & Division of Roles</strong>: Pay close attention to what your partner leads. If your partner has an aggressive hand, your role is to suppress the opponent's strong plays and pass control back to your partner. Win together, not alone.</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>3. Keep the Key Counters in Mind</strong>: Track these 3 essentials: How many Jokers have been played? Are all current rank cards out? How many cards are left in opponents' hands (under 6 cards means beware of singles/bombs)?</p>
-          </div>
+          <h3>⭐ 4. Rank Hierarchy & Wild Card (<span class="highlight-gold">Feng Ren Pei</span>)</h3>
+          <p>• <strong>Current Rank (级牌)</strong>: Advances from 2 to A. Current rank cards rank above Ace and below Small Joker.<br>
+          • <span class="highlight-red">Heart Wild Card (红桃逢人配)</span>: The 2 Heart cards of current rank substitute any non-joker card.<br>
+          • <strong>Hierarchy</strong>: <span class="highlight-red">Red Joker</span> &gt; <span class="highlight-blue">Black Joker</span> &gt; <span class="highlight-gold">Heart Wild</span> &gt; Regular Rank Cards &gt; A &gt; K &gt; Q &gt; J &gt; 10 &gt; 9 &gt; 8 &gt; 7 &gt; 6 &gt; 5 &gt; 4 &gt; 3 &gt; 2.</p>
         </div>
-      `;
-    } else if (currentLang === 'es') {
-      container.innerHTML = `
+
         <div class="rule-section">
-          <h3>🏆 1. Descripción y Objetivo</h3>
-          <p><strong>Guandan (掼蛋)</strong> se juega entre 4 jugadores en parejas con 2 barajas (108 cartas en total).</p>
+          <h3>💣 5. Standard Combos & Bomb Power Ladder</h3>
+          <table class="ladder-table">
+            <tr><th style="width:25%;">Standard Combos</th><td>Single, Pair, Triplets, Full House (3+2), Straight (<strong>Strictly 5 consecutive cards</strong>), <strong>Plates (钢板, 2 consecutive triplets)</strong>, <strong>Tubes / Wooden Plates (木板/三连对, 3 consecutive pairs)</strong>.</td></tr>
+            <tr><th>Bomb Power Ladder</th><td>
+              <div class="rule-card-preview-row">
+                <span class="mini-chip">4-Bomb</span> &lt;
+                <span class="mini-chip">5-Bomb</span> &lt;
+                <span class="mini-chip red">Straight Flush (5-card suited)</span> &lt;
+                <span class="mini-chip">6-Bomb</span> &lt;
+                <span class="mini-chip">7-Bomb</span> &lt;
+                <span class="mini-chip">8-Bomb</span> &lt;
+                <span class="mini-chip gold">👑 4-Joker Supreme Bomb</span>
+              </div>
+            </td></tr>
+            <tr><th>Critical Watershed</th><td><span class="highlight-red">Straight Flush beats 4-Bomb & 5-Bomb, but yields to 6-Bomb and higher!</span></td></tr>
+          </table>
         </div>
+
         <div class="rule-section">
-          <h3>⭐ 2. Nivel Actual y Comodines (<span class="highlight-gold">Feng Ren Pei</span>)</h3>
-          <p>• Los dos <span class="highlight-red">Corazones del nivel actual</span> son comodines universales.<br>
-          • <strong>Jerarquía</strong>: <span class="highlight-red">Joker Rojo</span> &gt; <span class="highlight-blue">Joker Negro</span> &gt; <span class="highlight-gold">Comodín de Nivel</span> &gt; Cartas de Nivel &gt; A &gt; K &gt; ... &gt; 2.</p>
-        </div>
-        <div class="rule-section">
-          <h3>💣 3. Jerarquía de Bombas</h3>
-          <p>Bomba de 4 &lt; Bomba de 5 &lt; <span class="highlight-red">Escalera de Color (5)</span> &lt; Bomba de 6+ &lt; <span class="highlight-gold">👑 Bomba Suprema (4 Jokers)</span>.</p>
-        </div>
-        <div class="rule-section">
-          <h3>💡 4. Estrategia para Principiantes</h3>
-          <div class="strategy-box"><p><strong>1. Comodines para Bombas</strong>: Úsalos siempre para bombas o escaleras de color.</p></div>
-          <div class="strategy-box"><p><strong>2. Cooperación</strong>: Reparte roles de ataque y soporte con tu compañero.</p></div>
+          <h3>💡 6. Master Tactics & Pitfall Guide (10 Golden Principles)</h3>
+          <div class="strategy-box"><p><strong>1. Catch-Wind Synergy (接风权战略)</strong>: If a player empties their hand and no one beats their last play, the lead passes to their <strong>direct partner</strong>. Feed combos your partner can catch!</p></div>
+          <div class="strategy-box"><p><strong>2. Warning Count Defenses (报牌防守红线)</strong>: Opponent holds ≤ 10: high alert. Opponent holds ≤ 5: <strong>never play small singles or easy pairs</strong>. Bomb immediately!</p></div>
+          <div class="strategy-box"><p><strong>3. Dynamic Lead vs Wingman (主攻与僚机分工)</strong>: Don't both race for 1st place. If your hand lacks firepower, act as the Wingman: intercept opponents' high cards and draw out their bombs.</p></div>
+          <div class="strategy-box"><p><strong>4. Wilds for Bombs Only (逢人配成炸铁律)</strong>: Heart Wilds belong in Straight Flushes or 5/6-card bombs. Wasting them on ordinary straights or full houses destroys your hand power.</p></div>
+          <div class="strategy-box"><p><strong>5. The Rank A Trap (打A避忌1+4)</strong>: At Rank A, protect your partner from landing 4th place. It's often smarter to help your partner finish 3rd than rushing for a selfish 1st place with partner 4th.</p></div>
+          <div class="strategy-box"><p><strong>6. Clean Layout Over High Face Values (牌形整编胜于大牌)</strong>: Having 5 loose singles is fatal. Better to break high pairs to assemble clean straights or full houses than keep broken garbage.</p></div>
+          <div class="strategy-box"><p><strong>7. Anti-Tribute Concealment (抗贡藏双大王)</strong>: Holding two Red Jokers exempts tribute. Do not reveal them unnecessarily early; keep your opponents guessing.</p></div>
+          <div class="strategy-box"><p><strong>8. Early Probe Play (首轮探路摸底)</strong>: The opening leads reveal the table: notice who plays high rank cards or passes on straights to map opponents' weak suits.</p></div>
+          <div class="strategy-box"><p><strong>9. Three-Count Memory Base (极简三线记牌)</strong>: Beginners only need to count 3 things: ① How many Jokers are out? ② Are all 8 rank cards exhausted? ③ How many cards are opponents holding?</p></div>
+          <div class="strategy-box"><p><strong>10. Avoid Last Place at All Costs (末游保命策略)</strong>: When victory is out of reach, fight for 2nd or 3rd place to deny opponents a Double Win (+3) and avoid paying single tribute.</p></div>
         </div>
       `;
     } else if (currentLang === 'zh-TW') {
       container.innerHTML = `
         <div class="rule-section">
-          <h3>🏆 1. 遊戲綜述與勝負目標</h3>
-          <p><strong>掼蛋</strong>源自江蘇淮安，採用<strong>兩副牌（共 108 張）</strong>，4人參與，對家兩人為一組配合。遊戲核心目標是在隊友戰術掩護下，儘早將手中 27 張牌全部出完（第一名出完者稱為「頭遊」）。</p>
+          <h3>🏆 1. 遊戲架構與局數推進</h3>
+          <p>• <strong>人數與牌數</strong>：4人參與，對家為隊友（2打2），採用兩副標準撲克（共 108 張，每人 27 張）。<br>
+          • <strong>晉級核心</strong>：雙方從打 2 開始升級，一路打至打 A。率先攻克 A 級並符合打過條件的一方獲得全盤大勝。</p>
         </div>
+
         <div class="rule-section">
-          <h3>⭐ 2. 級牌體系與「<span class="highlight-gold">逢人配</span>」萬能牌</h3>
-          <p>• <span class="highlight-gold">級牌（本局打幾）</span>：從打 2 開始升至打 A。若當前打 5，則所有的 5 點數權重被拔高，大於 A 且僅次於小王。<br>
-          • <span class="highlight-red">逢人配（紅心級牌）</span>：兩張<strong>紅心級牌</strong>為萬能百搭牌（除大小王外），可替代任意點數和花色湊成同花順、順子、炸彈等。<br>
-          • <strong>大小順序</strong>：<span class="highlight-red">大王</span> ＞ <span class="highlight-blue">小王</span> ＞ <span class="highlight-gold">紅心逢人配</span> ＞ 其他花色級牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
+          <h3>📈 2. 名次、升級與進貢結算一體表</h3>
+          <table class="ladder-table">
+            <thead>
+              <tr><th>同隊名次組合</th><th>戰局結果</th><th>升級幅度</th><th>進貢細則</th><th>抗貢條件（豁免進貢）</th><th>還貢規定</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="highlight-gold">第 1 名 + 第 2 名</span></td>
+                <td><span class="highlight-gold">雙下（完勝）</span></td>
+                <td><strong>直接升 3 級</strong></td>
+                <td>末遊與三遊各向頭遊、二遊進貢手中<span class="highlight-red">最大單牌</span>（紅桃配除外）。</td>
+                <td>落敗方兩人手中<strong>合計抓齊 2 張大王</strong>。</td>
+                <td>得貢者各挑一張 ≤ 10 的任意牌回還。</td>
+              </tr>
+              <tr>
+                <td><span class="highlight-blue">第 1 名 + 第 3 名</span></td>
+                <td>單贏（勝）</td>
+                <td><strong>升 2 級</strong></td>
+                <td>末遊（第4名）向頭遊進貢手中<span class="highlight-red">最大單牌</span>（紅桃配除外）。</td>
+                <td>末遊玩家自己一人<strong>獨抓 2 張大王</strong>。</td>
+                <td>頭遊挑一張 ≤ 10 的任意牌回還。</td>
+              </tr>
+              <tr>
+                <td><strong>第 1 名 + 第 4 名</strong></td>
+                <td>險勝（保頭遊）</td>
+                <td><strong>升 1 級</strong></td>
+                <td>末遊（第4名）向頭遊進貢手中<span class="highlight-red">最大單牌</span>（紅桃配除外）。</td>
+                <td>末遊玩家自己一人<strong>獨抓 2 張大王</strong>。</td>
+                <td>頭遊挑一張 ≤ 10 的任意牌回還。</td>
+              </tr>
+              <tr>
+                <td><span class="highlight-red">未獲頭遊（2+3/2+4/3+4）</span></td>
+                <td>敗局</td>
+                <td><strong>不升級（0級）</strong></td>
+                <td>依對手勝幅，於下一局向對手進貢對應大牌。</td>
+                <td>檢驗是否符合上述大王抗貢條件。</td>
+                <td>接收對手還貢之牌。</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+
         <div class="rule-section">
-          <h3>💣 3. 牌型圖譜與炸彈威力天梯</h3>
-          <div class="rule-card-preview-row">
-            <span class="mini-chip">四張炸彈</span> &lt;
-            <span class="mini-chip">五張炸彈</span> &lt;
-            <span class="mini-chip red">同花順 (5張同花連續)</span> &lt;
-            <span class="mini-chip">六張炸彈</span> &lt;
-            <span class="mini-chip">七張炸彈</span> &lt;
-            <span class="mini-chip">八張炸彈</span> &lt;
-            <span class="mini-chip gold">👑 四大天王 (天王炸)</span>
-          </div>
-          <p style="font-size:var(--font-modal-small); color:#94a3b8;">* 關鍵特權：同花順威力大於五張炸彈，但小於六張炸彈！天王炸為全場最大神牌。</p>
+          <h3>👑 3. 「打 A」決勝機制（全場獲勝標準）</h3>
+          <p>• <strong>打 A 必過條件</strong>：當某隊升至 A 級時，該隊必須<strong>奪得頭遊</strong>，且隊友<strong>絕對不能是最後一名（第 4 名）</strong>。<br>
+          • <strong>成功過 A 獲勝</strong>：打 A 局中取得 <span class="highlight-gold">1+2 名（雙下）</span> 或 <span class="highlight-blue">1+3 名</span>，正式宣告比賽大獲全勝！<br>
+          • <strong>未過 A 局（打 A 不結）</strong>：若取得 1+4 名，因隊友包底，不算過 A，下一局必須繼續留在 A 級重打（一般連續三次不過需罰退級）。</p>
         </div>
+
         <div class="rule-section">
-          <h3>💡 4. 實戰進階：掼蛋核心戰術思路與控局哲學</h3>
-          <div class="strategy-box">
-            <p><strong>一、配火第一，絕不湊零（逢人配的黃金法則）</strong><br>
-            逢人配萬萬不可隨便拿去湊三帶二或單順。它的<span class="highlight-gold">最優價值永遠是「配炸」或「配同花順」</span>。多一個炸彈，整手牌的防守與進攻能力將迎來質的飛躍。</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>二、隊友同心，角色分工（一主一副打法）</strong><br>
-            掼蛋是雙人默契運動：摸完牌後要迅速評估自己的牌力。若牌力強、炸彈多，主動當<span class="highlight-red">「主攻手」</span>衝刺頭遊；若手牌零散、小牌多，要甘願當<span class="highlight-blue">「掩護手」</span>，負責頂對手大牌、拆炸彈卡位，把出牌路數留給隊友。</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>三、基礎算牌基線（知己知彼）</strong><br>
-            不需要背下全部 108 張牌，新手只要記住三條線：① 四張王牌出了幾張？② 當前級牌有沒有出完？③ 對手手牌小於 6 張時，隨時防範其一擊走脫！</p>
-          </div>
+          <h3>⭐ 4. 級牌體系與「<span class="highlight-gold">逢人配</span>」萬能牌</h3>
+          <p>• <span class="highlight-gold">級牌（本局打幾）</span>：打 2 升至打 A。當局打幾，該點數地位超越 A，僅次於小王。<br>
+          • <span class="highlight-red">逢人配（紅心級牌）</span>：兩張<strong>紅心級牌</strong>為萬能百搭（除大小王外），可任意替代點數與花色組合同花順、炸彈等。<br>
+          • <strong>大小序列</strong>：<span class="highlight-red">大王</span> ＞ <span class="highlight-blue">小王</span> ＞ <span class="highlight-gold">紅心逢人配</span> ＞ 其他花色級牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
+        </div>
+
+        <div class="rule-section">
+          <h3>💣 5. 基礎牌型與炸彈威力天梯</h3>
+          <table class="ladder-table">
+            <tr><th style="width:25%;">常規基礎牌型</th><td>單張、對子、三張、三帶二、單順（<strong>嚴格限 5 張連續</strong>）、<strong>鋼板（相鄰兩組三張）</strong>、<strong>木板（三連對，相鄰三對）</strong>。</td></tr>
+            <tr><th>炸彈天梯</th><td>
+              <div class="rule-card-preview-row" style="margin:2px 0;">
+                <span class="mini-chip">四張炸彈</span> &lt;
+                <span class="mini-chip">五張炸彈</span> &lt;
+                <span class="mini-chip red">同花順 (5張同花連續)</span> &lt;
+                <span class="mini-chip">六張炸彈</span> &lt;
+                <span class="mini-chip">七張炸彈</span> &lt;
+                <span class="mini-chip">八張炸彈</span> &lt;
+                <span class="mini-chip gold">👑 四大天王 (天王炸)</span>
+              </div>
+            </td></tr>
+            <tr><th>關鍵分水嶺</th><td><span class="highlight-red">同花順大於五張炸彈，但小於六張炸彈！</span> 天王炸（4張王）為全場終極至尊。</td></tr>
+          </table>
+        </div>
+
+        <div class="rule-section">
+          <h3>💡 6. 高階實戰心法與避坑寶典（十大黃金準則）</h3>
+          <div class="strategy-box"><p><strong>一、接風權戰略轉送</strong>：當隊友出完最後一手牌且全場無人能壓時，首出權自動交給<strong>直接對家（隊友）接風</strong>！留牌時打隊友擅長的牌路，是打出雙下的最快捷徑。</p></div>
+          <div class="strategy-box"><p><strong>二、報牌紅線警覺防禦</strong>：對手手牌剩 <strong>10 張</strong> 時全面戒備；一旦報出剩 <strong>5 張以內</strong>，<span class="highlight-red">絕對禁出散單、小對</span>，有炸必須果斷壓死封航，防止對方偷渡。</p></div>
+          <div class="strategy-box"><p><strong>三、主攻與僚機角色分工</strong>：切忌兩人都想衝頭遊。若手牌無王、火牌弱，應主動當「掩護僚機」，專門拆牌頂大、吃對手炸彈，全力護送隊友登頂。</p></div>
+          <div class="strategy-box"><p><strong>四、逢人配配炸鐵律</strong>：紅心級牌的<span class="highlight-gold">最高戰略價值是配同花順或 5/6 炸</span>。隨意拿去湊單順或三帶二，等同白白浪費一顆戰略級核彈！</p></div>
+          <div class="strategy-box"><p><strong>五、打 A 局防 1+4 陷阱</strong>：打 A 局最忌「自己衝第一、隊友落最後」。殘局時寧可留炸彈掩護隊友脫離末遊搶第 3，也不盲目只顧自己跑頭遊。</p></div>
+          <div class="strategy-box"><p><strong>六、手牌整齊勝於大牌點數</strong>：手留 5 張以上零散單牌是輸牌根源。寧拆大對湊齊完整單順或鋼板，也不留碎牌阻滯出牌路數。</p></div>
+          <div class="strategy-box"><p><strong>七、抗貢雙大王藏牌哲學</strong>：抓齊雙大王具備抗貢特權，出牌時切勿過早打出暴露牌力，留作關鍵節點壓制對手的大殺器。</p></div>
+          <div class="strategy-box"><p><strong>八、首輪開局探路摸底</strong>：首輪出牌是探測四家牌力的黃金期，留意誰先放過大牌、誰接不上順子，便能精準推測對手斷張與弱項。</p></div>
+          <div class="strategy-box"><p><strong>九、極簡三線算牌法</strong>：新手無需記全部牌，死守 3 條底線即入高手之境：① 四張王牌已出幾張？② 8張級牌是否已明？③ 對手剩餘手牌張數節點。</p></div>
+          <div class="strategy-box"><p><strong>十、末遊保命防雙下</strong>：局勢極度劣勢時，戰略重心必須從爭勝轉為「保 3 爭 2」，徹底粉碎對手奪取雙下（+3）的企圖，少輸即是贏。</p></div>
         </div>
       `;
     } else {
       container.innerHTML = `
         <div class="rule-section">
-          <h3>🏆 1. 游戏综述与胜负目标</h3>
-          <p><strong>掼蛋</strong>源自江苏淮安，采用<strong>两副牌（共 108 张）</strong>，4人参与，对家两人为一组配合。游戏核心目标是在队友的战术掩护下，尽早将手中的 27 张牌全部出完（第一名出完者称为“头游”）。</p>
+          <h3>🏆 1. 游戏架构与局数推进</h3>
+          <p>• <strong>人数与牌数</strong>：4 人参与，对家两人为固定搭档（2 打 2），采用两副标准扑克（共 108 张，每人 27 张）。<br>
+          • <strong>晋级核心</strong>：双方从打 2 开始逐级升级，一路冲刺至打 A。率先攻克 A 级并符合打过条件的一方，获得整场比赛的最终总胜利！</p>
         </div>
+
         <div class="rule-section">
-          <h3>⭐ 2. 级牌体系与“<span class="highlight-gold">逢人配</span>”万能牌</h3>
-          <p>• <span class="highlight-gold">级牌（本局打几）</span>：从打 2 开始升至打 A。若当前打 5，则所有的 5 权重拔高，大于 A 且仅次于小王。<br>
-          • <span class="highlight-red">逢人配（红心级牌）</span>：两张<strong>红心级牌</strong>为万能百搭牌（除大小王外），可替代任意点数和花色凑成同花顺、顺子、炸弹等。<br>
+          <h3>📈 2. 名次、升级与进贡结算一体表</h3>
+          <table class="ladder-table">
+            <thead>
+              <tr><th>我方名次组合</th><th>战局结果</th><th>升级幅度</th><th>进贡细则</th><th>抗贡条件（免贡）</th><th>还贡规定</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="highlight-gold">第 1 名 + 第 2 名</span></td>
+                <td><span class="highlight-gold">双下（完胜）</span></td>
+                <td><strong>直升 3 级</strong></td>
+                <td>末游与三游分别向头游、二游进贡各自手中<span class="highlight-red">最大单牌</span>（红桃配除外）。</td>
+                <td>落败方两人手中<strong>合力抓齐 2 张大王</strong>。</td>
+                <td>得贡者各挑一张 ≤ 10 的任意牌回送。</td>
+              </tr>
+              <tr>
+                <td><span class="highlight-blue">第 1 名 + 第 3 名</span></td>
+                <td>单赢（胜）</td>
+                <td><strong>升 2 级</strong></td>
+                <td>末游（第4名）向头游进贡手中<span class="highlight-red">最大单牌</span>（红桃配除外）。</td>
+                <td>末游单人独自<strong>抓齐 2 张大王</strong>。</td>
+                <td>头游挑一张 ≤ 10 的任意牌回送。</td>
+              </tr>
+              <tr>
+                <td><strong>第 1 名 + 第 4 名</strong></td>
+                <td>险胜（保头游）</td>
+                <td><strong>升 1 级</strong></td>
+                <td>末游（第4名）向头游进贡手中<span class="highlight-red">最大单牌</span>（红桃配除外）。</td>
+                <td>末游单人独自<strong>抓齐 2 张大王</strong>。</td>
+                <td>头游挑一张 ≤ 10 的任意牌回送。</td>
+              </tr>
+              <tr>
+                <td><span class="highlight-red">未得头游（2+3/2+4/3+4）</span></td>
+                <td>败局</td>
+                <td><strong>不升级（0级）</strong></td>
+                <td>依对手胜幅，在下一局向对手进贡对应大牌。</td>
+                <td>检验是否符合上述大王抗贡条件。</td>
+                <td>接收对手回还之牌。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="rule-section">
+          <h3>👑 3. 「打 A」决胜机制（最终获胜判定）</h3>
+          <p>• <strong>打 A 必过条件</strong>：当队伍升级至 A 级后，不仅必须<strong>拿下第 1 名（头游）</strong>，且队友<strong>绝对不能是末游（第 4 名）</strong>。<br>
+          • <strong>成功过 A 获胜</strong>：打 A 局中打出 <span class="highlight-gold">1+2 名（双下）</span> 或 <span class="highlight-blue">1+3 名</span>，直接宣布打穿全盘，斩获全场总冠军！<br>
+          • <strong>未过 A 局（打 A 不结）</strong>：若拿到 1+4 名，因队友包底，此局算“胜而不结”，不记过关。下局需留在 A 级继续打（一般连续三次不过 A 需罚退级）。</p>
+        </div>
+
+        <div class="rule-section">
+          <h3>⭐ 4. 级牌体系与“<span class="highlight-gold">逢人配</span>”万能牌</h3>
+          <p>• <span class="highlight-gold">级牌（本局打几）</span>：从打 2 升至打 A。当前打几，该点数的权重地位超越 A，仅次于小王。<br>
+          • <span class="highlight-red">逢人配（红心级牌）</span>：两张<strong>红心级牌</strong>为万能百搭牌（除大小王外），可任意替代点数与花色组合同花顺、炸弹等。<br>
           • <strong>大小顺序</strong>：<span class="highlight-red">大王</span> ＞ <span class="highlight-blue">小王</span> ＞ <span class="highlight-gold">红心逢人配</span> ＞ 其他花色级牌 ＞ A ＞ K ＞ Q ＞ J ＞ 10 ＞ 9 ＞ 8 ＞ 7 ＞ 6 ＞ 5 ＞ 4 ＞ 3 ＞ 2。</p>
         </div>
+
         <div class="rule-section">
-          <h3>💣 3. 牌型图谱与炸弹威力天梯</h3>
-          <div class="rule-card-preview-row">
-            <span class="mini-chip">四张炸弹</span> &lt;
-            <span class="mini-chip">五张炸弹</span> &lt;
-            <span class="mini-chip red">同花顺 (5张同花连续)</span> &lt;
-            <span class="mini-chip">六张炸弹</span> &lt;
-            <span class="mini-chip">七张炸弹</span> &lt;
-            <span class="mini-chip">八张炸弹</span> &lt;
-            <span class="mini-chip gold">👑 四大天王 (天王炸)</span>
-          </div>
-          <p style="font-size:var(--font-modal-small); color:#94a3b8;">* 关键特权：同花顺威力大于五张炸弹，但小于六张炸弹！天王炸为全场最大神牌。</p>
+          <h3>💣 5. 基础牌型与炸弹威力天梯</h3>
+          <table class="ladder-table">
+            <tr><th style="width:25%;">常规基础牌型</th><td>单张、对子、三张、三带二、单顺（<strong>严格限 5 张连续</strong>）、<strong>钢板（两组相邻三张）</strong>、<strong>木板（三连对，三组相邻对子）</strong>。</td></tr>
+            <tr><th>炸弹威力天梯</th><td>
+              <div class="rule-card-preview-row" style="margin:2px 0;">
+                <span class="mini-chip">四张炸弹</span> &lt;
+                <span class="mini-chip">五张炸弹</span> &lt;
+                <span class="mini-chip red">同花顺 (5张同花连续)</span> &lt;
+                <span class="mini-chip">六张炸弹</span> &lt;
+                <span class="mini-chip">七张炸弹</span> &lt;
+                <span class="mini-chip">八张炸弹</span> &lt;
+                <span class="mini-chip gold">👑 四大天王 (天王炸)</span>
+              </div>
+            </td></tr>
+            <tr><th>核心分水岭</th><td><span class="highlight-red">同花顺大于五张炸弹，但小于六张炸弹！</span> 四大天王（4 张王）为全场绝对至尊神牌。</td></tr>
+          </table>
         </div>
+
         <div class="rule-section">
-          <h3>💡 4. 实战进阶：掼蛋核心战术思路与控局哲学</h3>
-          <div class="strategy-box">
-            <p><strong>一、配火第一，绝不凑零（逢人配的黄金法则）</strong><br>
-            逢人配万万不可随便拿去凑三带二或单顺。它的<span class="highlight-gold">最优价值永远是“配炸”或“配同花顺”</span>。多一个炸弹，整手牌的防守与进攻能力将迎来质的飞跃。</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>二、队友同心，角色分工（一主一副打法）</strong><br>
-            掼蛋是双人默契运动：摸完牌后要迅速评估自己的牌力。若牌力强、炸弹多，主动当<span class="highlight-red">“主攻手”</span>冲刺头游；若手牌零散、小牌多，要甘愿当<span class="highlight-blue">“掩护手”</span>，负责顶对手大牌、拆炸弹卡位，把出牌路数留给队友。</p>
-          </div>
-          <div class="strategy-box">
-            <p><strong>三、基础算牌基线（知己知彼）</strong><br>
-            不需要背下全部 108 张牌，新手只要记住三条线：① 四张王牌出了几张？② 当前级牌有没有出完？③ 对手手牌小于 6 张时，随时防范其一击走脱！</p>
-          </div>
+          <h3>💡 6. 高手实战心法与避坑宝典（十大黄金准则）</h3>
+          <div class="strategy-box"><p><strong>一、接风权战略转送</strong>：当队友出完最后一手牌且全场无人能管时，首发权自动交由其<strong>同队搭档（对家）接风</strong>！留牌时优先打对家能接风的牌路，是打出双下的关键胜负手。</p></div>
+          <div class="strategy-box"><p><strong>二、报牌防线意识（残局防偷渡）</strong>：对手手牌报 <strong>10 张</strong> 必须进入警备；一旦对手报牌 <strong>5 张以内</strong>，<span class="highlight-red">绝对禁止出小散单或杂对</span>！必须用大牌或炸弹封死控场，防范对方一波清空走脱。</p></div>
+          <div class="strategy-box"><p><strong>三、切忌盲目冲头游（主攻与僚机分工）</strong>：新手最易犯“两人都想跑头游，结果一起垫底”。起手若无王、火牌弱，必须主动转为<span class="highlight-blue">“掩护僚机”</span>：帮队友顶大牌、逼对手交炸弹，给主攻队友垫牌开路！</p></div>
+          <div class="strategy-box"><p><strong>四、逢人配的核心铁律（配炸不配顺）</strong>：红桃级牌万能百搭，它的<span class="highlight-gold">最优解永远是组同花顺或 5/6 炸</span>。随意拿去凑普通杂顺或三带二，等于直接自废一个强力炸弹！</p></div>
+          <div class="strategy-box"><p><strong>五、打 A 避忌 1+4 陷阱</strong>：打 A 局最忌“自己跑头游、队友包第四”。残局时若队友危险，宁可留炸护送队友抢第 3 彻底过 A，也不要盲目单冲导致打 A 不结。</p></div>
+          <div class="strategy-box"><p><strong>六、手牌整齐胜于大点数</strong>：手留 5 张以上零散单牌是输牌根源。宁拆大对整编成套（凑成顺子或钢板），也不留散单阻碍手数。</p></div>
+          <div class="strategy-box"><p><strong>七、抗贡双大王藏牌哲学</strong>：手握两张大王具备免除进贡特权，实战中切忌过早打出暴露牌力，留在残局关键时刻形成一锤定音的压制。</p></div>
+          <div class="strategy-box"><p><strong>八、首轮开局探路摸虚实</strong>：第一轮出牌是洞察全场牌势的最佳窗口，观察谁放过大牌、谁无法接顺子，便能快速推测出各家断张与偏好。</p></div>
+          <div class="strategy-box"><p><strong>九、极简三线算牌基线</strong>：新手无需死记 108 张牌，盯紧 3 件事即可：① 四张王牌已出几张？② 8 张级牌是否已断？③ 对手剩余手牌张数预警。</p></div>
+          <div class="strategy-box"><p><strong>十、末游保命策略（少输当赢）</strong>：当牌势处于绝境无法争胜时，战术重心应转为“保 3 争 2”，全力粉碎对手打成双下（+3）的企图，防守即是进攻。</p></div>
         </div>
       `;
     }
@@ -3435,7 +3618,7 @@
     renderArchiveList();
   };
 
-  /* ---------------- 重构后的自定义调牌核心交互 ---------------- */
+  /* ---------------- 自定义调牌核心交互 ---------------- */
   const customModal = document.getElementById('customModal');
   const modalCardsList = document.getElementById('modalCardsList');
   const modalLevelSelect = document.getElementById('modalLevelSelect');
@@ -3487,7 +3670,6 @@
       if (count > 0) {
         totalSelected += count;
         const [rank, suit] = key.split('_');
-        const isJoker = (rank === '大王' || rank === '小王');
         const color = (suit === '♥' || suit === '♦' || rank === '大王') ? 'red' : 'black';
         const isWild = (rank === targetLevel && suit === '♥');
 
@@ -3583,7 +3765,6 @@
       ${count > 0 ? `<div class="cell-badge">${count}</div>` : ''}
     `;
 
-    // 左键点击：0 -> 1 -> 2 -> 0
     el.addEventListener('click', (e) => {
       e.preventDefault();
       const cur = modalSelectionMap[key] || 0;
@@ -3592,7 +3773,6 @@
       updateCustomHeaderAndTray();
     });
 
-    // 右键点击：直接减1
     el.addEventListener('contextmenu', (e) => {
       e.preventDefault();
       const cur = modalSelectionMap[key] || 0;
@@ -3608,14 +3788,13 @@
 
   document.getElementById('customHandBtn').addEventListener('click', openCustomModal);
   document.getElementById('cancelModalBtn').addEventListener('click', closeCustomModal);
-  
+
   document.getElementById('clearAllModalBtn').addEventListener('click', () => {
     modalSelectionMap = {};
     renderCustomMatrix();
     updateCustomHeaderAndTray();
   });
 
-  // 随机生成27张标准手牌快捷按键
   document.getElementById('randomFillBtn').addEventListener('click', () => {
     modalSelectionMap = {};
     const randomHand = dealHand();
@@ -3637,7 +3816,6 @@
     for (const [key, count] of Object.entries(modalSelectionMap)) {
       if (count <= 0) continue;
       const [rank, suit] = key.split('_');
-      const isJoker = (rank === '大王' || rank === '小王');
       const isHeart = (suit === '♥');
       const color = (suit === '♥' || suit === '♦' || rank === '大王') ? 'red' : 'black';
 
@@ -3648,7 +3826,7 @@
           suit,
           color,
           isHeart,
-          isJoker,
+          isJoker: (rank === '大王' || rank === '小王'),
           jokerType: rank === '大王' ? 'big' : (rank === '小王' ? 'small' : null)
         });
       }
