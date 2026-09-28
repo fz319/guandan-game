@@ -1559,7 +1559,7 @@
         },
         {
           title: '4. 理牌对比与复盘',
-          desc: '• 点击 <span class="help-pill">💡 推荐理牌</span> 生成算法基准；点击 <span class="help-pill">⚖️ 理牌比较</span> 开启多方案同屏对照。<br>• 若思路吻合点亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span>；若有拆牌出入，系统精准高亮差异层，秒查拆法优劣！'
+          desc: '• 点击 <span class="help-pill">💡 推荐理牌</span> 生成基于最优期望算法的基准；点击 <span class="help-pill">⚖️ 理牌比较</span> 开启多方案同屏对照。<br>• 若思路吻合点亮 <span class="help-pill" style="color:#4ade80;">🎯 与推荐理牌完全一致</span>；若有拆牌出入，系统精准高亮差异层，秒查拆法优劣！'
         }
       ]
     },
@@ -1626,7 +1626,7 @@
         },
         {
           title: '4. 理牌對比與複盤',
-          desc: '• 點擊 <span class="help-pill">💡 推薦理牌</span> 生成算法基準；點擊 <span class="help-pill">⚖️ 理牌比較</span> 開啟多方案同屏對照。<br>• 思路吻合點亮 <span class="help-pill" style="color:#4ade80;">🎯 完全一致</span>；若有拆牌出入，系統精準高亮差異層，秒查拆法優劣！'
+          desc: '• 點擊 <span class="help-pill">💡 推薦理牌</span> 生成算法基準；點擊 <span class="help-pill">⚖️ 理牌比較</span> 開啟多方案同屏對照。<br>• 思路吻合點亮 <span class="help-pill" style="color:#4ade80;">🎯 與推薦理牌完全一致</span>；若有拆牌出入，系統精準高亮差異層，秒查拆法優劣！'
         }
       ]
     },
@@ -1784,7 +1784,7 @@
     if (el) el.textContent = text;
   }
 
-  /* ---------------- 彻底重构后的规则模块 ---------------- */
+  /* ---------------- 规则模块 ---------------- */
   function renderRulesModalContent() {
     const container = document.getElementById('rulesContentBody');
     if (!container) return;
@@ -2322,274 +2322,338 @@
     return `理牌 ${num}`;
   }
 
+  /* =========================================================================
+     两阶段混合最优解理牌算法引擎
+     ========================================================================= */
   function extractCategorizedCombos(cardsPool, level) {
-    let pool = sortCards([...cardsPool], level);
-    const combos = {
-      kingBombs: [],
-      bomb8: [],
-      bomb7: [],
-      bomb6: [],
-      straightFlushes: [],
-      bomb5: [],
-      bomb4: [],
-      tubes: [],
-      plates: [],
-      straights: [],
-      fullHouses: [],
-      trips: [],
-      pairs: [],
-      singles: []
-    };
+    const standardOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
+    const suits = ['♥', '♦', '♠', '♣'];
 
-    function takeCardsByIds(ids) {
+    function removeCardsById(pool, ids) {
       const set = new Set(ids);
-      const taken = pool.filter(c => set.has(c.id));
-      pool = pool.filter(c => !set.has(c.id));
-      return taken;
+      return pool.filter(c => !set.has(c.id));
     }
+
+    function evaluateSolution(combos, level) {
+      let score = 0;
+      let turns = 0;
+
+      score += combos.kingBombs.length * 1500;
+      score += combos.bomb8.length * 1200;
+      score += combos.bomb7.length * 900;
+      score += combos.bomb6.length * 700;
+      score += combos.straightFlushes.length * 600;
+      score += combos.bomb5.length * 400;
+      score += combos.bomb4.length * 260;
+
+      turns += combos.kingBombs.length + combos.bomb8.length + combos.bomb7.length + 
+               combos.bomb6.length + combos.straightFlushes.length + combos.bomb5.length + combos.bomb4.length;
+
+      combos.tubes.forEach(t => { score += 120 + getTubesPowerScore(t) * 2; turns++; });
+      combos.plates.forEach(p => { score += 100 + getPlatesPowerScore(p) * 2; turns++; });
+      combos.straights.forEach(s => { score += 80 + getStraightPowerScore(s) * 2; turns++; });
+      combos.fullHouses.forEach(fh => { score += 50 + getCardWeight(fh[0], level) * 0.1; turns++; });
+      combos.trips.forEach(tr => { score += 30 + getCardWeight(tr[0], level) * 0.1; turns++; });
+      combos.pairs.forEach(pr => {
+        const w = getCardWeight(pr[0], level);
+        score += (w >= 700 ? 35 : (w >= 18 ? 20 : 10));
+        turns++;
+      });
+
+      combos.singles.forEach(s => {
+        turns++;
+        const w = getCardWeight(s, level);
+        if (w >= 900) score += 60;
+        else if (w >= 700) score += 40;
+        else if (w >= 22) score += 15;
+        else score -= (30 - w);
+      });
+
+      score -= turns * 35;
+      return score;
+    }
+
+    function solveRestPool(initialPool, level) {
+      let bestCombos = null;
+      let bestScore = -Infinity;
+
+      function dfs(pool, currentCombos) {
+        const buckets = {};
+        pool.forEach(c => {
+          if (!c.isJoker) {
+            buckets[c.rank] = buckets[c.rank] || [];
+            buckets[c.rank].push(c);
+          }
+        });
+
+        const tubeOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
+        for (let i = 0; i <= tubeOrder.length - 3; i++) {
+          const win = tubeOrder.slice(i, i + 3);
+          if (win.every(r => buckets[r] && buckets[r].length >= 2)) {
+            const isLowA = (win[0] === '3' && win[2] === 'A');
+            const taken = [];
+            win.forEach(r => taken.push(buckets[r][0], buckets[r][1]));
+            taken.sort((a, b) => getNaturalRankWeight(b.rank, isLowA) - getNaturalRankWeight(a.rank, isLowA));
+
+            const nCombos = { ...currentCombos, tubes: [...currentCombos.tubes, taken] };
+            dfs(removeCardsById(pool, taken.map(c => c.id)), nCombos);
+            break;
+          }
+        }
+
+        for (let i = 0; i <= tubeOrder.length - 2; i++) {
+          const win = tubeOrder.slice(i, i + 2);
+          if (win.every(r => buckets[r] && buckets[r].length >= 3)) {
+            const isLowA = (win[0] === '2' && win[1] === 'A');
+            const taken = [];
+            win.forEach(r => taken.push(buckets[r][0], buckets[r][1], buckets[r][2]));
+            taken.sort((a, b) => getNaturalRankWeight(b.rank, isLowA) - getNaturalRankWeight(a.rank, isLowA));
+
+            const nCombos = { ...currentCombos, plates: [...currentCombos.plates, taken] };
+            dfs(removeCardsById(pool, taken.map(c => c.id)), nCombos);
+            break;
+          }
+        }
+
+        for (let i = 0; i <= standardOrder.length - 5; i++) {
+          const win = standardOrder.slice(i, i + 5);
+          const isLowA = (win[0] === '5' && win[4] === 'A');
+          let can = true;
+          const chosen = [];
+          for (let wr of win) {
+            const f = pool.find(c => c.rank === wr && !c.isJoker && !(c.rank === level && c.isHeart) && !chosen.some(item => item.id === c.id));
+            if (f) chosen.push(f);
+            else { can = false; break; }
+          }
+          if (can) {
+            chosen.sort((a, b) => getNaturalRankWeight(b.rank, isLowA) - getNaturalRankWeight(a.rank, isLowA));
+            const nCombos = { ...currentCombos, straights: [...currentCombos.straights, chosen] };
+            dfs(removeCardsById(pool, chosen.map(c => c.id)), nCombos);
+          }
+        }
+
+        const remBuckets = {};
+        pool.forEach(c => {
+          remBuckets[c.rank] = remBuckets[c.rank] || [];
+          remBuckets[c.rank].push(c);
+        });
+
+        const curTrips = [];
+        const curPairs = [];
+        const curSingles = [];
+
+        const jokers = pool.filter(c => c.isJoker);
+        if (jokers.length === 2 && jokers[0].jokerType === jokers[1].jokerType) {
+          curPairs.push(jokers);
+        } else {
+          jokers.forEach(j => curSingles.push(j));
+        }
+
+        Object.keys(remBuckets).forEach(r => {
+          const cards = remBuckets[r].filter(c => !c.isJoker);
+          let len = cards.length;
+          let idx = 0;
+          while (len >= 3) {
+            curTrips.push(cards.slice(idx, idx + 3));
+            idx += 3;
+            len -= 3;
+          }
+          while (len >= 2) {
+            curPairs.push(cards.slice(idx, idx + 2));
+            idx += 2;
+            len -= 2;
+          }
+          while (len === 1) {
+            curSingles.push(cards[idx]);
+            idx++;
+            len--;
+          }
+        });
+
+        const sortedTrips = [...curTrips].sort((a, b) => getCardWeight(a[0], level) - getCardWeight(b[0], level));
+        const sortedPairs = [...curPairs].sort((a, b) => getCardWeight(a[0], level) - getCardWeight(b[0], level));
+        const finalFullHouses = [];
+        const remainingTrips = [];
+        const remainingPairs = [];
+
+        while (sortedTrips.length > 0 && sortedPairs.length > 0) {
+          const t = sortedTrips.shift();
+          const p = sortedPairs.shift();
+          finalFullHouses.push([...sortCards(t, level), ...sortCards(p, level)]);
+        }
+        sortedTrips.forEach(t => remainingTrips.push(sortCards(t, level)));
+        sortedPairs.forEach(p => remainingPairs.push(sortCards(p, level)));
+
+        const candidateResult = {
+          ...currentCombos,
+          fullHouses: [...currentCombos.fullHouses, ...finalFullHouses],
+          trips: [...currentCombos.trips, ...remainingTrips],
+          pairs: [...currentCombos.pairs, ...remainingPairs],
+          singles: [...currentCombos.singles, ...sortCards(curSingles, level)]
+        };
+
+        const sc = evaluateSolution(candidateResult, level);
+        if (sc > bestScore) {
+          bestScore = sc;
+          bestCombos = candidateResult;
+        }
+      }
+
+      const emptyCombos = {
+        kingBombs: [], bomb8: [], bomb7: [], bomb6: [], straightFlushes: [],
+        bomb5: [], bomb4: [], tubes: [], plates: [], straights: [],
+        fullHouses: [], trips: [], pairs: [], singles: []
+      };
+
+      dfs(initialPool, emptyCombos);
+      return bestCombos || emptyCombos;
+    }
+
+    let pool = sortCards([...cardsPool], level);
+    const lockedCombos = {
+      kingBombs: [], bomb8: [], bomb7: [], bomb6: [], straightFlushes: [],
+      bomb5: [], bomb4: [], tubes: [], plates: [], straights: [],
+      fullHouses: [], trips: [], pairs: [], singles: []
+    };
 
     const jokers = pool.filter(c => c.isJoker);
     if (jokers.length === 4) {
-      combos.kingBombs.push(sortCards(takeCardsByIds(jokers.map(c => c.id)), level));
+      lockedCombos.kingBombs.push(sortCards(jokers, level));
+      pool = removeCardsById(pool, jokers.map(c => c.id));
     }
 
     const rankBuckets = {};
     pool.forEach(c => {
-      if (!c.isJoker) {
+      if (!c.isJoker && !(c.rank === level && c.isHeart)) {
         rankBuckets[c.rank] = rankBuckets[c.rank] || [];
         rankBuckets[c.rank].push(c);
       }
     });
 
-    [8, 7, 6].forEach(count => {
-      const sortedRanks = Object.keys(rankBuckets).sort((a, b) => getCardWeight({rank: b, suit: '♠', isJoker: false}, level) - getCardWeight({rank: a, suit: '♠', isJoker: false}, level));
-      sortedRanks.forEach(r => {
-        if (rankBuckets[r] && rankBuckets[r].length === count) {
-          const cards = sortCards(takeCardsByIds(rankBuckets[r].map(c => c.id)), level);
-          if (count === 8) combos.bomb8.push(cards);
-          else if (count === 7) combos.bomb7.push(cards);
-          else if (count === 6) combos.bomb6.push(cards);
+    [8, 7, 6].forEach(cnt => {
+      Object.keys(rankBuckets).forEach(r => {
+        if (rankBuckets[r] && rankBuckets[r].length === cnt) {
+          const cards = sortCards(rankBuckets[r], level);
+          if (cnt === 8) lockedCombos.bomb8.push(cards);
+          else if (cnt === 7) lockedCombos.bomb7.push(cards);
+          else if (cnt === 6) lockedCombos.bomb6.push(cards);
+          pool = removeCardsById(pool, cards.map(c => c.id));
           delete rankBuckets[r];
         }
       });
     });
 
-    const wildCards = pool.filter(c => c.rank === level && c.isHeart);
-    const standardOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
-    const suits = ['♥', '♦', '♠', '♣'];
+    let wildCards = pool.filter(c => c.rank === level && c.isHeart);
 
-    for (let s of suits) {
-      const suitCards = pool.filter(c => c.suit === s && !(c.rank === level && c.isHeart) && !c.isJoker);
-
-      for (let i = 0; i <= standardOrder.length - 5; i++) {
-        const windowRanks = standardOrder.slice(i, i + 5);
-        const isLowAStraight = (windowRanks[0] === '5' && windowRanks[4] === 'A');
-        let missing = [];
-        let matched = [];
-
-        windowRanks.forEach(wr => {
-          const matchCard = suitCards.find(c => c.rank === wr && !matched.some(m => m.id === c.id));
-          if (matchCard) matched.push({ card: matchCard, vRank: wr });
-          else missing.push(wr);
-        });
-
-        if (missing.length > 0 && missing.length <= wildCards.length && (matched.length + missing.length === 5)) {
-          const usedWilds = wildCards.splice(0, missing.length);
-          const wildcardPairs = usedWilds.map((wc, idx) => ({ card: wc, vRank: missing[idx] }));
-          const allFormed = [...matched, ...wildcardPairs];
-
-          allFormed.sort((a, b) => {
-            return getNaturalRankWeight(b.vRank, isLowAStraight) - getNaturalRankWeight(a.vRank, isLowAStraight);
-          });
-
-          const orderedCombo = allFormed.map(item => {
-            const cObj = item.card;
-            cObj._vRank = item.vRank;
-            return cObj;
-          });
-
-          takeCardsByIds(orderedCombo.map(c => c.id));
-          combos.straightFlushes.push(orderedCombo);
-          break;
-        }
-      }
-    }
-
-    const sortedRanks5 = Object.keys(rankBuckets).sort((a, b) => getCardWeight({rank: b, suit: '♠', isJoker: false}, level) - getCardWeight({rank: a, suit: '♠', isJoker: false}, level));
-    sortedRanks5.forEach(r => {
-      if (rankBuckets[r] && rankBuckets[r].length === 5) {
-        combos.bomb5.push(sortCards(takeCardsByIds(rankBuckets[r].map(c => c.id)), level));
-        delete rankBuckets[r];
-      }
-    });
     if (wildCards.length > 0) {
-      const curBuckets = {};
-      pool.forEach(c => {
-        if (!c.isJoker && !(c.rank === level && c.isHeart)) {
-          curBuckets[c.rank] = curBuckets[c.rank] || [];
-          curBuckets[c.rank].push(c);
-        }
-      });
-      const curSorted = Object.keys(curBuckets).sort((a, b) => getCardWeight({rank: b, suit: '♠', isJoker: false}, level) - getCardWeight({rank: a, suit: '♠', isJoker: false}, level));
-      for (let r of curSorted) {
-        if (curBuckets[r].length === 4 && wildCards.length > 0) {
-          const wildToUse = wildCards.pop();
-          combos.bomb5.push(sortCards(takeCardsByIds([...curBuckets[r].map(c => c.id), wildToUse.id]), level));
+      for (let s of suits) {
+        if (wildCards.length === 0) break;
+        const suitCards = pool.filter(c => c.suit === s && !(c.rank === level && c.isHeart) && !c.isJoker);
+
+        for (let i = 0; i <= standardOrder.length - 5; i++) {
+          if (wildCards.length === 0) break;
+          const windowRanks = standardOrder.slice(i, i + 5);
+          const isLowAStraight = (windowRanks[0] === '5' && windowRanks[4] === 'A');
+          let missing = [];
+          let matched = [];
+
+          windowRanks.forEach(wr => {
+            const matchCard = suitCards.find(c => c.rank === wr && !matched.some(m => m.id === c.id));
+            if (matchCard) matched.push({ card: matchCard, vRank: wr });
+            else missing.push(wr);
+          });
+
+          if (missing.length > 0 && missing.length <= wildCards.length && (matched.length + missing.length === 5)) {
+            const usedWilds = wildCards.splice(0, missing.length);
+            const wildcardPairs = usedWilds.map((wc, idx) => ({ card: wc, vRank: missing[idx] }));
+            const allFormed = [...matched, ...wildcardPairs];
+
+            allFormed.sort((a, b) => getNaturalRankWeight(b.vRank, isLowAStraight) - getNaturalRankWeight(a.vRank, isLowAStraight));
+
+            const orderedCombo = allFormed.map(item => {
+              const cObj = item.card;
+              cObj._vRank = item.vRank;
+              return cObj;
+            });
+
+            lockedCombos.straightFlushes.push(orderedCombo);
+            pool = removeCardsById(pool, orderedCombo.map(c => c.id));
+            break;
+          }
         }
       }
     }
 
-    const curBuckets4 = {};
+    const currentCounts = {};
     pool.forEach(c => {
       if (!c.isJoker && !(c.rank === level && c.isHeart)) {
-        curBuckets4[c.rank] = curBuckets4[c.rank] || [];
-        curBuckets4[c.rank].push(c);
+        currentCounts[c.rank] = currentCounts[c.rank] || [];
+        currentCounts[c.rank].push(c);
       }
     });
-    const curSorted4 = Object.keys(curBuckets4).sort((a, b) => getCardWeight({rank: b, suit: '♠', isJoker: false}, level) - getCardWeight({rank: a, suit: '♠', isJoker: false}, level));
-    curSorted4.forEach(r => {
-      if (curBuckets4[r].length === 4) {
-        combos.bomb4.push(sortCards(takeCardsByIds(curBuckets4[r].map(c => c.id)), level));
+
+    Object.keys(currentCounts).forEach(r => {
+      if (currentCounts[r] && currentCounts[r].length === 5) {
+        lockedCombos.bomb5.push(sortCards(currentCounts[r], level));
+        pool = removeCardsById(pool, currentCounts[r].map(c => c.id));
+        delete currentCounts[r];
       }
     });
+
+    wildCards = pool.filter(c => c.rank === level && c.isHeart);
     if (wildCards.length > 0) {
-      const curBuckets3 = {};
-      pool.forEach(c => {
-        if (!c.isJoker && !(c.rank === level && c.isHeart)) {
-          curBuckets3[c.rank] = curBuckets3[c.rank] || [];
-          curBuckets3[c.rank].push(c);
-        }
-      });
-      const curSorted3 = Object.keys(curBuckets3).sort((a, b) => getCardWeight({rank: b, suit: '♠', isJoker: false}, level) - getCardWeight({rank: a, suit: '♠', isJoker: false}, level));
-      for (let r of curSorted3) {
-        if (curBuckets3[r].length === 3 && wildCards.length > 0) {
-          const wildToUse = wildCards.pop();
-          combos.bomb4.push(sortCards(takeCardsByIds([...curBuckets3[r].map(c => c.id), wildToUse.id]), level));
+      const sortedRanks = Object.keys(currentCounts).sort((a, b) => getCardWeight({rank: b, suit: '♠', isJoker: false}, level) - getCardWeight({rank: a, suit: '♠', isJoker: false}, level));
+      for (let r of sortedRanks) {
+        if (currentCounts[r] && currentCounts[r].length === 4 && wildCards.length > 0) {
+          const wCard = wildCards.pop();
+          const bombCards = [...currentCounts[r], wCard];
+          lockedCombos.bomb5.push(sortCards(bombCards, level));
+          pool = removeCardsById(pool, bombCards.map(c => c.id));
+          delete currentCounts[r];
         }
       }
     }
 
-    const tubeBuckets = {};
-    pool.forEach(c => {
-      if (!c.isJoker) {
-        tubeBuckets[c.rank] = tubeBuckets[c.rank] || [];
-        tubeBuckets[c.rank].push(c);
+    wildCards = pool.filter(c => c.rank === level && c.isHeart);
+    Object.keys(currentCounts).forEach(r => {
+      if (currentCounts[r] && currentCounts[r].length === 4) {
+        lockedCombos.bomb4.push(sortCards(currentCounts[r], level));
+        pool = removeCardsById(pool, currentCounts[r].map(c => c.id));
+        delete currentCounts[r];
       }
     });
-    const tubeOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
-    for (let i = 0; i <= tubeOrder.length - 2; i++) {
-      const windowRanks = tubeOrder.slice(i, i + 2);
-      if (windowRanks.every(r => tubeBuckets[r] && tubeBuckets[r].length >= 3)) {
-        const tubeCards = [];
-        windowRanks.forEach(r => {
-          tubeCards.push(...tubeBuckets[r].splice(0, 3));
-        });
-        const taken = takeCardsByIds(tubeCards.map(c => c.id));
-        taken.sort((a, b) => getNaturalRankWeight(b.rank) - getNaturalRankWeight(a.rank));
-        combos.tubes.push(taken);
-      }
-    }
 
-    const normOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
-    for (let i = 0; i <= normOrder.length - 5; i++) {
-      const windowRanks = normOrder.slice(i, i + 5);
-      const isLowAStraight = (windowRanks[0] === '5' && windowRanks[4] === 'A');
-
-      const candidateCombo = [];
-      let canForm = true;
-
-      for (let wr of windowRanks) {
-        const found = pool.find(c => c.rank === wr && !c.isJoker && !candidateCombo.some(item => item.id === c.id));
-        if (found) {
-          candidateCombo.push(found);
-        } else {
-          canForm = false;
-          break;
+    if (wildCards.length > 0) {
+      const sortedRanks = Object.keys(currentCounts).sort((a, b) => getCardWeight({rank: b, suit: '♠', isJoker: false}, level) - getCardWeight({rank: a, suit: '♠', isJoker: false}, level));
+      for (let r of sortedRanks) {
+        if (currentCounts[r] && currentCounts[r].length === 3 && wildCards.length > 0) {
+          const wCard = wildCards.pop();
+          const bombCards = [...currentCounts[r], wCard];
+          lockedCombos.bomb4.push(sortCards(bombCards, level));
+          pool = removeCardsById(pool, bombCards.map(c => c.id));
+          delete currentCounts[r];
         }
       }
-
-      if (canForm && candidateCombo.length === 5) {
-        const taken = takeCardsByIds(candidateCombo.map(c => c.id));
-        taken.sort((a, b) => getNaturalRankWeight(b.rank, isLowAStraight) - getNaturalRankWeight(a.rank, isLowAStraight));
-        combos.straights.push(taken);
-      }
     }
 
-    const countsMap = {};
-    pool.forEach(c => {
-      if (!c.isJoker) {
-        countsMap[c.rank] = countsMap[c.rank] || [];
-        countsMap[c.rank].push(c);
-      }
-    });
+    const resolvedRest = solveRestPool(pool, level);
 
-    const candidateTrips = [];
-    const candidatePairs = [];
-    Object.keys(countsMap).forEach(r => {
-      const g = countsMap[r];
-      if (g.length === 3) candidateTrips.push(g);
-      else if (g.length === 2) candidatePairs.push(g);
-    });
-
-    candidateTrips.sort((a, b) => getCardWeight(a[0], level) - getCardWeight(b[0], level));
-    candidatePairs.sort((a, b) => getCardWeight(a[0], level) - getCardWeight(b[0], level));
-
-    while (candidateTrips.length > 0 && candidatePairs.length > 0) {
-      const tGroup = candidateTrips.shift();
-      const pGroup = candidatePairs.shift();
-
-      const tTaken = takeCardsByIds(tGroup.map(c => c.id));
-      const pTaken = takeCardsByIds(pGroup.map(c => c.id));
-
-      const solidFullHouse = [...sortCards(tTaken, level), ...sortCards(pTaken, level)];
-      combos.fullHouses.push(solidFullHouse);
-    }
-
-    const remainBuckets = {};
-    pool.forEach(c => {
-      remainBuckets[c.rank] = remainBuckets[c.rank] || [];
-      remainBuckets[c.rank].push(c);
-    });
-
-    const plateOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
-    for (let i = 0; i <= plateOrder.length - 3; i++) {
-      const windowRanks = plateOrder.slice(i, i + 3);
-      if (windowRanks.every(r => remainBuckets[r] && remainBuckets[r].length >= 2)) {
-        const isLowAPlate = (windowRanks[0] === '3' && windowRanks[2] === 'A');
-        const plateCards = [];
-        windowRanks.forEach(r => {
-          const pair2 = remainBuckets[r].splice(0, 2);
-          plateCards.push(...pair2);
-        });
-        const taken = takeCardsByIds(plateCards.map(c => c.id));
-        taken.sort((a, b) => getNaturalRankWeight(b.rank, isLowAPlate) - getNaturalRankWeight(a.rank, isLowAPlate));
-        combos.plates.push(taken);
-      }
-    }
-
-    const curRankList = Object.keys(remainBuckets).sort((a, b) => {
-      return getCardWeight({rank: b, suit: '♠', isJoker: false}, level) - getCardWeight({rank: a, suit: '♠', isJoker: false}, level);
-    });
-
-    curRankList.forEach(r => {
-      while (remainBuckets[r] && remainBuckets[r].length >= 3) {
-        const threeCards = remainBuckets[r].splice(0, 3);
-        combos.trips.push(sortCards(takeCardsByIds(threeCards.map(c => c.id)), level));
-      }
-    });
-
-    curRankList.forEach(r => {
-      while (remainBuckets[r] && remainBuckets[r].length >= 2) {
-        const pCards = remainBuckets[r].splice(0, 2);
-        combos.pairs.push(sortCards(takeCardsByIds(pCards.map(c => c.id)), level));
-      }
-    });
-
-    if (pool.length > 0) {
-      combos.singles = sortCards(takeCardsByIds(pool.map(c => c.id)), level);
-    }
-
-    return combos;
+    return {
+      kingBombs: [...lockedCombos.kingBombs, ...resolvedRest.kingBombs],
+      bomb8: [...lockedCombos.bomb8, ...resolvedRest.bomb8],
+      bomb7: [...lockedCombos.bomb7, ...resolvedRest.bomb7],
+      bomb6: [...lockedCombos.bomb6, ...resolvedRest.bomb6],
+      straightFlushes: [...lockedCombos.straightFlushes, ...resolvedRest.straightFlushes],
+      bomb5: [...lockedCombos.bomb5, ...resolvedRest.bomb5],
+      bomb4: [...lockedCombos.bomb4, ...resolvedRest.bomb4],
+      tubes: [...lockedCombos.tubes, ...resolvedRest.tubes],
+      plates: [...lockedCombos.plates, ...resolvedRest.plates],
+      straights: [...lockedCombos.straights, ...resolvedRest.straights],
+      fullHouses: [...lockedCombos.fullHouses, ...resolvedRest.fullHouses],
+      trips: [...lockedCombos.trips, ...resolvedRest.trips],
+      pairs: [...lockedCombos.pairs, ...resolvedRest.pairs],
+      singles: [...lockedCombos.singles, ...resolvedRest.singles]
+    };
   }
 
   function generateStrictCategorizedRows(cardsPool, level) {
@@ -2621,37 +2685,115 @@
     return nonWild[0].rank === nonWild[1].rank;
   }
 
+  /* =========================================================================
+     核心优化：语义级理牌比较算法（同花顺严校花色，常规牌型只看点数结构）
+     ========================================================================= */
+  function isStraightFlushRow(row, level) {
+    if (!row || row.length !== 5) return false;
+    const standardOrder = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
+    const nonWildCards = row.filter(c => !(c.rank === level && c.isHeart) && !c.isJoker);
+    const wildCount = row.filter(c => c.rank === level && c.isHeart).length;
+    if (row.some(c => c.isJoker)) return false;
+    if (nonWildCards.length === 0) return true;
+
+    // 检查非配牌是否花色全部一致
+    const firstSuit = nonWildCards[0].suit;
+    if (!nonWildCards.every(c => c.suit === firstSuit)) return false;
+
+    // 检查点数是否能与逢人配拼成五张连续顺子
+    for (let i = 0; i <= standardOrder.length - 5; i++) {
+      const windowRanks = standardOrder.slice(i, i + 5);
+      let missing = [];
+      let matched = [];
+      windowRanks.forEach(wr => {
+        const found = nonWildCards.find(c => c.rank === wr && !matched.some(m => m.id === c.id));
+        if (found) matched.push(found);
+        else missing.push(wr);
+      });
+      if (missing.length === wildCount && matched.length === nonWildCards.length) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function getRowSemanticSignature(row, level) {
+    if (!row || row.length === 0) return '';
+    
+    // 1. 同花顺特殊处理：必须包含花色标识与顺子点数阶梯
+    if (isStraightFlushRow(row, level)) {
+      const nonWild = row.filter(c => !(c.rank === level && c.isHeart));
+      const targetSuit = nonWild.length > 0 ? nonWild[0].suit : '♥';
+      const ranks = row.map(c => c._vRank || c.rank).sort((a,b) => getNaturalRankWeight(b) - getNaturalRankWeight(a));
+      return `SF_${targetSuit}_${ranks.join('-')}`;
+    }
+
+    // 2. 其余所有牌型（炸弹、木板、钢板、普通单顺、三带二、三张、对子、单张）：只校验点数结构
+    const rankTokens = row.map(c => {
+      if (c.isJoker) return c.jokerType === 'big' ? 'BJ' : 'SJ';
+      if (c.rank === level && c.isHeart) return `WILD_${c.rank}`;
+      if (c.rank === level) return `LV_${c.rank}`;
+      return c.rank;
+    });
+
+    // 按照统一点数权重升序排序，生成结构哈希
+    rankTokens.sort((a, b) => {
+      function getTokWeight(t) {
+        if (t === 'BJ') return 1000;
+        if (t === 'SJ') return 900;
+        if (t.startsWith('WILD_')) return 800;
+        if (t.startsWith('LV_')) return 700;
+        return getNaturalRankWeight(t);
+      }
+      return getTokWeight(a) - getTokWeight(b);
+    });
+
+    return `COMBO_LEN${row.length}_${rankTokens.join(',')}`;
+  }
+
   function analyzeSemanticMatch(userRows, benchmarkRows, level) {
     const cleanUser = userRows.filter(r => r && r.length > 0);
     const cleanBench = benchmarkRows.filter(r => r && r.length > 0);
 
-    function getSortedIds(row) {
-      return row.map(c => c.id).sort((a,b)=>a-b).join(',');
-    }
+    const userSignatures = cleanUser.map(r => getRowSemanticSignature(r, level));
+    const benchSignatures = cleanBench.map(r => getRowSemanticSignature(r, level));
 
-    const userSignatures = cleanUser.map(getSortedIds);
-    const benchSignatures = cleanBench.map(getSortedIds);
-
+    // 全局完全一致性判定（多重集合相等）
     const isExactMatch = (userSignatures.slice().sort().join('|') === benchSignatures.slice().sort().join('|'));
-    const validBenchSet = new Set(benchSignatures);
+
+    // 多重集合消耗匹配（用于精确标记哪些层存在拆牌差异）
+    const benchPool = [...benchSignatures];
     const diffRowIndices = new Set();
 
     cleanUser.forEach((row, idx) => {
-      const sig = getSortedIds(row);
-      let isRowLegit = validBenchSet.has(sig);
-      if (!isRowLegit) {
+      const sig = userSignatures[idx];
+      const matchPos = benchPool.indexOf(sig);
+      if (matchPos !== -1) {
+        benchPool.splice(matchPos, 1); // 成功消耗一个推荐层
+      } else {
+        // 容错检查：如果用户将多对整齐摆在同一层，而基准里存在对应的独立对子
+        let isBatchPairsMatched = false;
         if (row.length % 2 === 0 && row.every((_, i, arr) => i % 2 !== 0 || isPairRow([arr[i], arr[i+1]], level))) {
-          const benchPairs = cleanBench.filter(r => r.length === 2 && isPairRow(r, level)).map(getSortedIds);
-          let allSubPairsInRec = true;
+          const subPairSigs = [];
           for (let p = 0; p < row.length; p += 2) {
-            const pairSig = [row[p].id, row[p+1].id].sort((a,b)=>a-b).join(',');
-            if (!benchPairs.includes(pairSig)) { allSubPairsInRec = false; break; }
+            subPairSigs.push(getRowSemanticSignature([row[p], row[p+1]], level));
           }
-          if (allSubPairsInRec) isRowLegit = true;
+          let tempBench = [...benchPool];
+          let allSubFound = true;
+          for (let sSig of subPairSigs) {
+            const pos = tempBench.indexOf(sSig);
+            if (pos !== -1) tempBench.splice(pos, 1);
+            else { allSubFound = false; break; }
+          }
+          if (allSubFound) {
+            benchPool.length = 0;
+            benchPool.push(...tempBench);
+            isBatchPairsMatched = true;
+          }
         }
-      }
-      if (!isRowLegit) {
-        diffRowIndices.add(idx);
+        if (!isBatchPairsMatched) {
+          diffRowIndices.add(idx);
+        }
       }
     });
 
@@ -3618,7 +3760,7 @@
     renderArchiveList();
   };
 
-  /* ---------------- 自定义调牌核心交互 ---------------- */
+  /* ---------------- 自定义调牌交互 ---------------- */
   const customModal = document.getElementById('customModal');
   const modalCardsList = document.getElementById('modalCardsList');
   const modalLevelSelect = document.getElementById('modalLevelSelect');
@@ -3704,7 +3846,6 @@
     modalCardsList.innerHTML = '';
     const tempLevel = modalLevelSelect.value;
 
-    // 1. 王牌行 (大王、小王)
     const jokerRow = document.createElement('div');
     jokerRow.className = 'custom-suit-row';
     jokerRow.innerHTML = `
@@ -3726,7 +3867,6 @@
     });
     modalCardsList.appendChild(jokerRow);
 
-    // 2. 四色花色行
     SUITS.forEach(s => {
       const row = document.createElement('div');
       row.className = 'custom-suit-row';
